@@ -243,7 +243,7 @@
 		}
 	}
 
-	$redirect_link=str_replace('%SUBID%', $subid, get_out_link ($out_id));
+	$redirect_link=str_ireplace('[SUBID]', $subid, get_out_link ($out_id));
 
 	// Add rule id
 	$str.=$rule_id."\t";
@@ -282,14 +282,14 @@
 		if ($key=='track_request'){continue;}
                 if (strtoupper(substr($key, 0, 3)) == 'IN_') {
                     $var = substr($key, 3);
-                    $redirect_link = str_ireplace('%'.$var.'%', $value, $redirect_link);
+                    $redirect_link = str_ireplace('['.$var.']', $value, $redirect_link);
                 }
 		$get_request[]="{$key}={$value}";
 	}
         
         //Cleaning not used %-params
-        $redirect_link = preg_replace('/(%[a-z\_0-9]+%)/i', '', $redirect_link);
-	
+        $redirect_link = preg_replace('/(\[[a-z\_0-9]+\])/i', '', $redirect_link);
+	print_r($redirect_link);exit;
 	// Last value, don't add \t
 	$request_string=implode ('&', $get_request);
 	if (strlen($request_string)>0)

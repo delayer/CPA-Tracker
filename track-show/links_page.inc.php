@@ -224,7 +224,7 @@ else
 {
 ?>
 
-<p><strong>Новая ссылка</strong> <a href="#" data-toggle="tooltip" data-placement="bottom" title="" onclick="return false;" style="cursor:default; color:gray;" id="link_add_tooltip" data-original-title="Для использования SubID добавьте %SUBID% в URL" class='no-hover'><i class="fa fa-question-circle"></i></a></p>
+<p><strong>Новая ссылка</strong> <a href="#" data-toggle="tooltip" data-placement="bottom" title="" onclick="return false;" style="cursor:default; color:gray;" id="link_add_tooltip" data-original-title="Для использования SubID добавьте [SUBID] в URL" class='no-hover'><i class="fa fa-question-circle"></i></a></p>
 
 <div class="row">
 	<form class="form-inline" role="form" method="post" onSubmit='return check_add_offer();' id='form_add_offer'>

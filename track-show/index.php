@@ -1,5 +1,4 @@
-<?
-        header('Content-Type: text/html; charset=utf-8');
+<?php
 	ob_start();
 	set_time_limit(0);
 	error_reporting(0);
@@ -555,7 +554,8 @@
 		break;
 
 	}
-	
+        
+        header('Content-Type: text/html; charset=utf-8');
 	switch ($_REQUEST['page'])
 	{
 		case 'links': 

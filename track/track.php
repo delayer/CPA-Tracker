@@ -289,7 +289,7 @@
         
         //Cleaning not used %-params
         $redirect_link = preg_replace('/(\[[a-z\_0-9]+\])/i', '', $redirect_link);
-	print_r($redirect_link);exit;
+	
 	// Last value, don't add \t
 	$request_string=implode ('&', $get_request);
 	if (strlen($request_string)>0)

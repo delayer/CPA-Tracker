@@ -215,5 +215,7 @@
     `is_active` INT NOT NULL ,
     `status` INT NOT NULL
     );";
+    
+    $arr_sql[]="UPDATE `tbl_offers` SET `offer_tracking_url` = REPLACE(`offer_tracking_url`, '%SUBID%', '[SUBID]')";
 
 ?>

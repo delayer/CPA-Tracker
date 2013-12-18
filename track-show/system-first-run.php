@@ -106,13 +106,7 @@
 		{
 			$('#login').focus();
 			return false;
-		}	
-
-		if ($('#password').val()=='')
-		{
-			$('#password').focus();
-			return false;
-		}	
+		}		
 
 		if ($('#dbname').val()=='')
 		{

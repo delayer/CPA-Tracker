@@ -6,103 +6,207 @@
 <script src="lib/clipboard/ZeroClipboard.min.js"></script>
 
 <script>
-    $(document).ready(function() 
+    $(document).ready(function()
     {
         $('input[name=rule_name]').focus();
 
         $.ajax({
-               type: "POST",
-               url: "index.php",
-               data: 'ajax_act=get_rules_json'
-           }).done(function (msg) {
-                var template = $('#rulesTemplate').html();
-                var template_data=$.parseJSON(msg);
-                
-                var html = Mustache.to_html(template, template_data);
-                $('#rules_container').html(html);
+            type: "POST",
+            url: "index.php",
+            data: 'ajax_act=get_rules_json'
+        }).done(function(msg) {  
+            var template = $('#rulesTemplate').html();
+            var template_data = $.parseJSON(msg);
 
-                // Init ZeroClipboard
-                $('button[id^="copy-button"]').each(function(i)
-                {
-                    var cur_id=$(this).attr('id');
-                    var clip = new ZeroClipboard( document.getElementById(cur_id), {
-                        moviePath: "lib/clipboard/ZeroClipboard.swf"
-                    } );
+            var html = Mustache.to_html(template, template_data);
+            $('#rules_container').html(html);
 
-                    clip.on( 'mouseout', function ( client, args ) {
-                        $('.btn-rule-copy').removeClass('zeroclipboard-is-hover');
-                    } );
+            // Init ZeroClipboard
+            $('button[id^="copy-button"]').each(function(i)
+            {
+                var cur_id = $(this).attr('id');
+                var clip = new ZeroClipboard(document.getElementById(cur_id), {
+                    moviePath: "lib/clipboard/ZeroClipboard.swf"
                 });
 
-                $(".table-rules th").on( "click", function() {
-                    $(this).closest("table").children("tbody").toggle(); 
-                    $(this).closest("table").toggleClass("rule-table-selected");
-                });                        
-
-                // Fill values for destination links
-                var dictionary_links = [];
-                dictionary_links.push(<?=$js_offers_data;?>);
-                $('input.select-link').each(function() 
-                {
-                    $(this).select2({data:{results: dictionary_links}, width:'copy', containerCssClass:'form-control select2'});
-                    $(this).select2("val", $(this).attr('data-selected-value'));
+                clip.on('mouseout', function(client, args) {
+                    $('.btn-rule-copy').removeClass('zeroclipboard-is-hover');
                 });
+            });
 
-                var dictionary_countries=[];
-                dictionary_countries.push(<?=$js_countries_data;?>);
-                $('input.select-country').each(function() 
-                {
-                    $(this).select2({data:{results: dictionary_countries}, width:'250px', containerCssClass:'form-control select2 noborder-select2'});
-                    $(this).select2("val", $(this).attr('data-selected-value'));
+
+            $('.delbut').on("click", function() {
+                delete_rule($(this).attr('id'));
+            });
+            $('.addcountry').on("click", function(e) {
+                e.preventDefault();
+                var template = $('#countryTemplate').html();
+                var rule_id = $(this).attr('id');
+                var rule_table = $('#rule' + rule_id + ' tbody');
+                rule_table.prepend(template);
+                rule_table.find('input.select-geo_country').select2({data: {results: dictionary_countries}, width: '250px', containerCssClass: 'form-control select2 noborder-select2'});
+                rule_table.find('input.select-link').select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});
+            });
+            $('.addlang').on("click", function(e) {
+                e.preventDefault();
+                var template = $('#langTemplate').html();
+                var rule_id = $(this).attr('id');
+                var rule_table = $('#rule' + rule_id + ' tbody');
+                rule_table.prepend(template);
+                rule_table.find('input.select-lang').select2({data: {results: dictionary_langs}, width: '250px', containerCssClass: 'form-control select2 noborder-select2'});
+                rule_table.find('input.select-link').select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});
+            });
+
+            $('.btnsave').on("click", function(e) {
+                e.preventDefault();
+                var rule_id = $(this).attr('id');
+                var rule_table = $('#rule' + rule_id + ' tbody');
+                $(rule_table).find('input.select-link').each(function() {                                      
+                       $(this).addClass('toSave');                      
                 });
-           });
+                $(rule_table).find('input.select-item').each(function() {                                         
+                       $(this).addClass('toSave');                     
+                });
+                if(update_rule(rule_id) && !$(rule_table).find('.fa-check').size()){
+                    $(this).after('<i style="position: relative; right: 20px; top: 9px;"  class="fa fa-check pull-right"></i>');
+                }
+            });
+            $('body').on("click", '.btnrmcountry', function(e) {
+                e.preventDefault();
+                var rule_id = $(this).closest("tr").parent().attr('id');
+                $(this).closest("tr").remove();
+                update_rule(rule_id);
+            });
+            $(".table-rules th").on("click", function() {
+                $(this).closest("table").children("tbody").toggle();
+                $(this).closest("table").toggleClass("rule-table-selected");
+            });
+
+            
+            // Fill values for destination links
+            var dictionary_links = [];
+            dictionary_links.push(<?= $js_offers_data; ?>);
+            
+            $('input.select-link').each(function()
+            {
+                $(this).select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});
+                $(this).select2("val", $(this).attr('data-selected-value'));
+            });
+
+            var dictionary_countries = [];
+           
+            dictionary_countries.push(<?= $js_countries_data; ?>); 
+             
+            $('input.select-geo_country').each(function()
+            {
+                $(this).select2({data: {results: dictionary_countries}, width: '250px', containerCssClass: 'form-control select2 noborder-select2'});
+                $(this).select2("val", $(this).attr('data-selected-value'));
+            });
+            
+            dictionary_langs = [];
+            dictionary_langs.push({text:"", children:[{id:"en", text:"Английский, en"},{id:"ru", text:"Русский, ru"},{id:"uk", text:"Украинский, uk"}]});
+            dictionary_langs.push(<?= $js_langs_data; ?>);
+            
+            $('input.select-lang').each(function()
+            {
+                $(this).select2({data: {results: dictionary_langs}, width: '250px', containerCssClass: 'form-control select2 noborder-select2'});
+                $(this).select2("val", $(this).attr('data-selected-value'));
+            });
+            
+            
+        });
     });
 
-    function delete_rule(obj, rule_id)
+    function delete_rule(rule_id)
     {
+
         $.ajax({
-          type: 'POST',
-          url: 'index.php',
-          data: 'ajax_act=delete_rule&id='+rule_id
-        }).done(function( msg ) 
+            type: 'POST',
+            url: 'index.php',
+            data: 'ajax_act=delete_rule&id=' + rule_id
+        }).done(function(msg)
         {
-          $(obj).closest('.rule_form').hide();
+            $('#rule' + rule_id).hide();
         });
 
         return false;
     }
+ 
 
-    function validate_add_rule()
+    function update_rule(rule_id)
     {
-        if ($('input[name=rule_name]', $('#form_add_rule')).val()==''){
-          $('input[name=rule_name]', $('#form_add_rule')).focus();
-          return false;
+        var links = [];
+        var rules_items = '';
+        var values = '';
+        var error = '';
+        var rule_table = $('#rule' + rule_id + ' tbody');
+        var name = $(rule_table).prev().find('.rule-name-title').text();
+        var i = 0;
+        $(rule_table).find('input.select-item.toSave').each(function() {        
+            if ($(this).val()) {
+                rules_items = rules_items + '&rules_item['+i+"][val]=" + $(this).val();
+                rules_items = rules_items + '&rules_item['+i+"][type]=" + $(this).attr('itemtype');
+                i++;
+            } else {
+                error = 'Выберите страну';
+            }
+        });
+        $(rule_table).find('input.select-link.toSave').each(function() {
+            if ($(this).val()) {
+                if (!in_array($(this).val(), links)) {
+                    links.push($(this).val());
+                }
+                values = values + '&rule_value[]=' + $(this).val();
+            } else {
+                error = 'Выберите ссылку';
+            }
+        });
+        if (error) {
+            alert(error);
+            return false;
+        } else {
+            rules_items = rules_items + '&rules_item['+i+"][val]=default";
+            rules_items = rules_items + '&rules_item['+i+"][type]=geo_country" ;
+            $.ajax({
+                type: 'POST',
+                url: 'index.php',
+                data: 'ajax_act=update_rule&rule_id=' + rule_id + '&rule_name=' + name + rules_items + values
+            }).done(function(msg)
+            {
+                console.log(msg);
+           
+                if (links.length > 1) {
+                    var badge = '<span class="badge">' + (links.length) + ' ' + declination((links.length), 'ссылка', 'ссылки', 'ссылок') + '</span>';
+                    $(rule_table).parent().find('.rule-destination-title').html(badge);
+                }
+            });
         }
         return true;
     }
-
-    function rule_add_country(obj)
-    {
-        var new_obj=$('#system_rule_select div.system_inner').clone(true);
-        $('select.select_s2', new_obj).addClass('select2').select2(); 
-
-        $('.rule_value', $(obj).parent().parent()).prepend(new_obj);
-        $('.new-country-selector', $(obj).parent().parent()).removeClass('new-country-selector').addClass('country-selector').selectToAutocomplete();
-
-        return false;
+    function declination(number, one, two, five) {
+        number = Math.abs(number);
+        number %= 100;
+        if (number >= 5 && number <= 20) {
+            return five;
+        }
+        number %= 10;
+        if (number == 1) {
+            return one;
+        }
+        if (number >= 2 && number <= 4) {
+            return two;
+        }
+        return five;
     }
-
-    function update_rule(id)
-    {
-        $('.rule_update_ajax', '#rule_'+id).show();
-        $.ajax({
-            type: 'POST',
-            url: 'index.php',
-            data: $('#rule_'+id).serialize()
-          }).done(function( msg ) 
-          {
-            $('.rule_update_ajax', '#rule_'+id).hide();
-          });
+    function in_array(needle, haystack, strict) {
+        var found = false, key, strict = !!strict;
+        for (key in haystack) {
+            if ((strict && haystack[key] === needle) || (!strict && haystack[key] == needle)) {
+                found = true;
+                break;
+            }
+        }
+        return found;
     }
 </script>
 
@@ -225,9 +329,51 @@
     }    
 </style>
 
+<script id="countryTemplate" type="text/template">
+     {{#conditions}}
+                    <tr>
+                        <td>
+                            <div class="form-inline" role="form">                            
+                                <div class="btn-group trash-button">
+                                    <button class='btn btn-default btnrmcountry'><i class="fa fa-trash-o text-muted"></i></button>
+                                </div>
+                                <div class="form-group">
+                                    <span class="label label-default">Страна</span>
+                                </div>
+                                <div class="form-group">
+                                <input type="hidden" placeholder="Страна" itemtype='geo_country' class='select-geo_country select-item' data-selected-value=''>
+                                <!-- <button class='btn btn-default' style='border:none;'>  <i class="fa fa-caret-down text-muted"></i></button> -->
+                                </div>
+                                <div class='pull-right' style='width:200px;'><input placeholder="Ссылка" require="" type="hidden" name='out_id[]' class='select-link' data-selected-value=''></div>
+                            </div>
+                        </td>
+                    </tr>
+       {{/conditions}}          
+</script>
+<script id="langTemplate" type="text/template">
+     {{#conditions}}
+                    <tr>
+                        <td>
+                            <div class="form-inline" role="form">                            
+                                <div class="btn-group trash-button">
+                                    <button class='btn btn-default btnrmcountry'><i class="fa fa-trash-o text-muted"></i></button>
+                                </div>
+                                <div class="form-group">
+                                    <span class="label label-default">Язык</span>
+                                </div>
+                                <div class="form-group">
+                                <input type="hidden" placeholder="Язык" itemtype='lang' class='select-lang select-item' data-selected-value=''>
+                                <!-- <button class='btn btn-default' style='border:none;'>  <i class="fa fa-caret-down text-muted"></i></button> -->
+                                </div>
+                                <div class='pull-right' style='width:200px;'><input placeholder="Ссылка" require="" type="hidden" name='out_id[]' class='select-link' data-selected-value=''></div>
+                            </div>
+                        </td>
+                    </tr>
+       {{/conditions}}          
+</script>
 <script id="rulesTemplate" type="text/template">
     {{#rules}}
-        <table class='table table-rules'>
+        <table id="rule{{id}}" class='table table-rules'>
             <thead>
                 <tr>
                     <th>
@@ -244,27 +390,27 @@
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody id="{{id}}">
                 {{#conditions}}
                     <tr>
                         <td>
                             <div class="form-inline" role="form">                            
                                 <div class="btn-group trash-button">
-                                    <button class='btn btn-default'><i class="fa fa-trash-o text-muted"></i></button>
+                                    <button class='btn btn-default btnrmcountry'><i class="fa fa-trash-o text-muted"></i></button>
                                 </div>
                                 <div class="form-group">
                                     <span class="label label-default">{{type}}</span>
                                 </div>
                                 <div class="form-group">
-                                <input type="hidden" placeholder="Страна" class='select-country' data-selected-value='{{value}}'>
+                                <input type="hidden" placeholder="Страна" itemtype={{select_type}} class='select-{{select_type}} select-item toSave' data-selected-value='{{value}}'>
                                 <!-- <button class='btn btn-default' style='border:none;'>{{value}} <i class="fa fa-caret-down text-muted"></i></button> -->
                                 </div>
-                                <div class='pull-right' style='width:200px;'><input type=hidden name='out_id[]' class='select-link' data-selected-value='{{destination_id}}'></div>
+                                <div class='pull-right' style='width:200px;'><input type=hidden name='out_id[]' class='select-link toSave' data-selected-value='{{destination_id}}'></div>
                             </div>
                         </td>
                     </tr>
                 {{/conditions}}
-
+           
                 <tr><td>
                     <form class="form-inline" role="form">
                         <div class="btn-group trash-button" style='visibility:hidden'>
@@ -276,7 +422,7 @@
                         <div class="form-group">
                             <button class='btn btn-default' style='border:none; visibility:hidden'><i class="fa fa-caret-down text-muted"></i></button>
                         </div>
-                        <div class='pull-right' style='width:200px;'><input type='hidden' name='default_out_id' class='select-link' data-selected-value='{{default_destination_id}}'></div>
+                        <div class='pull-right' style='width:200px;'><input type='hidden' name='default_out_id' class='select-link toSave' data-selected-value='{{default_destination_id}}'></div>
                     </form>
                 </td></tr>
 
@@ -288,7 +434,7 @@
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="#">Переименовать правило</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="#">Удалить правило</a></li>
+                                    <li><a class="delbut" id="{{id}}" href="#">Удалить правило</a></li>
                                 </ul>
                             </div>                        
                               <div class="btn-group">
@@ -297,8 +443,8 @@
                                   <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#">Страна</a></li>
-                                    <li><a href="#">Язык браузера</a></li>
+                                    <li><a class="addcountry" id="{{id}}" href="#">Страна</a></li>
+                                    <li><a class="addlang" id="{{id}}"  href="#">Язык браузера</a></li>
                                     <li><a href="#">Реферер</a></li>
                                     <li><a href="#">Город</a></li>
                                     <li><a href="#">Регион</a></li>
@@ -316,7 +462,7 @@
                                 </ul>                            
                               </div>
                         </div>
-                        <button class='btn btn-default pull-right'>Сохранить</button>
+                        <button id="{{id}}" class='btn btn-default pull-right btnsave'>Сохранить</button>
                     </form>
                 </td></tr>
 
@@ -335,7 +481,7 @@
         &nbsp;→&nbsp;
         <div class="form-group">
             <label class="sr-only">Ссылка</label>
-            <input type="hidden" placeholder="Ссылка" name='out_id' class='select-link' data-selected-value='<?=$js_last_offer_id;?>'>
+            <input type="hidden" placeholder="Ссылка" name='out_id' class='select-link toSave' data-selected-value='<?=$js_last_offer_id;?>'>
         </div>
         <button type="submit" class="btn btn-default">Добавить</button>
         <input type="hidden" name="ajax_act" value="add_rule">

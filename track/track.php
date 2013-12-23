@@ -33,7 +33,7 @@
 			return array ('country'=>$record->country_code, 'state'=>$GEOIP_REGION_NAME[$record->country_code][$record->region], 'city'=>$record->city, 'region'=>$record->region);
 		}
 	}
-
+               
 	if (!function_exists('get_rules'))
 	{
 		function get_rules($rule_name)
@@ -54,7 +54,8 @@
 			else
 			{
 				require_once (dirname(__FILE__)."/connect.php");
-				$sql="select tbl_rules.id as rule_id, tbl_rules_items.id, tbl_rules_items.parent_id, tbl_rules_items.type, tbl_rules_items.value from tbl_rules left join tbl_rules_items on tbl_rules_items.rule_id=tbl_rules.id where tbl_rules.link_name='".mysql_real_escape_string($rule_name)."' and tbl_rules.status=0 and tbl_rules_items.status=0 order by tbl_rules_items.parent_id, tbl_rules_items.id";
+				$sql="select tbl_rules.id as rule_id, tbl_rules_items.id, tbl_rules_items.parent_id, tbl_rules_items.type, tbl_rules_items.value from tbl_rules left join tbl_rules_items on tbl_rules_items.rule_id=tbl_rules.id where tbl_rules.link_name='".mysql_real_escape_string($rule_name)."' and tbl_rules.status=0 and tbl_rules_items.status=0 order by tbl_rules_items.parent_id, tbl_rules_items.id
+                                     ORDER BY rule_id ASC ";
 				$result=mysql_query($sql);
 				
 				$arr_items=array();
@@ -73,12 +74,11 @@
 				$arr_rules=array();
 				foreach ($arr_items as $row)
 				{
-					if ($row['parent_id']>0)
-					{
-						$arr_rules[$arr_items[$row['parent_id']]['value']]=array('rule_id'=>$rule_id, 'out_id'=>$row['value']);
-					}
+                                    if ($row['parent_id']>0)
+                                    {
+                                     $arr_rules[$arr_items[$row['parent_id']]['type']][$arr_items[$row['parent_id']]['value']]=array('rule_id'=>$rule_id, 'out_id'=>$row['value']);
+                                    }
 				}
-
 				$str_rules=serialize($arr_rules);
 
 				if (!is_dir($rules_path))
@@ -189,7 +189,10 @@
 	$cur_country=$geo_data['country'];
 	$cur_state=$geo_data['state'];
 	$cur_city=$geo_data['city'];
-	
+        
+	// User language
+        $user_lang =  substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+                
 	// User-agent
 	$str.=remove_tab($_SERVER['HTTP_USER_AGENT'])."\t";
 	
@@ -222,28 +225,23 @@
 		exit();
 	}
 	else
-	{
-		if ($cur_country=='')
-		{
-			$rule_id=$arr_rules['default']['rule_id'];
-			$out_id=$arr_rules['default']['out_id'];
-		}
-		else
-		{
-			if (isset ($arr_rules[$cur_country]))
-			{
-				$rule_id=$arr_rules[$cur_country]['rule_id'];
-				$out_id=$arr_rules[$cur_country]['out_id'];
-			}
-			else
-			{
-				$rule_id=$arr_rules['default']['rule_id'];
-				$out_id=$arr_rules['default']['out_id'];
-			}
-		}
+	{ 
+          $user_params = array(); 
+          $user_params['lang'] = $user_lang;
+          $user_params['geo_country'] = $cur_country;
+          $rule_id=$arr_rules['geo_country']['default']['rule_id'];
+          $out_id=$arr_rules['geo_country']['default']['out_id'];
+
+          foreach ($arr_rules as $key  => $value) {
+            if(isset($value[$user_params[$key]])){
+               $rule_id =  $value[$user_params[$key]]['rule_id'];
+               $out_id =  $value[$user_params[$key]]['out_id'];
+               break;
+            }
+          } 
 	}
 
-	$redirect_link=str_ireplace('[SUBID]', $subid, get_out_link ($out_id));
+	$redirect_link=str_replace('%SUBID%', $subid, get_out_link ($out_id));
 
 	// Add rule id
 	$str.=$rule_id."\t";
@@ -282,13 +280,13 @@
 		if ($key=='track_request'){continue;}
                 if (strtoupper(substr($key, 0, 3)) == 'IN_') {
                     $var = substr($key, 3);
-                    $redirect_link = str_ireplace('['.$var.']', $value, $redirect_link);
+                    $redirect_link = str_ireplace('%'.$var.'%', $value, $redirect_link);
                 }
 		$get_request[]="{$key}={$value}";
 	}
         
         //Cleaning not used %-params
-        $redirect_link = preg_replace('/(\[[a-z\_0-9]+\])/i', '', $redirect_link);
+        $redirect_link = preg_replace('/(%[a-z\_0-9]+%)/i', '', $redirect_link);
 	
 	// Last value, don't add \t
 	$request_string=implode ('&', $get_request);

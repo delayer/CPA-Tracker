@@ -38,10 +38,18 @@
             $('.delbut').on("click", function() {
                 delete_rule($(this).attr('id'));
             });
+            function prepareTextInput(tr,name,title){                
+                tr.find('.label-default').text(title);
+                tr.find('input.select-item').attr('placeholder',title);
+                tr.find('input.select-item').attr('itemtype',name);
+                tr.find('input.select-link').select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});
+            } 
+           // buttons {// 
+            
             $('.addcountry').on("click", function(e) {
                 e.preventDefault();
                 var template = $('#countryTemplate').html();
-                var rule_id = $(this).attr('id');
+                var rule_id = $(this).parent().parent().attr('id');
                 var rule_table = $('#rule' + rule_id + ' tbody');
                 rule_table.prepend(template);
                 rule_table.find('input.select-geo_country').select2({data: {results: dictionary_countries}, width: '250px', containerCssClass: 'form-control select2 noborder-select2'});
@@ -50,13 +58,59 @@
             $('.addlang').on("click", function(e) {
                 e.preventDefault();
                 var template = $('#langTemplate').html();
-                var rule_id = $(this).attr('id');
+                var rule_id = $(this).parent().parent().attr('id');
                 var rule_table = $('#rule' + rule_id + ' tbody');
                 rule_table.prepend(template);
                 rule_table.find('input.select-lang').select2({data: {results: dictionary_langs}, width: '250px', containerCssClass: 'form-control select2 noborder-select2'});
                 rule_table.find('input.select-link').select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});
             });
-
+            $('.addrefer').on("click", function(e) {
+                e.preventDefault();
+                var template = $('#referTemplate').html();
+                var rule_id = $(this).parent().parent().attr('id');
+                var rule_table = $('#rule' + rule_id + ' tbody');
+                rule_table.prepend(template);
+                rule_table.find('input.select-link').select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});
+            });
+             $('.addcity').on("click", function(e) {
+                e.preventDefault();
+                var template = $('#referTemplate').html();
+                var rule_id = $(this).parent().parent().attr('id');
+                var rule_table =  $('#rule' + rule_id + ' tbody');
+                rule_table.prepend(template);
+                var tr = rule_table.find('tr').first();
+                prepareTextInput(tr,'city','Город');
+            });
+             $('.addregion').on("click", function(e) {
+                e.preventDefault();
+                var template = $('#referTemplate').html();
+                var rule_id = $(this).parent().parent().attr('id');
+                var rule_table =  $('#rule' + rule_id + ' tbody');
+                rule_table.prepend(template);
+                var tr = rule_table.find('tr').first();
+                prepareTextInput(tr,'region','Регион');
+            });
+            $('.addprovider').on("click", function(e) {
+                e.preventDefault();
+                var template = $('#referTemplate').html();
+                var rule_id = $(this).parent().parent().attr('id');
+                var rule_table =  $('#rule' + rule_id + ' tbody');
+                rule_table.prepend(template);
+                var tr = rule_table.find('tr').first();
+                prepareTextInput(tr,'provider','Провайдер');
+            });
+            $('.addip').on("click", function(e) {
+                e.preventDefault();
+                var template = $('#referTemplate').html();
+                var rule_id = $(this).parent().parent().attr('id');
+                var rule_table =  $('#rule' + rule_id + ' tbody');
+                rule_table.prepend(template);
+                var tr = rule_table.find('tr').first();
+                prepareTextInput(tr,'ip','IP адрес');
+            });
+            
+            // buttons }//  
+            
             $('.btnsave').on("click", function(e) {
                 e.preventDefault();
                 var rule_id = $(this).attr('id');
@@ -117,6 +171,7 @@
         });
     });
 
+    
     function delete_rule(rule_id)
     {
 
@@ -148,7 +203,7 @@
                 rules_items = rules_items + '&rules_item['+i+"][type]=" + $(this).attr('itemtype');
                 i++;
             } else {
-                error = 'Выберите страну';
+                error = 'Выберите условие';
             }
         });
         $(rule_table).find('input.select-link.toSave').each(function() {
@@ -328,7 +383,26 @@
         border-radius:0px; 
     }    
 </style>
-
+<script id="referTemplate" type="text/template">
+     {{#conditions}}
+                    <tr>
+                        <td>
+                            <div class="form-inline" role="form">                            
+                                <div class="btn-group trash-button">
+                                    <button class='btn btn-default btnrmcountry'><i class="fa fa-trash-o text-muted"></i></button>
+                                </div>
+                                <div class="form-group">
+                                    <span class="label label-default">Реферер</span>
+                                </div>
+                                <div class="form-group">
+                                <input type="text" class="form-control select-item" placeholder="Реферер" itemtype='referer'  > 
+                                </div>
+                                <div class='pull-right' style='width:200px;'><input placeholder="Ссылка" require="" type="hidden" name='out_id[]' class='select-link' data-selected-value=''></div>
+                            </div>
+                        </td>
+                    </tr>
+       {{/conditions}}          
+</script>
 <script id="countryTemplate" type="text/template">
      {{#conditions}}
                     <tr>
@@ -400,11 +474,18 @@
                                 </div>
                                 <div class="form-group">
                                     <span class="label label-default">{{type}}</span>
-                                </div>
+                                </div>                        
+                        {{#textinput}}
                                 <div class="form-group">
-                                <input type="hidden" placeholder="Страна" itemtype={{select_type}} class='select-{{select_type}} select-item toSave' data-selected-value='{{value}}'>
+                                <input type="text" class="form-control select-item toSave" placeholder="{{type}}" itemtype='{{select_type}}' value='{{value}}' > 
+                                </div>
+                        {{/textinput}}
+                        {{^textinput}}
+                                <div class="form-group">
+                                <input type="hidden" placeholder="{{type}}" itemtype='{{select_type}}' class='select-{{select_type}} select-item toSave' data-selected-value='{{value}}'>
                                 <!-- <button class='btn btn-default' style='border:none;'>{{value}} <i class="fa fa-caret-down text-muted"></i></button> -->
                                 </div>
+                        {{/textinput}}                        
                                 <div class='pull-right' style='width:200px;'><input type=hidden name='out_id[]' class='select-link toSave' data-selected-value='{{destination_id}}'></div>
                             </div>
                         </td>
@@ -442,21 +523,21 @@
                                   Добавить условие
                                   <span class="caret"></span>
                                 </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="addcountry" id="{{id}}" href="#">Страна</a></li>
-                                    <li><a class="addlang" id="{{id}}"  href="#">Язык браузера</a></li>
-                                    <li><a href="#">Реферер</a></li>
-                                    <li><a href="#">Город</a></li>
-                                    <li><a href="#">Регион</a></li>
-                                    <li><a href="#">Провайдер</a></li>
-                                    <li><a href="#">IP адрес</a></li>
-                                    <li><a href="#">Название браузера</a></li>
-                                    <li><a href="#">Версия браузера</a></li>
-                                    <li><a href="#">User-agent</a></li>
-                                    <li><a href="#">Мобильное устройство</a></li>
-                                    <li><a href="#">Операционная система</a></li>
-                                    <li><a href="#">Платформа</a></li>
-                                    <li><a href="#">Сотовый оператор</a></li>
+                                <ul class="dropdown-menu" id="{{id}}">
+                                    <li><a class="addcountry" href="#">Страна</a></li>
+                                    <li><a class="addlang" href="#">Язык браузера</a></li>
+                                    <li><a class="addrefer" href="#">Реферер</a></li>
+                                    <li><a class="addcity" href="#">Город</a></li>
+                                    <li><a class="addregion" href="#">Регион</a></li>
+                                    <li><a class="addprovider" href="#">Провайдер</a></li>
+                                    <li><a class="addip" href="#">IP адрес</a></li>
+                                    <li><a class="addbrowser" href="#">Название браузера</a></li>
+                                    <li><a class="addbrowserversion" href="#">Версия браузера</a></li>
+                                    <li><a class="addagen" href="#">User-agent</a></li>
+                                    <li><a class="addmobile" href="#">Мобильное устройство</a></li>
+                                    <li><a class="addos" href="#">Операционная система</a></li>
+                                    <li><a class="addplatform" href="#">Платформа</a></li>
+                                    <li><a class="addop" href="#">Сотовый оператор</a></li>
                                     <li class="divider"></li>
                                     <li><a href="#">Параметр в GET-запросе</a></li>
                                 </ul>                            

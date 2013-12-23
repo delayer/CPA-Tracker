@@ -144,7 +144,8 @@
 		case 'get_rules_json': 
 
 			$arr_offers=get_rules_offers();
-			$condition_types=array('geo_country'=>'Страна','lang'=>'Язык');                        
+			$condition_types=array('geo_country'=>'Страна','lang'=>'Язык','referer'=>'Реферер','city'=>'Город','region'=>'Регион'
+                            ,'provider'=>'Провайдер','ip'=>'IP адрес');                        
 			$arr_rules=get_rules_list($arr_offers);
 			$arr=array();
 			$i=0;
@@ -169,7 +170,7 @@
 					}
 
 					// Add item to conditions section
-					$arr['rules'][$i]['conditions'][]=array('type'=>$condition_types[$cur_item_val['root']['type']],'select_type'=>$cur_item_val['root']['type'], 'value'=>$cur_item_val['root']['value'], 'destination_id'=>$cur_item_val['inner'][0]['value']);
+					$arr['rules'][$i]['conditions'][]=array('textinput'=>inputtype($cur_item_val['root']['type']),'type'=>$condition_types[$cur_item_val['root']['type']],'select_type'=>$cur_item_val['root']['type'], 'value'=>$cur_item_val['root']['value'], 'destination_id'=>$cur_item_val['inner'][0]['value']);
 				}
 
 				$arr_destinations=array_keys($arr_destinations);

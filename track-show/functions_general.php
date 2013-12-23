@@ -1292,4 +1292,27 @@ function show_country_select($selected='')
 	    $js_countries_data='{'.'text:"", children:['.implode (',', $arr_data).']}';
 	    return $js_countries_data;	
     }	
+    function inputtype($type){
+        switch ($type) {
+            case 'referer':
+                return 1;
+                break;
+            case 'city':
+                return 1;
+                break;
+            case 'region':
+                return 1;
+                break;
+            case 'provider':
+                return 1;
+                break;
+            case 'ip':
+                return 1;
+                break;
+
+            default:
+                return null;
+                break;
+        }
+    }
 ?>

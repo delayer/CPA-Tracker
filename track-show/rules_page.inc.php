@@ -74,7 +74,9 @@
 
     function validate_add_rule()
     {
-        if ($('input[name=rule_name]', $('#form_add_rule')).val()==''){
+        var nameR = /a-z0-9\-\_/i;
+        if (nameR.test($('input[name=rule_name]', $('#form_add_rule')).val())){
+          $('#incorrect_name_alert').show();
           $('input[name=rule_name]', $('#form_add_rule')).focus();
           return false;
         }
@@ -327,6 +329,9 @@
 
 <div class="row">
     <div class="col-sm-9">
+        <div class="alert alert-danger" style="display:none;" id="incorrect_name_alert">
+            Неверное название правила, используйте только латинские буквы, цифры и знаки _ и -.
+        </div>
         <form class="form-inline" method="post" onsubmit="return validate_add_rule();" id="form_add_rule" role="form" style="margin-bottom:30px">
         <div class="form-group">
             <label class="sr-only">Название правила</label>

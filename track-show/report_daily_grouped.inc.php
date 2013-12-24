@@ -108,8 +108,7 @@ $(document).ready(function() {
 		break;
 	}
 
-	foreach ($arr_report_data as $source_name=>$data)
-	{
+	
 		switch ($main_type)
 			{
 				case 'out_id': 
@@ -125,7 +124,7 @@ $(document).ready(function() {
         $fromF=date ('d.m.Y', strtotime($from));
         $toF=date ('d.m.Y', strtotime($to));
         $value_date_range = "$fromF - $toF";
-               
+                                
         echo '<form method="post"  name="datachangeform">
         <div style="width: 229px;float: right;position: relative;top: -5px;">
             <div class="input-group">                          
@@ -137,6 +136,8 @@ $(document).ready(function() {
         </div>
         <div><h5>'._e($report_name)." "._e($source_name).'</h5></div>
         </form>';
+        foreach ($arr_report_data as $source_name=>$data)
+	{
 		?>
 <div class='row report_grouped_menu'>
 <div class='col-md-12'>

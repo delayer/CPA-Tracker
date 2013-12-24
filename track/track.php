@@ -19,26 +19,7 @@
 			return str_replace ("\t", ' ', $str);
 		}
 	}
-         function getProvider($ip = NULL){ 
-                if(empty($ip)) return ''; 
-                $ch = curl_init(); 
-                curl_setopt($ch, CURLOPT_URL, 'http://www.ipaddresslocation.org/ip-address-locator.php'); 
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-                curl_setopt($ch, CURLOPT_POST, true); 
-                curl_setopt($ch, CURLOPT_POSTFIELDS, array('ip' => $ip)); 
-                $data = curl_exec($ch); 
-                curl_close($ch);     
-                preg_match_all('/<i>([a-z\s]+)\:<\/i>\s+<b>(.*)<\/b>/im', $data, $matches, PREG_SET_ORDER); 
-                if(count($matches) == 0) return false;  
-                foreach($matches as $info) 
-                { 
-                 if(isset($info[2]) && $info[1]=='ISP Provider') 
-                   { 
-                      return $info[2]; 
-                   } 
-                } 
-                return '';
-           } 
+                
 	if (!function_exists('get_geodata'))
 	{
 		function get_geodata($ip)
@@ -48,8 +29,9 @@
 			require_once (dirname (__FILE__)."/lib/maxmind/geoipregionvars.php");
 			$gi = geoip_open(dirname (__FILE__)."/lib/maxmind/MaxmindCity.dat", GEOIP_STANDARD);
 			$record = geoip_record_by_addr($gi, $ip); 
+                        $isp = geoip_org_by_addr($gi, $ip);
 			geoip_close($gi);
-			return array ('country'=>$record->country_code, 'state'=>$GEOIP_REGION_NAME[$record->country_code][$record->region], 'city'=>$record->city, 'region'=>$record->region);
+			return array ('country'=>$record->country_code, 'state'=>$GEOIP_REGION_NAME[$record->country_code][$record->region], 'city'=>$record->city, 'region'=>$record->region,'isp'=>$isp);
 		}
 	}
                
@@ -207,7 +189,7 @@
 	$cur_country=$geo_data['country'];
 	$cur_state=$geo_data['state'];
 	$cur_city=$geo_data['city'];
-        
+        $isp=$geo_data['isp'];
 	// User language
         $user_lang =  substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
                 
@@ -249,10 +231,11 @@
           $user_params['ip'] = $ip;
           $user_params['city'] = $cur_city;
           $user_params['region'] = $cur_state;
-          $user_params['provider'] = getProvider($ip);
+          $user_params['provider'] = $isp;
           $user_params['lang'] = $user_lang;
           $user_params['referer'] =  $_SERVER['HTTP_REFERER'];
           $user_params['geo_country'] = $cur_country;
+          
           $rule_id=$arr_rules['geo_country']['default']['rule_id'];
           $out_id=$arr_rules['geo_country']['default']['out_id']; 
           foreach ($arr_rules as $key  => $value) {

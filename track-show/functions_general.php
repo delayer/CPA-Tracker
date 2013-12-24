@@ -1260,7 +1260,28 @@ function show_country_select($selected='')
 		
 		return $arr_countries;
 	}
-
+        function get_lang_list()
+	{
+		$arr_langs=array("az"=>"Азербайджанский, az","en"=>"Английский, en","ar"=>"Арабский, ar","be"=>"Белорусский, be","hu"=>"Венгерский, hu",
+                    "vi"=>"Вьетнамский, vi","el"=>"Греческий, el","id"=>"Индонезийский, id","es"=>"Испанский, es","it"=>"Итальянский, it","kk"=>"Казахский, kk",
+                    "zh"=>"Китайский, zh","ko"=>"Корейский, ko","de"=>"Немецкий, de","nl"=>"Нидерландский, nl","pl"=>"Польский, pl","pt"=>"Португальский, pt",
+                    "ps"=>"Пушту, ps","ro"=>"Румынский, ro","ru"=>"Русский, ru","th"=>"Тайский, th","tr"=>"Турецкий, tr",
+                    "uz"=>"Узбекский, uz","uk"=>"Украинский, uk","fr"=>"Французский, fr","hi"=>"Хинди, hi","cs"=>"Чешский, cs",
+                    "ja"=>"Японский, ja",);
+                        
+		
+		return $arr_langs;
+	}
+    function get_langs_data_js()
+    {
+	    $arr_langs=get_lang_list();
+	    foreach ($arr_langs as $k=>$v)
+	    {
+	        $arr_data[]='{id:"'.$k.'", text:"'.$v.'"}';        
+	    }
+	    $js_langs_data='{'.'text:"", children:['.implode (',', $arr_data).']}';
+	    return $js_langs_data;	
+    }	
     function get_countries_data_js()
     {
 	    $arr_countries=get_countries_list_rus();
@@ -1271,4 +1292,27 @@ function show_country_select($selected='')
 	    $js_countries_data='{'.'text:"", children:['.implode (',', $arr_data).']}';
 	    return $js_countries_data;	
     }	
+    function inputtype($type){
+        switch ($type) {
+            case 'referer':
+                return 1;
+                break;
+            case 'city':
+                return 1;
+                break;
+            case 'region':
+                return 1;
+                break;
+            case 'provider':
+                return 1;
+                break;
+            case 'ip':
+                return 1;
+                break;
+
+            default:
+                return null;
+                break;
+        }
+    }
 ?>

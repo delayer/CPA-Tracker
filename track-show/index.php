@@ -1,4 +1,4 @@
-<?php
+<?
 	ob_start();
 	set_time_limit(0);
 	error_reporting(0);
@@ -144,8 +144,8 @@
 		case 'get_rules_json': 
 
 			$arr_offers=get_rules_offers();
-
-			$condition_types=array('geo_country'=>'Страна');
+			$condition_types=array('geo_country'=>'Страна','lang'=>'Язык','referer'=>'Реферер','city'=>'Город','region'=>'Регион'
+                            ,'provider'=>'Провайдер','ip'=>'IP адрес');                        
 			$arr_rules=get_rules_list($arr_offers);
 			$arr=array();
 			$i=0;
@@ -170,7 +170,7 @@
 					}
 
 					// Add item to conditions section
-					$arr['rules'][$i]['conditions'][]=array('type'=>$condition_types[$cur_item_val['root']['type']], 'value'=>$cur_item_val['root']['value'], 'destination_id'=>$cur_item_val['inner'][0]['value']);
+					$arr['rules'][$i]['conditions'][]=array('textinput'=>inputtype($cur_item_val['root']['type']),'type'=>$condition_types[$cur_item_val['root']['type']],'select_type'=>$cur_item_val['root']['type'], 'value'=>$cur_item_val['root']['value'], 'destination_id'=>$cur_item_val['inner'][0]['value']);
 				}
 
 				$arr_destinations=array_keys($arr_destinations);
@@ -193,8 +193,7 @@
 				$arr['rules'][$i]['default_destination_id']=$default_destination_id;
 				
 				$i++;               
-			}
-			
+			} 
 			echo json_encode($arr);
 
 			exit();
@@ -375,10 +374,10 @@
 			exit();
 		break;
 		
-		case 'update_rule': 
+		case 'update_rule':                          
 		    $rule_id=$_REQUEST['rule_id'];
 		    $rule_name=$_REQUEST['rule_name'];
-		    $rule_countries=$_REQUEST['rule_country'];
+		    $rules_item=$_REQUEST['rules_item'];
 		    $rule_values=$_REQUEST['rule_value'];
 			if ($rule_id==0 || $rule_id=='' || $rule_name=='')
 			{
@@ -398,13 +397,13 @@
 				
 			// Add new rules
 			$i=0;
-			foreach ($rule_countries as $cur_country)
+			foreach ($rules_item as $cur_item)
 			{
-				$country=$rule_countries[$i];
+				$item=$rules_item[$i];
 				$out_id=$rule_values[$i];		
-				if ($country!='')
+				if ($item['val']!='')
 				{
-					$sql="insert into tbl_rules_items (rule_id, parent_id, type, value) values ('".mysql_real_escape_string($rule_id)."', '0', 'geo_country', '".mysql_real_escape_string($country)."')";
+					$sql="insert into tbl_rules_items (rule_id, parent_id, type, value) values ('".mysql_real_escape_string($rule_id)."', '0', '".mysql_real_escape_string($item['type'])."', '".mysql_real_escape_string($item['val'])."')";
 					mysql_query($sql);
 					$parent_id=mysql_insert_id();
 					
@@ -554,8 +553,7 @@
 		break;
 
 	}
-        
-        header('Content-Type: text/html; charset=utf-8');
+	
 	switch ($_REQUEST['page'])
 	{
 		case 'links': 
@@ -570,7 +568,7 @@
 		    list ($js_last_offer_id, $js_offers_data)=get_offers_data_js($arr_offers);
 
 			$js_countries_data=get_countries_data_js();
-
+                        $js_langs_data=get_langs_data_js();         
 			$page_content='rules_page.inc.php';
 			include "templates/main.inc.php";
 			exit();

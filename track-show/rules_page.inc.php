@@ -191,12 +191,6 @@
     function update_rule(rule_id)
     {
 
-        var nameR = /a-z0-9\-\_/i;
-        if (nameR.test($('input[name=rule_name]', $('#form_add_rule')).val())){
-          $('#incorrect_name_alert').show();
-          $('input[name=rule_name]', $('#form_add_rule')).focus();
-          return false;
-        }
         var links = [];
         var rules_items = '';
         var values = '';
@@ -269,6 +263,15 @@
             }
         }
         return found;
+    }
+    function validate_add_rule() {
+        var nameR = /\s/i;
+        if (nameR.test($('input[name=rule_name]', $('#form_add_rule')).val())){
+          $('#incorrect_name_alert').show();
+          $('input[name=rule_name]', $('#form_add_rule')).focus();
+          return false;
+        }
+        return true;
     }
 </script>
 
@@ -574,7 +577,7 @@
             <label class="sr-only">Ссылка</label>
             <input type="hidden" placeholder="Ссылка" name='out_id' class='select-link toSave' data-selected-value='<?=$js_last_offer_id;?>'>
         </div>
-        <button type="submit" class="btn btn-default">Добавить</button>
+        <button type="submit" class="btn btn-default" onclick="">Добавить</button>
         <input type="hidden" name="ajax_act" value="add_rule">
         </form>         
     </div>

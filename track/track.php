@@ -285,13 +285,13 @@
 		if ($key=='track_request'){continue;}
                 if (strtoupper(substr($key, 0, 3)) == 'IN_') {
                     $var = substr($key, 3);
-                    $redirect_link = str_ireplace('%'.$var.'%', $value, $redirect_link);
+                    $redirect_link = str_ireplace('['.$var.']', $value, $redirect_link);
                 }
 		$get_request[]="{$key}={$value}";
 	}
         
-        //Cleaning not used %-params
-        $redirect_link = preg_replace('/(%[a-z\_0-9]+%)/i', '', $redirect_link);
+        //Cleaning not used []-params
+        $redirect_link = preg_replace('/(\[[a-z\_0-9]+\])/i', '', $redirect_link);
 	
 	// Last value, don't add \t
 	$request_string=implode ('&', $get_request);

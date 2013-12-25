@@ -1,4 +1,4 @@
-<?
+<?php
 	set_time_limit(0);
 	
 	$settings_file=dirname (__FILE__).'/cache/settings.php';
@@ -49,22 +49,22 @@
 	
 	if (count ($arr_files)==0){exit();}
 
-				
-	// Init WURFL library for mobile device detection
-	$wurflDir = dirname(__FILE__) . '/lib/wurfl/WURFL';
-	$resourcesDir = dirname(__FILE__) . '/lib/wurfl/resources';	
-	require_once $wurflDir.'/Application.php';
-	$persistenceDir = dirname(__FILE__).'/cache/wurfl-persistence';
-	$cacheDir = dirname(__FILE__).'/cache/wurfl-cache';	
-	$wurflConfig = new WURFL_Configuration_InMemoryConfig();
-	$wurflConfig->wurflFile($resourcesDir.'/wurfl.zip');
-	$wurflConfig->matchMode('accuracy');
-	$wurflConfig->allowReload(true);
-	$wurflConfig->persistence('file', array('dir' => $persistenceDir));
-	$wurflConfig->cache('file', array('dir' => $cacheDir, 'expiration' => 36000));
-	$wurflManagerFactory = new WURFL_WURFLManagerFactory($wurflConfig);
-	$wurflManager = $wurflManagerFactory->create();
-
+        if (extension_loaded('xmlreader')) {
+            // Init WURFL library for mobile device detection
+            $wurflDir = dirname(__FILE__) . '/lib/wurfl/WURFL';
+            $resourcesDir = dirname(__FILE__) . '/lib/wurfl/resources';	
+            require_once $wurflDir.'/Application.php';
+            $persistenceDir = dirname(__FILE__).'/cache/wurfl-persistence';
+            $cacheDir = dirname(__FILE__).'/cache/wurfl-cache';	
+            $wurflConfig = new WURFL_Configuration_InMemoryConfig();
+            $wurflConfig->wurflFile($resourcesDir.'/wurfl.zip');
+            $wurflConfig->matchMode('accuracy');
+            $wurflConfig->allowReload(true);
+            $wurflConfig->persistence('file', array('dir' => $persistenceDir));
+            $wurflConfig->cache('file', array('dir' => $cacheDir, 'expiration' => 36000));
+            $wurflManagerFactory = new WURFL_WURFLManagerFactory($wurflConfig);
+            $wurflManager = $wurflManagerFactory->create();
+        }
 
 	foreach ($arr_files as $cur_file)
 	{
@@ -140,38 +140,40 @@
 		$is_mobile_device=false; $is_tablet=false; $is_phone=false; $brand_name=''; $model_name=''; $model_extra_info=''; 
 		$device_os=''; $device_os_version=''; $device_browser=''; $device_browser_version='';
 
-		$requestingDevice = $wurflManager->getDeviceForUserAgent($click_user_agent);
-	
-		$is_wireless = ($requestingDevice->getCapability('is_wireless_device') == 'true');
-		$is_tablet = ($requestingDevice->getCapability('is_tablet') == 'true');
-		$is_mobile_device = ($is_wireless || $is_tablet);
+                if (extension_loaded('xmlreader')) {
+                    $requestingDevice = $wurflManager->getDeviceForUserAgent($click_user_agent);
 
-		// Use WURFL database info for mobile devices only	
-		if ($is_mobile_device)
-		{	
-			$is_phone = ($requestingDevice->getCapability('can_assign_phone_number') == 'true');
-			
-			$brand_name=$requestingDevice->getCapability('brand_name');
-			$model_name=$requestingDevice->getCapability('model_name');
-			$model_extra_info=$requestingDevice->getCapability('model_extra_info');
-			
-			$device_os = $requestingDevice->getCapability('device_os');
-			$device_os_version = $requestingDevice->getCapability('device_os_version');				
-			
-			$device_browser = $requestingDevice->getCapability('mobile_browser');
-			$device_browser_version = $requestingDevice->getCapability('mobile_browser_version');
-		}
-		else
-		{
-			// Use UAParser to get click info
-			$result = $parser->parse($click_user_agent);
-			
-			$device_browser=$result->ua->family;
-			$device_browser_version=$result->ua->toVersionString;
+                    $is_wireless = ($requestingDevice->getCapability('is_wireless_device') == 'true');
+                    $is_tablet = ($requestingDevice->getCapability('is_tablet') == 'true');
+                    $is_mobile_device = ($is_wireless || $is_tablet);
 
-			$device_os=$result->os->family;
-			$device_os_version=$result->os->toVersionString;
-		}
+                    // Use WURFL database info for mobile devices only	
+                    if ($is_mobile_device)
+                    {	
+                            $is_phone = ($requestingDevice->getCapability('can_assign_phone_number') == 'true');
+
+                            $brand_name=$requestingDevice->getCapability('brand_name');
+                            $model_name=$requestingDevice->getCapability('model_name');
+                            $model_extra_info=$requestingDevice->getCapability('model_extra_info');
+
+                            $device_os = $requestingDevice->getCapability('device_os');
+                            $device_os_version = $requestingDevice->getCapability('device_os_version');				
+
+                            $device_browser = $requestingDevice->getCapability('mobile_browser');
+                            $device_browser_version = $requestingDevice->getCapability('mobile_browser_version');
+                    }
+                    else
+                    {
+                            // Use UAParser to get click info
+                            $result = $parser->parse($click_user_agent);
+
+                            $device_browser=$result->ua->family;
+                            $device_browser_version=$result->ua->toVersionString;
+
+                            $device_os=$result->os->family;
+                            $device_os_version=$result->os->toVersionString;
+                    }
+                }
 		
 		$click_referer=$arr_click_info[3];
 		$click_link_name=$arr_click_info[4];

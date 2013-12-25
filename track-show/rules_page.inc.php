@@ -265,8 +265,8 @@
         return found;
     }
     function validate_add_rule() {
-        var nameR = /\s/i;
-        if (nameR.test($('input[name=rule_name]', $('#form_add_rule')).val())){
+        var nameR = /^[a-z0-9\-\_]+$/i;
+        if (!nameR.test($('input[name=rule_name]', $('#form_add_rule')).val())){
           $('#incorrect_name_alert').show();
           $('input[name=rule_name]', $('#form_add_rule')).focus();
           return false;

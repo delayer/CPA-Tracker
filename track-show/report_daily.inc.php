@@ -36,7 +36,7 @@ $(document).ready(function() {
 } );
 </script>
 
-<?
+<?php
 
 	$main_type=$subtype;
 	$group_by=$subtype;
@@ -179,15 +179,15 @@ echo "<table class='table table-condensed table-striped table-bordered dataTable
 		echo '<td>'.get_clicks_report_element($row_total_data['clicks'], $row_total_data['leads'], $row_total_data['sales'], $row_total_data['saleleads']).'</td>';
 		echo "</tr>";
 	}
-		echo "<tr>";
-		echo "<td><strong><i style='display:none;'>&#148257;</i>Итого</strong></td>";
+		echo "</tbody><tfoot><tr>";
+		echo "<th><strong><i style='display:none;'>&#148257;</i>Итого</strong></th>";
 		foreach ($arr_dates as $cur_date)
 		{
-			echo '<td>'.get_clicks_report_element($column_total_data[$cur_date]['clicks'], $column_total_data[$cur_date]['leads'], $column_total_data[$cur_date]['sales'], $column_total_data[$cur_date]['saleleads']).'</td>';
+			echo '<th>'.get_clicks_report_element($column_total_data[$cur_date]['clicks'], $column_total_data[$cur_date]['leads'], $column_total_data[$cur_date]['sales'], $column_total_data[$cur_date]['saleleads']).'</th>';
 		}	
-		echo '<td>'.get_clicks_report_element($table_total_data['clicks'], $table_total_data['leads'], $table_total_data['sales'], $table_total_data['saleleads']).'</td>';
-		echo "</tr>";
-	echo "</tbody>";
+		echo '<th>'.get_clicks_report_element($table_total_data['clicks'], $table_total_data['leads'], $table_total_data['sales'], $table_total_data['saleleads']).'</th>';
+		echo "</tr></tfoot>";
+	echo "";
 echo "</table>";
 echo "</div>";
 echo "</div>";

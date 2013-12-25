@@ -24,7 +24,7 @@ $(document).ready(function() {
 } );
 </script>
 
-<?	
+<?php	
         $from=$_REQUEST['from'];
 	$to=$_REQUEST['to'];
 
@@ -210,7 +210,7 @@ $(document).ready(function() {
 </div> <!-- ./col-md-12 -->
 </div> <!-- ./row -->
 <div class="row">&nbsp;</div>
-<?
+<?php
 		echo "<div class='row'>";
 		echo "<div class='col-md-12'>";
 		echo "<table class='table table-condensed table-striped table-bordered dataTableT'>";	

@@ -53,7 +53,8 @@
                 var rule_table = $('#rule' + rule_id + ' tbody');
                 rule_table.prepend(template);
                 rule_table.find('input.select-geo_country').select2({data: {results: dictionary_countries}, width: '250px', containerCssClass: 'form-control select2 noborder-select2'});
-                rule_table.find('input.select-link').select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});
+                rule_table.find('input.select-link').select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});               
+                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
             $('.addlang').on("click", function(e) {
                 e.preventDefault();
@@ -62,7 +63,8 @@
                 var rule_table = $('#rule' + rule_id + ' tbody');
                 rule_table.prepend(template);
                 rule_table.find('input.select-lang').select2({data: {results: dictionary_langs}, width: '250px', containerCssClass: 'form-control select2 noborder-select2'});
-                rule_table.find('input.select-link').select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});
+                rule_table.find('input.select-link').select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});               
+                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
             $('.addrefer').on("click", function(e) {
                 e.preventDefault();
@@ -70,7 +72,8 @@
                 var rule_id = $(this).parent().parent().attr('id');
                 var rule_table = $('#rule' + rule_id + ' tbody');
                 rule_table.prepend(template);
-                rule_table.find('input.select-link').select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});
+                rule_table.find('input.select-link').select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});               
+                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;           
             });
              $('.addcity').on("click", function(e) {
                 e.preventDefault();
@@ -79,7 +82,8 @@
                 var rule_table =  $('#rule' + rule_id + ' tbody');
                 rule_table.prepend(template);
                 var tr = rule_table.find('tr').first();
-                prepareTextInput(tr,'city','Город');
+                prepareTextInput(tr,'city','Город');               
+                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
              $('.addregion').on("click", function(e) {
                 e.preventDefault();
@@ -88,7 +92,8 @@
                 var rule_table =  $('#rule' + rule_id + ' tbody');
                 rule_table.prepend(template);
                 var tr = rule_table.find('tr').first();
-                prepareTextInput(tr,'region','Регион');
+                prepareTextInput(tr,'region','Регион');               
+                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
             $('.addprovider').on("click", function(e) {
                 e.preventDefault();
@@ -97,7 +102,8 @@
                 var rule_table =  $('#rule' + rule_id + ' tbody');
                 rule_table.prepend(template);
                 var tr = rule_table.find('tr').first();
-                prepareTextInput(tr,'provider','Провайдер');
+                prepareTextInput(tr,'provider','Провайдер');               
+                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
             $('.addip').on("click", function(e) {
                 e.preventDefault();
@@ -106,7 +112,8 @@
                 var rule_table =  $('#rule' + rule_id + ' tbody');
                 rule_table.prepend(template);
                 var tr = rule_table.find('tr').first();
-                prepareTextInput(tr,'ip','IP адрес');
+                prepareTextInput(tr,'ip','IP адрес');               
+                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
             
             // buttons }//  

@@ -115,6 +115,46 @@
                 prepareTextInput(tr,'ip','IP адрес');               
                 rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
+             $('.addos').on("click", function(e) {
+                e.preventDefault();
+                var template = $('#referTemplate').html();
+                var rule_id = $(this).parent().parent().attr('id');
+                var rule_table =  $('#rule' + rule_id + ' tbody');
+                rule_table.prepend(template);
+                var tr = rule_table.find('tr').first();
+                prepareTextInput(tr,'os','ОС');               
+                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
+            }); $('.addplatform').on("click", function(e) {
+                e.preventDefault();
+                var template = $('#referTemplate').html();
+                var rule_id = $(this).parent().parent().attr('id');
+                var rule_table =  $('#rule' + rule_id + ' tbody');
+                rule_table.prepend(template);
+                var tr = rule_table.find('tr').first();
+                prepareTextInput(tr,'platform','Платформа');               
+                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
+            });
+             $('.addbrowser').on("click", function(e) {
+                e.preventDefault();
+                var template = $('#referTemplate').html();
+                var rule_id = $(this).parent().parent().attr('id');
+                var rule_table =  $('#rule' + rule_id + ' tbody');
+                rule_table.prepend(template);
+                var tr = rule_table.find('tr').first();
+                prepareTextInput(tr,'browser','Браузер');               
+                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
+            });
+             $('.addagent').on("click", function(e) {
+                e.preventDefault();
+                var template = $('#referTemplate').html();
+                var rule_id = $(this).parent().parent().attr('id');
+                var rule_table =  $('#rule' + rule_id + ' tbody');
+                rule_table.prepend(template);
+                var tr = rule_table.find('tr').first();
+                prepareTextInput(tr,'agent','User-agent');               
+                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
+            });
+            
             
             // buttons }//  
             
@@ -548,13 +588,11 @@
                                     <li><a class="addregion" href="#">Регион</a></li>
                                     <li><a class="addprovider" href="#">Провайдер</a></li>
                                     <li><a class="addip" href="#">IP адрес</a></li>
-                                    <li><a class="addbrowser" href="#">Название браузера</a></li>
-                                    <li><a class="addbrowserversion" href="#">Версия браузера</a></li>
-                                    <li><a class="addagen" href="#">User-agent</a></li>
-                                    <li><a class="addmobile" href="#">Мобильное устройство</a></li>
-                                    <li><a class="addos" href="#">Операционная система</a></li>
-                                    <li><a class="addplatform" href="#">Платформа</a></li>
-                                    <li><a class="addop" href="#">Сотовый оператор</a></li>
+                                    <li><a class="addos" href="#">ОC</a></li>
+                                    <li><a class="addplatform" href="#">Платформа</a></li>                                    
+                                    <li><a class="addbrowser" href="#">Браузер</a></li> 
+                                    
+                                    <li><a class="addagent" href="#">User-agent</a></li>
                                     <li class="divider"></li>
                                     <li><a href="#">Параметр в GET-запросе</a></li>
                                 </ul>                            

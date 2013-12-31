@@ -1348,6 +1348,18 @@ function show_country_select($selected='')
             case 'ip':
                 return 1;
                 break;
+            case 'os':
+                return 1;
+                break;
+            case 'platform':
+                return 1;
+                break;
+            case 'browser':
+                return 1;
+                break;
+             case 'agent':
+                return 1;
+                break;
 
             default:
                 return null;

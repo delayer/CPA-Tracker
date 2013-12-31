@@ -71,8 +71,8 @@ $(document).ready(function() {
                          $to=date ('Y-m-d', strtotime('13.'.$to));
 		}
 	}
-            $from=date ('Y-m-d', strtotime('first day of', strtotime($from)));
-            $to=date ('Y-m-d', strtotime('last day of ', strtotime($to)));
+           $from=date ('Y-m-01',  strtotime($from));
+           $to=date ('Y-m-t',  strtotime($to));
                                 
         
 	$arr_months=getMonthsBetween($from, $to);

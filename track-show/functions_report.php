@@ -103,6 +103,42 @@
 
 				$time_filter="CONVERT_TZ(date_add, '+00:00', '"._str($timezone_shift)."') BETWEEN '"._str($from)." 00:00:00' AND '"._str($to)." 23:59:59'";	
 			break;
+			case 'monthly':
+				$time_column_alias="date_add_day";
+				$time_column="DATE(CONVERT_TZ(date_add, '+00:00', '"._str($timezone_shift)."')) as date_add_day";
+				$group_time_column="DATE(CONVERT_TZ(date_add, '+00:00', '"._str($timezone_shift)."'))";
+				$order_time_column="date_add_day";
+
+				$time_filter="`date_add_day` >= DATE_SUB( DATE(CONVERT_TZ(NOW(), '+00:00', '"._str($timezone_shift)."')) , INTERVAL 7 DAY)";
+
+				if ($from=='')
+				{
+					if ($to=='')
+					{
+						$from=get_current_day('-6 months');
+						$to=get_current_day();
+					}
+					else
+					{
+						$from=date ('Y-m-d', strtotime('-6 months', strtotime($to)));
+					}
+				}
+				else
+				{
+					if ($to=='')
+					{
+						$to=date ('Y-m-d', strtotime('+6 months', strtotime($from)));
+					}
+					else
+					{
+						 $from=date ('Y-m-d',  strtotime('13.'.$from));
+                                              $to=date ('Y-m-d', strtotime('13.'.$to));
+					}
+				}
+           $from=date ('Y-m-01',  strtotime($from));
+           $to=date ('Y-m-t',  strtotime($to));
+				$time_filter="CONVERT_TZ(date_add, '+00:00', '"._str($timezone_shift)."') BETWEEN '"._str($from)." 00:00:00' AND '"._str($to)." 23:59:59'";	
+			break;
 
 			default: 
 				$time_column_alias="date_add_day";
@@ -139,7 +175,7 @@
 				ORDER BY 
 					`"._str($main_column)."`, 
 					{$order_time_column} ASC
-					";
+					"; 
 		}
 		else
 		{
@@ -272,7 +308,7 @@
 	}
 
 	function get_clicks_report_element ($clicks_data, $leads_data, $sales_data, $saleleads_data)
-	{
+	{ 
 		if ((isset($clicks_data)) || (isset($leads_data)) || (isset($sales_data)) || isset($saleleads_data))
 		{
 			$clicks_count=array_sum (array($clicks_data['cnt'], $leads_data['cnt'], $sales_data['cnt'], $saleleads_data['cnt']));

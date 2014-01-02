@@ -75,8 +75,8 @@
 				foreach ($arr_items as $row)
 				{
                                     if ($row['parent_id']>0)
-                                    {
-                                     $arr_rules[$arr_items[$row['parent_id']]['type']][$arr_items[$row['parent_id']]['value']]=array('rule_id'=>$rule_id, 'out_id'=>$row['value']);
+                                    {   
+                                     $arr_rules[$arr_items[$row['parent_id']]['type']][]=array('value'=>$arr_items[$row['parent_id']]['value'],'rule_id'=>$rule_id, 'out_id'=>$row['value']);
                                     }
 				}
 				$str_rules=serialize($arr_rules);
@@ -235,16 +235,31 @@
           $user_params['lang'] = $user_lang;
           $user_params['referer'] =  $_SERVER['HTTP_REFERER'];
           $user_params['geo_country'] = $cur_country;
+          $relevant_params = array();
+          foreach ($arr_rules['geo_country'] as $key => $value) {
+              if($value['value']=='default'){
+                  $rule_id=$value['rule_id'];
+                  $out_id=$value['out_id']; 
+                  break;
+              }
+          }
           
-          $rule_id=$arr_rules['geo_country']['default']['rule_id'];
-          $out_id=$arr_rules['geo_country']['default']['out_id']; 
+          $flag = false;
           foreach ($arr_rules as $key  => $value) {
-            if(isset($value[$user_params[$key]])){
-               $rule_id =  $value[$user_params[$key]]['rule_id'];
-               $out_id =  $value[$user_params[$key]]['out_id'];
-               break;
-            }
+              foreach ($value as $internal_key => $internal_value) {
+                  if($user_params[$key]==$internal_value['value']){ 
+                    $relevant_params[] = $internal_value;
+                    $flag = true;
+                  }
+              } 
+              if($flag){break;}
           } 
+          $relevant_count = count($relevant_params); 
+          if($relevant_count){
+              $relevant_arr_key = rand(0, $relevant_count-1);
+              $rule_id = $relevant_params[$relevant_arr_key]['rule_id'];
+              $out_id = $relevant_params[$relevant_arr_key]['out_id'];                  
+          }
 	}
 	$redirect_link=str_replace('%SUBID%', $subid, get_out_link ($out_id));
 

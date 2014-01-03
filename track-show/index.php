@@ -145,7 +145,8 @@
 
 			$arr_offers=get_rules_offers();
 			$condition_types=array('geo_country'=>'Страна','lang'=>'Язык','referer'=>'Реферер','city'=>'Город','region'=>'Регион'
-                            ,'provider'=>'Провайдер','ip'=>'IP адрес');                        
+                            ,'provider'=>'Провайдер','ip'=>'IP адрес','os'=>'ОС','platform'=>'Платформа','browser'=>'Браузер',
+                            'agent'=>'User-agent');                        
 			$arr_rules=get_rules_list($arr_offers);
 			$arr=array();
 			$i=0;

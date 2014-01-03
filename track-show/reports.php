@@ -44,6 +44,13 @@ switch ($_REQUEST['type']) {
         $fromF = date('d.m.Y', strtotime($from));
         $toF = date('d.m.Y', strtotime($to));
         $value_date_range = "$fromF - $toF";
+        $days_active = '';
+        $month_active = '';
+        if($_GET['type']=='monthly_stats'){$month_active = 'active';}else{$days_active='active';}
+        echo '<div class="btn-group">
+          <a href="?act=reports&type=daily_stats&subtype='.$_GET['subtype'].'" type="button" class="btn btn-default '.$days_active.'">По дням</a>
+          <a href="?act=reports&type=monthly_stats&subtype='.$_GET['subtype'].'" type="button" class="btn btn-default '.$month_active.'">По месяцам</a>
+        </div>';
         echo '<form method="post"  name="datachangeform">
                 <div style="width: 229px;float: right;position: relative;top: -5px;">
                     <div class="input-group">                          
@@ -59,7 +66,71 @@ switch ($_REQUEST['type']) {
         // Show report data
         include "report_daily.inc.php";
         break;
+     case 'monthly_stats':
+            // Show report name
+            $subtype = $_REQUEST['subtype'];
+            switch ($subtype) {
+                case 'out_id':
+                    $report_name = "Переходы по ссылкам за ";
+                    $report_main_column_name = "Ссылка";
+                    $empty_name = "Без ссылки";
+                    break;
 
+                case 'source_name':
+                    $report_name = "Переходы по источникам за ";
+                    $report_main_column_name = "Источник";
+                    $empty_name = "Без источника";
+                    break;
+            }
+
+            $from = $_REQUEST['from'];
+            $to = $_REQUEST['to'];
+            if ($from == '') {
+                if ($to == '') {
+                    $from = get_current_day('-6 months');
+                    $to = get_current_day();
+                } else {
+                    $from = date('d.m.Y', strtotime('-6 months', strtotime($to)));
+                }
+            } else {
+                if ($to == '') {
+                    $to = date('d.m.Y', strtotime('+6 months', strtotime($from)));
+                } else {
+                     $from=date ('Y-m-d',  strtotime('13.'.$from));
+                         $to=date ('Y-m-d', strtotime('13.'.$to));
+                }
+            }
+            $from=date ('Y-m-01',  strtotime($from));
+            $to=date ('Y-m-t',  strtotime($to));
+            $fromF = date('m.Y', strtotime($from));
+            $toF = date('m.Y', strtotime($to));
+                
+            $days_active = '';
+            $month_active = '';
+            if($_GET['type']=='monthly_stats'){$month_active = 'active';}else{$days_active='active';}
+            echo '<div class="btn-group">
+              <a href="?act=reports&type=daily_stats&subtype='.$_GET['subtype'].'" type="button" class="btn btn-default '.$days_active.'">По дням</a>
+              <a href="?act=reports&type=monthly_stats&subtype='.$_GET['subtype'].'" type="button" class="btn btn-default '.$month_active.'">По месяцам</a>
+            </div>';
+            echo '<form method="post"  name="datachangeform">
+             
+                    <div style=" width: 240px; float: right;position: relative;top: -5px;">
+                        <div class="input-group">                          
+                              <div class="input-group-addon "><i class="fa fa-calendar"></i></div>
+                      
+                              <input style="display: inline; float:left; width: 80px;   border-right: 0;" id="dpMonthsF"   type="text"  data-date="102/2012" data-date-format="mm.yyyy" data-date-viewmode="years" data-date-minviewmode="months"  class="form-control"  name="from" value="' . $fromF . '">
+                              <input style="display: inline; float:left; width: 80px;  border-right: 0;  border-top-right-radius: 0; border-bottom-right-radius: 0;" id="dpMonthsT"   type="text"  data-date="102/2012" data-date-format="mm.yyyy" data-date-viewmode="years" data-date-minviewmode="months" type="text" class="form-control"   name="to" value="' . $toF . '">
+                              <button type="button" style="width:40px;" class="btn btn-default form-control" onclick="$(\'[name = datachangeform]\').submit();"><i class="glyphicon glyphicon-search"></i></button>  
+                        </div>
+
+				 
+                    </div>
+                    <div><h3>' . $report_name . '</h3></div>
+                  </form>';
+
+            // Show report data
+            include "report_monthly.inc.php";
+            break;
     case 'daily_grouped':
         // Show report data
         include "report_daily_grouped.inc.php";
@@ -75,7 +146,12 @@ switch ($_REQUEST['type']) {
 <link href="lib/daterangepicker/daterangepicker-bs3.css" rel="stylesheet"/>
 <script src="lib/daterangepicker/moment.min.js"></script>
 <script src="lib/daterangepicker/daterangepicker.js"></script>
+<link href="lib/datepicker/css/datepicker.css" rel="stylesheet"/>
+<script type="text/javascript" src="lib/datepicker/js/bootstrap-datepicker.js"></script>
+ 
 <script>
+    $('#dpMonthsF').datepicker();
+    $('#dpMonthsT').datepicker();
     $('#putdate_range').daterangepicker({format: 'DD.MM.YYYY', locale: {applyLabel: "Выбрать", cancelLabel: "<i class='fa fa-times' style='color:gray'></i>", fromLabel: "От", toLabel: "До", customRangeLabel: 'Свой интервал', daysOfWeek: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
         }});
     jQuery.fn.dataTableExt.oSort['click-data-asc'] = function(a, b) {

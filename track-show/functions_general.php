@@ -383,7 +383,46 @@
 	        }
 	    }
 	    return $aryRange;
-	}	
+	}
+        function getMonthsBetween ($strDateFrom, $strDateTo)
+	{  
+		$aryRange=array();
+	
+	    $iDateFrom=mktime(1,0,0,substr($strDateFrom,5,2),     substr($strDateFrom,8,2),substr($strDateFrom,0,4));
+	    $iDateTo=mktime(1,0,0,substr($strDateTo,5,2),     substr($strDateTo,8,2),substr($strDateTo,0,4));
+	
+	    if ($iDateTo>=$iDateFrom)
+	    {
+	       
+                $date = explode('-', $strDateFrom);
+                $begin_year = $date[0];
+                $begin_month = $date[1];
+                $date = explode('-', $strDateTo);
+                $end_year = $date[0];
+                $end_month = $date[1];
+                for ($cur_year = $begin_year; $cur_year <= $end_year; $cur_year++)
+                {
+                    if ($cur_year == $end_year)
+                        $max_month = $end_month;
+                    else
+                        $max_month = 12;
+                    //
+                    if ($cur_year == $begin_year)
+                        $cur_month = $begin_month;
+                    else
+                        $cur_month = 1;        
+                    for ($cur_month; $cur_month <= $max_month; $cur_month++)
+                    {
+                        $item = ((strlen($cur_month)<2)? '0'.$cur_month : $cur_month).'.'.$cur_year;
+                        array_push($aryRange,$item);
+                    }
+                }
+
+
+                        
+	    }
+	    return $aryRange;
+	}
 	
 	// Time in relative format
 	function get_relative_mysql_time($timediff)
@@ -1292,6 +1331,18 @@ function show_country_select($selected='')
                 return 1;
                 break;
             case 'ip':
+                return 1;
+                break;
+            case 'os':
+                return 1;
+                break;
+            case 'platform':
+                return 1;
+                break;
+            case 'browser':
+                return 1;
+                break;
+             case 'agent':
                 return 1;
                 break;
 

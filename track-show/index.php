@@ -294,6 +294,12 @@
 			delete_sale ($click_id, $conversion_id, $type);
 			exit();
 		break;
+            
+                case 'get_sales':
+                    $sales = get_sales($_POST['sType'], $_POST['sStart'], $_POST['sEnd']);
+                    echo json_encode($sales);
+                    exit;
+                break;
 		
 		case 'delete_rule': 
 			$rule_id=$_REQUEST['id'];

@@ -708,7 +708,8 @@
 	        		switch ($_REQUEST['type'])
 	        		{
 	        			case 'sales': 
-		        			$page_content="sales.php"; 
+                                            $page_content = 'sales.php';
+		        			 
 	        			break;
 	            		
 	            		default:

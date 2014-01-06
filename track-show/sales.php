@@ -2,82 +2,135 @@
 if (!$include_flag) {
     exit();
 }
+
+$from = $_REQUEST['sStart'];
+$to = $_REQUEST['sEnd'];
+$total = array();
+$month = false;
+if ($_REQUEST['subtype']=='monthly') {
+    if ($from == '') {
+        if ($to == '') {
+            $from = get_current_day('-6 days');
+            $to = get_current_day();
+        } else {
+            $from = date('Y-m-d', strtotime('-6 month', strtotime($to)));
+        }
+    } else {
+        if ($to == '') {
+            $to = date('Y-m-d', strtotime('+6 month', strtotime($from)));
+        }
+    }
+    $days = getMonthsBetween($from, $to);
+    
+    $month_active = 'active';
+    $month = true;
+} else {
+    if ($from == '') {
+        if ($to == '') {
+            $from = get_current_day('-6 days');
+            $to = get_current_day();
+        } else {
+            $from = date('Y-m-d', strtotime('-6 days', strtotime($to)));
+        }
+    } else {
+        if ($to == '') {
+            $to = date('Y-m-d', strtotime('+6 days', strtotime($from)));
+        }
+    }
+    $days = getDatesBetween($from, $to);
+    
+    $days_active='active';
+    
+}
+
+$sales = get_sales($from, $to, $days, $month);
+krsort($sales);
 ?>
-<!--<div class="row">
-        <form class="form-inline" role="form" method="post">
-                <input type='hidden' name='act' value='reports'>
-                <input type='hidden' name='type' value='sales'>
-                <input type='hidden' name='sales' value='sales'>
-
-                <div class="form-group col-xs-4">
-                        <input type="text" class="form-control" name="filter_by" placeholder="Поиск по SubID" value="<?= _e($_REQUEST['filter_by']); ?>">
-                </div>
-
-                <button type="submit" class="btn btn-default">Найти</button>
-        </form>
-</div>-->
-<div class="jumbotron" style="padding: 10px;"> 
+    <div class="row">
+        <div class="col-md-4">
+            <div class="btn-group">
+                <a href="?act=reports&type=sales&subtype=daily" type="button" class="btn btn-default <?=$days_active?>">По дням</a>
+                <a href="?act=reports&type=sales&subtype=monthly" type="button" class="btn btn-default <?=$month_active?>">По месяцам</a>
+            </div>
+        </div>
+    </div>
     <div class='row'>
         <div class="col-md-4"><h3>Продажи по дням:</h3></div>
         <div id="per_day_range" class="pull-right">
             <span class="glyphicon glyphicon-calendar"></span>
-            <span id="cur_day_range"><?php echo date("d.m.Y", strtotime('-30 day')); ?> - <?php echo date("d.m.Y"); ?></span> <b class="caret"></b>
+            <span id="cur_day_range"><?php echo date(($month)?'m.Y':'d.m.Y', strtotime($from)); ?> - <?php echo date(($month)?'m.Y':'d.m.Y', strtotime($to)); ?></span> <b class="caret"></b>
+            <form action="index.php?act=reports&type=sales&subtype=<?=($month)?'monthly':'daily'?>" method="POST">
+                <input type="hidden" name="sStart" id="sStart" value="">
+                <input type="hidden" name="sEnd" id="sEnd" value="">
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="chart_div" style="width: 900px; height: 500px;"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class='table table-condensed table-striped table-bordered dataTableT'>
+                <thead>
+                    <tr>
+                        <th>Источник</th>
+                        <?php foreach ($days as $day) : ?>
+                            <th><?= (!$month)?date('d.m', strtotime($day)):$day; ?></th>
+                        <?php endforeach; ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (count($sales) == 0 ) :?>
+                    <tr>
+                        <td colspan="<?=count($days)+1;?>">
+                            За выбранный период продаж не было.
+                        </td>
+                    </tr>
+                    <?php else : ?>
+                        <?php foreach ($sales as $sale => $d) :?>
+                            <tr>
+                                <td><?php if($sale == '_') echo ' '; else echo $sale;?></td>
+                                <?php foreach ($days as $day) : ?>
+                                    <?php $dkey = (!$month)?date('d.m', strtotime($day)):$day;?>
+                                    <td>
+                                        <?php if (isset($d[$dkey])):?>
+                                            <?=$d[$dkey];?>
+                                            <?php $total[$dkey]+=$d[$dkey];?>
+                                        <?php else : ?>
+                                            0
+                                        <?php endif; ?>
+                                    </td>
+                                <?php endforeach; ?>
+                            </tr>
+                        <?php endforeach;?>
+                    <?php endif; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Итого:</th>
+                        <?php foreach ($days as $day) : ?>
+                            <th><?= intval($total[(!$month)?date('d.m', strtotime($day)):$day]); ?></th>
+                        <?php endforeach; ?>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
 
-</div>
-<?php
-//	echo "<div class='row'>";
-//	echo "<div class='col-md-12'>";
-//	echo "<table class='table table-striped table-bordered table-condensed' style='width:600px;'>";
-//		echo "<thead>";
-//		echo "<tr><th>Дата</th><th>Ссылка</th><th>Сумма</th><th>Страна</th><th>Источник</th><th>Кампания</th><th>Реферер</th><th>SubID</th></tr>";
-//		echo "</thead>";
-//		echo "<tbody>";	
-//			foreach ($arr_sales as $cur)
-//			{
-//
-//				$cur_referrer=$cur['referer'];
-//				if (strpos($cur_referrer, 'http://')===0){$cur_referrer=substr($cur_referrer, strlen('http://'));}
-//				if (strpos($cur_referrer, 'https://')===0){$cur_referrer=substr($cur_referrer, strlen('https://'));}
-//				if (strpos($cur_referrer, '/')===(strlen($cur_referrer)-1)){$cur_referrer=substr($cur_referrer, 0, -1);}
-//				
-//				if (strlen($cur_referrer)>40)
-//				{
-//					$cur_referrer=substr($cur_referrer,0,38).'…';
-//				}
-//
-//				echo "<tr class='sales_row'>";			
-//					echo "<td nowrap>".mysqldate2short($cur['date_add'])."</td>
-//							<td nowrap>"._e($cur['offer_name']);
-//							echo "<div class='btn-group sales_menu'>
-//								<button class='btn btn-default btn-xs dropdown-toggle' data-toggle='dropdown'><span class='caret'></span></button>
-//								<ul class='dropdown-menu'>
-//									<li><a href='#' style='color:red;' onclick=\"return delete_sale(this, '"._e($cur['type'])."', '"._e($cur['click_id'])."', '"._e($cur['conversion_id'])."')\">Удалить продажу</a></li>
-//								</ul>
-//							</div>";							
-//							echo "</td>
-//							<td>"._e(round($cur['profit'], 3))."</td>
-//							<td>"._e($cur['country'])."</td>
-//							<td>"._e($cur['source_name'])."</td>
-//							<td>"._e($cur['campaign_name'])." "._e($cur['ads_name'])."</td>
-//							<td><a target='_blank' href='http://anonym.to/?"._e($cur['referer'])."'>"._e($cur_referrer)."</a></td>
-//					<td>"._e($cur['subid'])."</a>";
-//					echo "</td>";
-//				echo "</tr>";				
-//			}
-//		echo "</tbody>";
-//	echo "</table>";
-//	echo "</div> <!-- ./col-md-12 -->";
-//	echo "</div> <!-- ./row -->";
-?>
 <link href="lib/daterangepicker/daterangepicker-bs3.css" rel="stylesheet"/>
 <script src="lib/daterangepicker/moment.min.js"></script>
 <script src="lib/daterangepicker/daterangepicker.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script>
     $('#per_day_range').daterangepicker(
             {
+                <?php if ($_REQUEST['subtype']=='monthly') :?>
+                format: 'MM.YYYY',
+                <?php else : ?>    
                 format: 'DD.MM.YYYY',
+                <?php endif; ?>
                 locale: {
                     applyLabel: "Выбрать",
                     cancelLabel: "<i class='fa fa-times' style='color:gray'></i>",
@@ -87,35 +140,28 @@ if (!$include_flag) {
                     daysOfWeek: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
                 },
                 ranges: {
+                    <?php if ($_REQUEST['subtype']=='monthly') :?>
+                    'Последние 3 мес': [moment().subtract('month', 3).startOf('month').startOf('month')],
+                    'Последние 6 мес': [moment().subtract('month', 6).startOf('month'), moment()],
+                    'Последний год': [moment().subtract('month', 12).startOf('month'), moment()],
+                    'Последние 2 года': [moment().subtract('month', 24).startOf('month'), moment()],
+                    <?php else : ?>
                     'Сегодня': [moment(), moment()],
                     'Вчера': [moment().subtract('days', 1), moment().subtract('days', 1)],
                     'Последние 7 дней': [moment().subtract('days', 6), moment()],
                     'Последние 30 дней': [moment().subtract('days', 29), moment()],
                     'Ткущий месяц': [moment().startOf('month'), moment().endOf('month')],
                     'Прошлый месяц': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+                    <?php endif; ?>
                 }
             },
     function(start, end) {
-        $('#cur_day_range').text(start.format('DD.MM.YYYY') + ' - ' + end.format('DD.MM.YYYY'));
-        get_sales('by_day', start.format('DD.MM.YYYY'), end.format('DD.MM.YYYY'));
+        $('#cur_day_range').text(start.format(<?=($month)?"'MM.YYYY'":"'DD.MM.YYYY'";?>) + ' - ' + end.format(<?=($month)?"'MM.YYYY'":"'DD.MM.YYYY'";?>));
+        $('#sStart').val(start.format('YYYY-MM-DD'));
+        $('#sEnd').val(end.format('YYYY-MM-DD'));
+        $('#per_day_range form').submit();
     }
     );
-
-
-    function get_sales(type, start, end) {
-        $.post(
-            'index.php?ajax_act=get_sales',
-            {
-                sType: type,
-                sStart: start,
-                sEnd: end
-            },
-            'json'
-        ).done(function(data){
-            console.log(data);
-        });
-    
-    }
 
 
     function delete_sale(obj, type, click_id, conversion_id)
@@ -131,6 +177,29 @@ if (!$include_flag) {
 
         return false;
     }
+    
+    google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          [<?php if ($_REQUEST['subtype']=='monthly') echo "'Месяц'"; else echo "'День'";?>, 'Продажи'],
+          <?php $i = 0;?>
+          <?php foreach ($days as $day) : ?>
+              <?php $i++;?>
+              <?php $dkey = (!$month)?date('d.m', strtotime($day)):$day; ?>
+              <?= '[\''.$dkey.'\', '. intval($total[$dkey]).']'; ?><?php if ($i < count($days)) echo ',';?>
+                
+          <?php endforeach; ?>
+        ]);
+
+        var options = {
+          title: 'Отчет продаж',
+          hAxis: {title: 'Количество'}
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
 </script>
 
 <style>
@@ -151,5 +220,5 @@ if (!$include_flag) {
         margin-top: 12px;
         margin-right: 20px;
     }
-    
+
 </style>

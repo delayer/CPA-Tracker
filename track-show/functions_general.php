@@ -255,11 +255,6 @@
 		}
 		return $arr_ads;
 	}	
-	
-	function get_sales($start, $end) {
-            
-            $r = mysql_query('SELECT * FROM `tbl_conversions` ');
-        }
 
 	function mysqldate2string($date)
 	{

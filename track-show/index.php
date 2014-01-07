@@ -1,7 +1,9 @@
 <?php
 	ob_start();
 	set_time_limit(0);
-	error_reporting(0);
+//	error_reporting(0);
+error_reporting(E_ALL);
+ini_set('display_errors', 'on');
 	ini_set('display_errors', 0);
 	
 	$include_flag=true;
@@ -114,7 +116,7 @@
 	include "../track/connect.php";
 
 	$page_sidebar_allowed=array('sidebar-left-links.inc.php', 'sidebar-left-reports.inc.php');
-	$page_content_allowed=array('reports.php', 'sales.php', 'stats-flow.php','links_page.inc.php','rules_page.inc.php', 'import_page.inc.php', 'support_page.inc.php', 'costs_page.inc.php', 'import_page_postback.inc.php', 'timezone_settings_page.inc.php', 'login.php');
+	$page_content_allowed=array('reports.php', 'sales.php', 'stats-flow.php','links_page.inc.php','rules_page.inc.php', 'import_page.inc.php', 'support_page.inc.php', 'costs_page.inc.php', 'import_page_postback.inc.php', 'timezone_settings_page.inc.php', 'login.php', 'salesreport.php');
 
 	// Authentification
 	if ($_REQUEST['page']!='login')
@@ -711,22 +713,25 @@
                                             $page_content = 'sales.php';
 		        			 
 	        			break;
+                                        case 'salesreport':
+                                            $page_content = 'salesreport.php';
+                                            break;
 	            		
-	            		default:
-	            			$page_content="reports.php"; 
-	            		break;
+                                        default:
+                                            $page_content="reports.php"; 
+                                            break;
 	        		}
 	        		$page_sidebar='sidebar-left-reports.inc.php';
-					include "templates/main.inc.php";
-					exit();		        		
-	        	break;
+                                include "templates/main.inc.php";
+                                exit();		        		
+                        break;
 
-				case 'register_admin':
-		        	$page_top_menu="top_menu_empty.php";
-		        	$sidebar_inc="left-sidebar-empty.php";
-	            	$page_content="register.php"; 
-	            	exit();
-	        	break;
+                        case 'register_admin':
+                                $page_top_menu="top_menu_empty.php";
+                                $sidebar_inc="left-sidebar-empty.php";
+                                $page_content="register.php"; 
+                                exit();
+                        break;
 
 	        	default:
 	            	$filter='';

@@ -255,6 +255,26 @@
 		}
 		return $arr_ads;
 	}	
+        
+        function get_last_sales($filter_by='')
+	{
+		$timezone_shift=get_current_timezone_shift();
+		$arr_sales=array();
+		$filter_by_str='';
+		if ($filter_by!='')
+		{
+			$filter_by_str=" and tbl_conversions.subid='"._str($filter_by)."' "; 
+		}
+		
+		$sql="select tbl_conversions.id, tbl_conversions.type, tbl_conversions.network, tbl_conversions.subid, tbl_conversions.profit, CONVERT_TZ(tbl_conversions.date_add, '+00:00', '"._str($timezone_shift)."') as date_add, tbl_conversions.status, tbl_conversions.id as conversion_id, tbl_clicks.id as click_id, tbl_clicks.country, tbl_clicks.source_name, tbl_clicks.campaign_name, tbl_clicks.ads_name, tbl_clicks.referer, tbl_offers.offer_name from tbl_conversions left join tbl_clicks on tbl_conversions.subid=tbl_clicks.subid left join tbl_offers on tbl_offers.id=tbl_clicks.out_id where tbl_conversions.status=0 {$filter_by_str} order by tbl_conversions.date_add desc limit 50";
+		$result=mysql_query($sql);
+
+		while ($row=mysql_fetch_assoc($result))
+		{
+			$arr_sales[]=$row;
+		}
+		return $arr_sales;
+	}
 
 	function mysqldate2string($date)
 	{

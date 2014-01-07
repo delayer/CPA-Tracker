@@ -67,7 +67,9 @@ krsort($sales);
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div id="chart_div" style="width: 900px; height: 500px;"></div>
+            <?php if (is_array($sales)) :?>
+            <div id="chart_div"></div>
+            <?php endif;?>
         </div>
     </div>
     <div class="row">
@@ -82,9 +84,9 @@ krsort($sales);
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (count($sales) == 0 ) :?>
+                    <?php if ($sales == FALSE) :?>
                     <tr>
-                        <td colspan="<?=count($days)+1;?>">
+                        <td colspan="<?=count($days)+1;?>" style="text-align: center;">
                             За выбранный период продаж не было.
                         </td>
                     </tr>
@@ -177,7 +179,7 @@ krsort($sales);
 
         return false;
     }
-    
+   <?php if (is_array($sales)) :?> 
     google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
       function drawChart() {
@@ -194,13 +196,16 @@ krsort($sales);
 
         var options = {
           title: 'Отчет продаж',
-          hAxis: {title: 'Количество'},
-          vAxis: {ticks: [1,2]}
+          width: '100%',
+          height: 500,
+          chartArea: {width: '100%'},
+          hAxis: {title: 'Количество'}
         };
 
         var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
         chart.draw(data, options);
       }
+      <?php endif;?>
 </script>
 
 <style>

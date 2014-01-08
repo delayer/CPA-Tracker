@@ -198,7 +198,8 @@ krsort($sales);
           title: 'Отчет продаж',
           width: '100%',
           height: 500,
-          chartArea: {width: '100%'},
+          chartArea: {left: '20',width:'800'},
+          legend: {position: 'in'},
           hAxis: {title: 'Количество'}
         };
 

@@ -35,9 +35,62 @@
             });
 
 
-            $('.delbut').on("click", function() {
-                delete_rule($(this).attr('id'));
+            $('.delbut').on("click", function(e) {
+                e.stopImmediatePropagation();
+                var id = $(this).attr('id');
+                var rule_name = $('#rule'+id).find('.rule-name-title').text();
+                $('#myModal').find('.modal-body').text('Удалить правило '+rule_name+'?');
+                $('#myModal').find('#hideid').val(id);
+                $('#myModal').modal()
+                $('#myModal').find('.yeapdel').on("click", function(e) {
+                    e.stopImmediatePropagation();
+                    $('#myModal').modal('hide');
+                    delete_rule($('#myModal').find('#hideid').val());                  
+                })            
             });
+            $('.rname').on("click", function() {
+                var id = $(this).attr('id');
+                var rule_name = $('#rule'+id).find('.rule-name-title');
+                var rule_name_text = $(rule_name).text();
+                var rule_old_name = rule_name_text;
+                var stop_flag = false;
+                $(rule_name).attr('contenteditable','true'); 
+                $(rule_name).focus();                
+                $(rule_name).keypress(function(e) {
+                    if(e.which == 13) {                      
+                     e.stopImmediatePropagation();
+                     e.preventDefault();
+                     rule_name_text = $(rule_name).text();
+                      if(rule_name_text.length){
+                     $(this).attr('contenteditable','false');
+                     stop_flag = true;
+                    }else{
+                        alert("Имя не может быть пустым.");
+                        $(rule_name).text(rule_old_name);
+                        $(rule_name).focus();                         
+                    }
+                }
+                });
+               $(rule_name).focusout(function(e) {
+                 e.stopImmediatePropagation();
+                 rule_name_text = $(rule_name).text();
+                      if(rule_name_text.length){
+                 save_name(id,$(rule_name).text(),rule_old_name);
+                 if(!stop_flag){$(this).attr('contenteditable','false');}
+                }else{
+                        alert("Имя не может быть пустым.");
+                        $(rule_name).text(rule_old_name);
+                        $(rule_name).focus();                         
+                }
+            })
+            });
+            function save_name(id,name,old_name){
+                $.ajax({
+                    type: 'POST',
+                    url: 'index.php',
+                    data: 'ajax_act=update_rule_name&rule_id=' + id + '&rule_name=' + name + '&old_rule_name=' + old_name
+                })
+            }
             function prepareTextInput(tr,name,title){                
                 tr.find('.label-default').text(title);
                 tr.find('input.select-item').attr('placeholder',title);
@@ -54,7 +107,7 @@
                 rule_table.prepend(template);
                 rule_table.find('input.select-geo_country').select2({data: {results: dictionary_countries}, width: '250px', containerCssClass: 'form-control select2 noborder-select2'});
                 rule_table.find('input.select-link').select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});               
-                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
+                rule_table.find('input.select-link').first().select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
             $('.addlang').on("click", function(e) {
                 e.preventDefault();
@@ -64,7 +117,7 @@
                 rule_table.prepend(template);
                 rule_table.find('input.select-lang').select2({data: {results: dictionary_langs}, width: '250px', containerCssClass: 'form-control select2 noborder-select2'});
                 rule_table.find('input.select-link').select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});               
-                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
+                rule_table.find('input.select-link').first().select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
             $('.addrefer').on("click", function(e) {
                 e.preventDefault();
@@ -73,7 +126,7 @@
                 var rule_table = $('#rule' + rule_id + ' tbody');
                 rule_table.prepend(template);
                 rule_table.find('input.select-link').select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});               
-                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;           
+                rule_table.find('input.select-link').first().select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;           
             });
              $('.addcity').on("click", function(e) {
                 e.preventDefault();
@@ -83,7 +136,7 @@
                 rule_table.prepend(template);
                 var tr = rule_table.find('tr').first();
                 prepareTextInput(tr,'city','Город');               
-                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
+                rule_table.find('input.select-link').first().select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
              $('.addregion').on("click", function(e) {
                 e.preventDefault();
@@ -93,7 +146,7 @@
                 rule_table.prepend(template);
                 var tr = rule_table.find('tr').first();
                 prepareTextInput(tr,'region','Регион');               
-                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
+                rule_table.find('input.select-link').first().select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
             $('.addprovider').on("click", function(e) {
                 e.preventDefault();
@@ -103,7 +156,7 @@
                 rule_table.prepend(template);
                 var tr = rule_table.find('tr').first();
                 prepareTextInput(tr,'provider','Провайдер');               
-                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
+                rule_table.find('input.select-link').first().select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
             $('.addip').on("click", function(e) {
                 e.preventDefault();
@@ -113,7 +166,7 @@
                 rule_table.prepend(template);
                 var tr = rule_table.find('tr').first();
                 prepareTextInput(tr,'ip','IP адрес');               
-                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
+                rule_table.find('input.select-link').first().select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
              $('.addos').on("click", function(e) {
                 e.preventDefault();
@@ -123,7 +176,7 @@
                 rule_table.prepend(template);
                 var tr = rule_table.find('tr').first();
                 prepareTextInput(tr,'os','ОС');               
-                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
+                rule_table.find('input.select-link').first().select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             }); $('.addplatform').on("click", function(e) {
                 e.preventDefault();
                 var template = $('#referTemplate').html();
@@ -132,7 +185,7 @@
                 rule_table.prepend(template);
                 var tr = rule_table.find('tr').first();
                 prepareTextInput(tr,'platform','Платформа');               
-                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
+                rule_table.find('input.select-link').first().select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
              $('.addbrowser').on("click", function(e) {
                 e.preventDefault();
@@ -142,7 +195,7 @@
                 rule_table.prepend(template);
                 var tr = rule_table.find('tr').first();
                 prepareTextInput(tr,'browser','Браузер');               
-                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
+                rule_table.find('input.select-link').first().select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
              $('.addagent').on("click", function(e) {
                 e.preventDefault();
@@ -151,12 +204,27 @@
                 var rule_table =  $('#rule' + rule_id + ' tbody');
                 rule_table.prepend(template);
                 var tr = rule_table.find('tr').first();
-                prepareTextInput(tr,'agent','User-agent');               
-                rule_table.find('input.select-link').select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
+                prepareTextInput(tr,'agent','User-agent'); 
+                console.log(rule_table.find('input.select-link'));
+                rule_table.find('input.select-link').first().select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
+            });
+             $('.addget').on("click", function(e) {
+                e.preventDefault();
+                var template = $('#getTemplate').html();
+                var rule_id = $(this).parent().parent().attr('id');
+                var rule_table =  $('#rule' + rule_id + ' tbody');
+                rule_table.prepend(template);       
+                console.log(rule_table.find('input.select-link'));
+                rule_table.find('input.select-link').select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});
+                rule_table.find('input.select-link').first().select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
             
-            
             // buttons }//  
+            $('body').on("change",'.getpreinput',function() {   
+                console.log(42);       
+                var text = $(this).parent().find('.in1').val()+'='+$(this).parent().find('.in2').val();
+                $(this).parent().find('.select-item').val(text);
+            });
             
             $('.btnsave').on("click", function(e) {
                 e.preventDefault();
@@ -214,15 +282,24 @@
                 $(this).select2("val", $(this).attr('data-selected-value'));
             });
             
-            
+            $('input.in1').each(function() {        
+                var text = $(this).parent().find('.select-item').val();
+                var arr = text.split('=');
+                $(this).val(arr[0]);
+            });
+            $('input.in2').each(function() {        
+                var text = $(this).parent().find('.select-item').val();
+                var arr = text.split('=');
+                $(this).val(arr[1]);
+            });
         });
     });
 
     
     function delete_rule(rule_id)
     {
-
-        $.ajax({
+        
+            $.ajax({
             type: 'POST',
             url: 'index.php',
             data: 'ajax_act=delete_rule&id=' + rule_id
@@ -245,6 +322,16 @@
         var rule_table = $('#rule' + rule_id + ' tbody');
         var name = $(rule_table).prev().find('.rule-name-title').text();
         var i = 0;
+        $(rule_table).find('input.in1').each(function() {        
+            if (!$(this).val()) {
+                error = 'Выберите условие';
+            }
+        });
+        $(rule_table).find('input.in2').each(function() {        
+            if (!$(this).val()) {
+                error = 'Выберите условие';
+            }
+        });
         $(rule_table).find('input.select-item.toSave').each(function() {        
             if ($(this).val()) {
                 rules_items = rules_items + '&rules_item['+i+"][val]=" + $(this).val();
@@ -440,6 +527,46 @@
         border-radius:0px; 
     }    
 </style>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Удаление правила</h4>
+      </div>
+        <input type="hidden" id="hideid">
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+        <button type="button"  class="btn btn-danger yeapdel">Удалить</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script id="getTemplate" type="text/template">
+     {{#conditions}}
+                    <tr>
+                        <td>
+                            <div class="form-inline" role="form">                            
+                                <div class="btn-group trash-button">
+                                    <button class='btn btn-default btnrmcountry'><i class="fa fa-trash-o text-muted"></i></button>
+                                </div>
+                                <div class="form-group">
+                                    <span class="label label-default">GET</span>
+                                </div>
+                                <div class="form-group">
+                                <input type="text" class="form-control getpreinput in1" style="width: 134px;" placeholder="Поле" > 
+                                <input type="text" class="form-control getpreinput in2"  style="width: 134px;" placeholder="Значение" > 
+                                <input type="hidden" class="select-item" itemtype='get' >
+                                </div>
+                                <div class='pull-right' style='width:200px;'><input placeholder="Ссылка" require="" type="hidden" name='out_id[]' class='select-link' data-selected-value=''></div>
+                            </div>
+                        </td>
+                    </tr>
+       {{/conditions}}          
+</script>
 <script id="referTemplate" type="text/template">
      {{#conditions}}
                     <tr>
@@ -509,7 +636,7 @@
                 <tr>
                     <th>
                         <button type='button' id='copy-button-{{id}}' class='btn-rule-copy' role="button" data-clipboard-target='rule-link-{{id}}'><i class="fa fa-copy" title="Скопировать ссылку в буфер"></i></button>
-                        <span class='rule-name-title'>{{name}}</span>
+                        <span class='rule-name-title' id='{{id}}' >{{name}}</span>
                         <span class='rule-destination-title'>
                             {{destination}}
                             {{#destination_multi}}
@@ -533,9 +660,16 @@
                                     <span class="label label-default">{{type}}</span>
                                 </div>                        
                         {{#textinput}}
+                        {{#getinput}}
+                                <input type="text" class="form-control getpreinput in1" style="width: 134px;" placeholder="Поле" > 
+                                <input type="text" class="form-control getpreinput in2"  style="width: 134px;" placeholder="Значение" > 
+                                <input type="hidden" class="select-item" itemtype='get' value="{{value}}">                        
+                        {{/getinput}}
+                        {{^getinput}}
                                 <div class="form-group">
                                 <input type="text" class="form-control select-item toSave" placeholder="{{type}}" itemtype='{{select_type}}' value='{{value}}' > 
                                 </div>
+                        {{/getinput}}
                         {{/textinput}}
                         {{^textinput}}
                                 <div class="form-group">
@@ -570,7 +704,7 @@
                             <div class="btn-group">
                                 <button class='btn btn-default dropdown-toggle btn-rule-settings' data-toggle="dropdown"><i class="fa fa-bars text-muted"></i></button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">Переименовать правило</a></li>
+                                    <li><a class="rname" id="{{id}}"  href="#">Переименовать правило</a></li>
                                     <li class="divider"></li>
                                     <li><a class="delbut" id="{{id}}" href="#">Удалить правило</a></li>
                                 </ul>
@@ -594,7 +728,7 @@
                                     
                                     <li><a class="addagent" href="#">User-agent</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="#">Параметр в GET-запросе</a></li>
+                                    <li><a class="addget" href="#">Параметр в GET-запросе</a></li>
                                 </ul>                            
                               </div>
                         </div>

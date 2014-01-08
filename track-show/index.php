@@ -148,7 +148,7 @@ ini_set('display_errors', 'on');
 			$arr_offers=get_rules_offers();
 			$condition_types=array('geo_country'=>'Страна','lang'=>'Язык','referer'=>'Реферер','city'=>'Город','region'=>'Регион'
                             ,'provider'=>'Провайдер','ip'=>'IP адрес','os'=>'ОС','platform'=>'Платформа','browser'=>'Браузер',
-                            'agent'=>'User-agent');                        
+                            'agent'=>'User-agent','get'=>'GET');                        
 			$arr_rules=get_rules_list($arr_offers);
 			$arr=array();
 			$i=0;
@@ -173,7 +173,7 @@ ini_set('display_errors', 'on');
 					}
 
 					// Add item to conditions section
-					$arr['rules'][$i]['conditions'][]=array('textinput'=>inputtype($cur_item_val['root']['type']),'type'=>$condition_types[$cur_item_val['root']['type']],'select_type'=>$cur_item_val['root']['type'], 'value'=>$cur_item_val['root']['value'], 'destination_id'=>$cur_item_val['inner'][0]['value']);
+					$arr['rules'][$i]['conditions'][]=array('textinput'=>inputtype($cur_item_val['root']['type']),'getinput'=>($cur_item_val['root']['type']=='get'),'type'=>$condition_types[$cur_item_val['root']['type']],'select_type'=>$cur_item_val['root']['type'], 'value'=>$cur_item_val['root']['value'], 'destination_id'=>$cur_item_val['inner'][0]['value']);
 				}
 
 				$arr_destinations=array_keys($arr_destinations);
@@ -383,6 +383,21 @@ ini_set('display_errors', 'on');
 			exit();
 		break;
 		
+		case 'update_rule_name':                          
+		    $rule_id=$_REQUEST['rule_id'];
+		    $rule_name=$_REQUEST['rule_name']; 
+                    $old_rule_name=$_REQUEST['old_rule_name'];
+			if ($rule_id==0 || $rule_id=='' || $rule_name=='' || $old_rule_name=='' ||  $old_rule_name == $rule_name)
+			{
+				exit();
+			}			
+                    // Update rule name
+                    $sql="update tbl_rules set link_name='".mysql_real_escape_string($rule_name)."' where id='".mysql_real_escape_string($rule_id)."'";        		
+                    mysql_query($sql);
+                    cache_remove_rule ($old_rule_name);
+
+			exit();
+		break;
 		case 'update_rule':                          
 		    $rule_id=$_REQUEST['rule_id'];
 		    $rule_name=$_REQUEST['rule_name'];
@@ -423,7 +438,6 @@ ini_set('display_errors', 'on');
 			}
 			exit();
 		break;
-		
 		case 'add_offer': 
 			ob_start();
 			$path = full_url();

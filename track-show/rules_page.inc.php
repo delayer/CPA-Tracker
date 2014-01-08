@@ -52,6 +52,7 @@
                 var id = $(this).attr('id');
                 var rule_name = $('#rule'+id).find('.rule-name-title');
                 var rule_name_text = $(rule_name).text();
+                var rule_old_name = rule_name_text;
                 var stop_flag = false;
                 $(rule_name).attr('contenteditable','true'); 
                 $(rule_name).focus();                
@@ -65,6 +66,7 @@
                      stop_flag = true;
                     }else{
                         alert("Имя не может быть пустым.");
+                        $(rule_name).text(rule_old_name);
                         $(rule_name).focus();                         
                     }
                 }
@@ -73,19 +75,20 @@
                  e.stopImmediatePropagation();
                  rule_name_text = $(rule_name).text();
                       if(rule_name_text.length){
-                 save_name(id,$(rule_name).text());
+                 save_name(id,$(rule_name).text(),rule_old_name);
                  if(!stop_flag){$(this).attr('contenteditable','false');}
                 }else{
                         alert("Имя не может быть пустым.");
+                        $(rule_name).text(rule_old_name);
                         $(rule_name).focus();                         
                 }
             })
             });
-            function save_name(id,name){
+            function save_name(id,name,old_name){
                 $.ajax({
                     type: 'POST',
                     url: 'index.php',
-                    data: 'ajax_act=update_rule_name&rule_id=' + id + '&rule_name=' + name 
+                    data: 'ajax_act=update_rule_name&rule_id=' + id + '&rule_name=' + name + '&old_rule_name=' + old_name
                 })
             }
             function prepareTextInput(tr,name,title){                

@@ -383,6 +383,20 @@ ini_set('display_errors', 'on');
 			exit();
 		break;
 		
+		case 'update_rule_name':                          
+		    $rule_id=$_REQUEST['rule_id'];
+		    $rule_name=$_REQUEST['rule_name'];                                        
+			if ($rule_id==0 || $rule_id=='' || $rule_name=='')
+			{
+				exit();
+			}			
+			// Update rule name
+			$sql="update tbl_rules set link_name='".mysql_real_escape_string($rule_name)."' where id='".mysql_real_escape_string($rule_id)."'";        		
+			mysql_query($sql);
+			
+			
+			exit();
+		break;
 		case 'update_rule':                          
 		    $rule_id=$_REQUEST['rule_id'];
 		    $rule_name=$_REQUEST['rule_name'];
@@ -423,7 +437,6 @@ ini_set('display_errors', 'on');
 			}
 			exit();
 		break;
-		
 		case 'add_offer': 
 			ob_start();
 			$path = full_url();

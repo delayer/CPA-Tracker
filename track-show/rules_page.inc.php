@@ -35,9 +35,59 @@
             });
 
 
-            $('.delbut').on("click", function() {
-                delete_rule($(this).attr('id'));
+            $('.delbut').on("click", function(e) {
+                e.stopImmediatePropagation();
+                var id = $(this).attr('id');
+                var rule_name = $('#rule'+id).find('.rule-name-title').text();
+                $('#myModal').find('.modal-body').text('Удалить правило '+rule_name+'?');
+                $('#myModal').find('#hideid').val(id);
+                $('#myModal').modal()
+                $('#myModal').find('.yeapdel').on("click", function(e) {
+                    e.stopImmediatePropagation();
+                    $('#myModal').modal('hide');
+                    delete_rule($('#myModal').find('#hideid').val());                  
+                })            
             });
+            $('.rname').on("click", function() {
+                var id = $(this).attr('id');
+                var rule_name = $('#rule'+id).find('.rule-name-title');
+                var rule_name_text = $(rule_name).text();
+                var stop_flag = false;
+                $(rule_name).attr('contenteditable','true'); 
+                $(rule_name).focus();                
+                $(rule_name).keypress(function(e) {
+                    if(e.which == 13) {                      
+                     e.stopImmediatePropagation();
+                     e.preventDefault();
+                     rule_name_text = $(rule_name).text();
+                      if(rule_name_text.length){
+                     $(this).attr('contenteditable','false');
+                     stop_flag = true;
+                    }else{
+                        alert("Имя не может быть пустым.");
+                        $(rule_name).focus();                         
+                    }
+                }
+                });
+               $(rule_name).focusout(function(e) {
+                 e.stopImmediatePropagation();
+                 rule_name_text = $(rule_name).text();
+                      if(rule_name_text.length){
+                 save_name(id,$(rule_name).text());
+                 if(!stop_flag){$(this).attr('contenteditable','false');}
+                }else{
+                        alert("Имя не может быть пустым.");
+                        $(rule_name).focus();                         
+                }
+            })
+            });
+            function save_name(id,name){
+                $.ajax({
+                    type: 'POST',
+                    url: 'index.php',
+                    data: 'ajax_act=update_rule_name&rule_id=' + id + '&rule_name=' + name 
+                })
+            }
             function prepareTextInput(tr,name,title){                
                 tr.find('.label-default').text(title);
                 tr.find('input.select-item').attr('placeholder',title);
@@ -221,8 +271,8 @@
     
     function delete_rule(rule_id)
     {
-
-        $.ajax({
+        
+            $.ajax({
             type: 'POST',
             url: 'index.php',
             data: 'ajax_act=delete_rule&id=' + rule_id
@@ -440,6 +490,24 @@
         border-radius:0px; 
     }    
 </style>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Удаление правила</h4>
+      </div>
+        <input type="hidden" id="hideid">
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+        <button type="button"  class="btn btn-danger yeapdel">Удалить</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <script id="referTemplate" type="text/template">
      {{#conditions}}
                     <tr>
@@ -509,7 +577,7 @@
                 <tr>
                     <th>
                         <button type='button' id='copy-button-{{id}}' class='btn-rule-copy' role="button" data-clipboard-target='rule-link-{{id}}'><i class="fa fa-copy" title="Скопировать ссылку в буфер"></i></button>
-                        <span class='rule-name-title'>{{name}}</span>
+                        <span class='rule-name-title' id='{{id}}' >{{name}}</span>
                         <span class='rule-destination-title'>
                             {{destination}}
                             {{#destination_multi}}
@@ -570,7 +638,7 @@
                             <div class="btn-group">
                                 <button class='btn btn-default dropdown-toggle btn-rule-settings' data-toggle="dropdown"><i class="fa fa-bars text-muted"></i></button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">Переименовать правило</a></li>
+                                    <li><a class="rname" id="{{id}}"  href="#">Переименовать правило</a></li>
                                     <li class="divider"></li>
                                     <li><a class="delbut" id="{{id}}" href="#">Удалить правило</a></li>
                                 </ul>

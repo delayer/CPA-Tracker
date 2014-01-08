@@ -1360,6 +1360,9 @@ function show_country_select($selected='')
              case 'agent':
                 return 1;
                 break;
+            case 'get':
+                return 2;
+                break;
 
             default:
                 return null;

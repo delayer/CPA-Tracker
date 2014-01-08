@@ -1,5 +1,5 @@
 <?php
-	ob_start();
+ob_start();
 
 	$settings_file=dirname (__FILE__).'/cache/settings.php';
 	$str=file_get_contents($settings_file);
@@ -19,7 +19,26 @@
 			return str_replace ("\t", ' ', $str);
 		}
 	}
-                
+         $requestingDevice   = null;
+         
+            require_once ("lib/ua-parser/uaparser.php");
+	 if (extension_loaded('xmlreader')) {
+            // Init WURFL library for mobile device detection
+            $wurflDir = dirname(__FILE__) . '/lib/wurfl/WURFL';
+            $resourcesDir = dirname(__FILE__) . '/lib/wurfl/resources';	
+            require_once $wurflDir.'/Application.php';
+            $persistenceDir = dirname(__FILE__).'/cache/wurfl-persistence';
+            $cacheDir = dirname(__FILE__).'/cache/wurfl-cache';	
+            $wurflConfig = new WURFL_Configuration_InMemoryConfig();
+            $wurflConfig->wurflFile($resourcesDir.'/wurfl.zip');
+            $wurflConfig->matchMode('accuracy');
+            $wurflConfig->allowReload(true);
+            $wurflConfig->persistence('file', array('dir' => $persistenceDir));
+            $wurflConfig->cache('file', array('dir' => $cacheDir, 'expiration' => 36000));
+            $wurflManagerFactory = new WURFL_WURFLManagerFactory($wurflConfig);
+            $wurflManager = $wurflManagerFactory->create();
+            $requestingDevice = $wurflManager->getDeviceForUserAgent($_SERVER['HTTP_USER_AGENT']); 
+        }
 	if (!function_exists('get_geodata'))
 	{
 		function get_geodata($ip)
@@ -226,15 +245,37 @@
 	}
 	else
 	{ 
-            
           $user_params = array(); 
+          if($requestingDevice){ 
+          $is_wireless = ($requestingDevice->getCapability('is_wireless_device') == 'true');
+          $is_tablet = ($requestingDevice->getCapability('is_tablet') == 'true');
+          $is_mobile_device = ($is_wireless || $is_tablet);
+          $user_params['agent'] = $_SERVER['HTTP_USER_AGENT'];   
+           if ($is_mobile_device)
+                    {	
+                        $user_params['os'] = $requestingDevice->getCapability('device_os');
+                        $user_params['platform']= $requestingDevice->getCapability('brand_name');
+                        $user_params['browser'] = $requestingDevice->getCapability('mobile_browser'); 
+                          
+                    }
+                    else
+                    {
+                            $parser = new UAParser;
+                            $result = $parser->parse($user_params['agent']);
+                            $user_params['browser'] = $result->ua->family;
+                            $user_params['os'] = $result->os->family;                
+                            $user_params['platform'] = '';
+                   }       
+         }
+                
+          
           $user_params['ip'] = $ip;
           $user_params['city'] = $cur_city;
           $user_params['region'] = $cur_state;
           $user_params['provider'] = $isp;
           $user_params['lang'] = $user_lang;
           $user_params['referer'] =  $_SERVER['HTTP_REFERER'];
-          $user_params['geo_country'] = $cur_country;
+          $user_params['geo_country'] = $cur_country; 
           $relevant_params = array();
           foreach ($arr_rules['geo_country'] as $key => $value) {
               if($value['value']=='default'){
@@ -262,7 +303,6 @@
           }
 	}
 	$redirect_link=str_replace('%SUBID%', $subid, get_out_link ($out_id));
-
 	// Add rule id
 	$str.=$rule_id."\t";
 

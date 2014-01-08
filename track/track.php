@@ -275,7 +275,7 @@ ob_start();
           $user_params['provider'] = $isp;
           $user_params['lang'] = $user_lang;
           $user_params['referer'] =  $_SERVER['HTTP_REFERER'];
-          $user_params['geo_country'] = $cur_country; 
+          $user_params['geo_country'] = $cur_country;           
           $relevant_params = array();
           foreach ($arr_rules['geo_country'] as $key => $value) {
               if($value['value']=='default'){
@@ -288,11 +288,22 @@ ob_start();
           $flag = false;
           foreach ($arr_rules as $key  => $value) {
               foreach ($value as $internal_key => $internal_value) {
-                  if($user_params[$key]==$internal_value['value']){ 
-                    $relevant_params[] = $internal_value;
-                    $flag = true;
+              if($key=='get'){
+                  $get_arr = explode('=', $internal_value['value']);
+                  $get_name = $get_arr[0];
+                  $get_val = $get_arr[1];
+                  if(isset($_GET[$get_name])&&$_GET[$get_name]==$get_val) {
+                      $relevant_params[] = $internal_value;
+                      $flag = true;
                   }
-              } 
+               }else{
+                   if($user_params[$key]==$internal_value['value']){ 
+                     $relevant_params[] = $internal_value;
+                     $flag = true;
+                   }
+               } 
+              
+              }
               if($flag){break;}
           } 
           $relevant_count = count($relevant_params); 

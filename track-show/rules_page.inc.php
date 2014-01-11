@@ -248,7 +248,7 @@
                           flag = false;  
                         }                     
                 });
-                if(!flag){ alert("В полях ввода для правила GET можно указывать только цифры и буквы латиницой.");  return false;}
+                if(!flag){ alert("В полях ввода для правила GET можно использовать только цифры и буквы латинского алфавита.");  return false;}
                 $(rule_table).find('input.select-link').each(function() {                                      
                        $(this).addClass('toSave');                      
                 });

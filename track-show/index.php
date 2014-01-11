@@ -398,11 +398,23 @@ ini_set('display_errors', 'on');
 
 			exit();
 		break;
-		case 'update_rule':                          
+		case 'update_rule':                 
 		    $rule_id=$_REQUEST['rule_id'];
 		    $rule_name=$_REQUEST['rule_name'];
 		    $rules_item=$_REQUEST['rules_item'];
-		    $rule_values=$_REQUEST['rule_value'];
+		    $rule_values=$_REQUEST['rule_value']; 
+                    
+                        $pattern = '/(^[a-z0-9_]+$)/';
+                        foreach ($rules_item as $key => $rull) {
+                            if($rull['type']=='get'){ 
+                                $get_arr = explode('=', $rull['val']);
+                                $get_name = $get_arr[0];
+                                $get_val = $get_arr[1];
+                                if(!preg_match($pattern, $get_name) || !preg_match($pattern, $get_val)){
+                                    exit;
+                                }
+                            }
+                        }
 			if ($rule_id==0 || $rule_id=='' || $rule_name=='')
 			{
 				exit();

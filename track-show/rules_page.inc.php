@@ -235,8 +235,20 @@
             
             $('.btnsave').on("click", function(e) {
                 e.preventDefault();
+                var flag = true;
                 var rule_id = $(this).attr('id');
                 var rule_table = $('#rule' + rule_id + ' tbody');
+//                $(rule_table).find('input.in1').each(function() {                                      
+//                     if(!(/(^[a-z0-9_]+$)/.test($(this).val()))){
+//                          flag = false;  
+//                        }                     
+//                });
+//                 $(rule_table).find('input.in2').each(function() {                                      
+//                     if(!(/(^[a-z0-9_]+$)/.test($(this).val()))){
+//                          flag = false;  
+//                        }                     
+//                });
+                if(!flag){ alert("В полях ввода для правила GET можно указывать только цифры и буквы латиницой.");  return false;}
                 $(rule_table).find('input.select-link').each(function() {                                      
                        $(this).addClass('toSave');                      
                 });
@@ -252,7 +264,7 @@
                 var rule_id = $(this).closest("tr").parent().attr('id');
                 $(this).closest("tr").remove();
                 update_rule(rule_id);
-            });
+            });          
             $(".table-rules th").on("click", function() {
                 $(this).closest("table").children("tbody").toggle();
                 $(this).closest("table").toggleClass("rule-table-selected");

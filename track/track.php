@@ -298,7 +298,7 @@ ob_start();
                       $flag = true;
                   }
                }else{
-                   if($user_params[$key]==$internal_value['value']){ 
+                   if(strripos(' '.$internal_value['value'], $user_params[$key])){                 
                      $relevant_params[] = $internal_value;
                       if(!$relevant_param_order){$relevant_param_order = $internal_value['order'];}else{
                          if($relevant_param_order>$internal_value['order']){$relevant_param_order = $internal_value['order'];}
@@ -319,7 +319,7 @@ ob_start();
                 }                  
             }
           }       
-	}
+	} 
 	$redirect_link=str_replace('%SUBID%', $subid, get_out_link ($out_id));
 	// Add rule id
 	$str.=$rule_id."\t";

@@ -65,7 +65,7 @@ ob_start();
 			$rules_path="{$cache_path}/rules";
 			$rule_path="{$rules_path}/.{$rule_hash}";
 
-			if (is_file($rule_path))
+			if (0 && is_file($rule_path))
 			{
 				$str_rules=file_get_contents($rule_path);
 				$arr_rules=unserialize($str_rules);
@@ -91,11 +91,14 @@ ob_start();
 				}
 
 				$arr_rules=array();
+                                $i = 1;
 				foreach ($arr_items as $row)
 				{
                                     if ($row['parent_id']>0)
                                     {   
-                                     $arr_rules[$arr_items[$row['parent_id']]['type']][]=array('value'=>$arr_items[$row['parent_id']]['value'],'rule_id'=>$rule_id, 'out_id'=>$row['value']);
+                                     $arr_rules[$arr_items[$row['parent_id']]['type']][]=array('value'=>$arr_items[$row['parent_id']]['value'],'rule_id'=>$rule_id, 'out_id'=>$row['value'],'order'=>$i);
+                                    $i++;
+                                     
                                     }
 				}
 				$str_rules=serialize($arr_rules);
@@ -246,28 +249,21 @@ ob_start();
 	else
 	{ 
           $user_params = array(); 
-          if($requestingDevice){ 
-          $is_wireless = ($requestingDevice->getCapability('is_wireless_device') == 'true');
-          $is_tablet = ($requestingDevice->getCapability('is_tablet') == 'true');
-          $is_mobile_device = ($is_wireless || $is_tablet);
-          $user_params['agent'] = $_SERVER['HTTP_USER_AGENT'];   
-           if ($is_mobile_device)
-                    {	
+          $user_params['agent'] = $_SERVER['HTTP_USER_AGENT']; 
+         if($requestingDevice && (($requestingDevice->getCapability('is_wireless_device') == 'true') || ($requestingDevice->getCapability('is_tablet') == 'true'))){               
                         $user_params['os'] = $requestingDevice->getCapability('device_os');
                         $user_params['platform']= $requestingDevice->getCapability('brand_name');
-                        $user_params['browser'] = $requestingDevice->getCapability('mobile_browser'); 
-                          
-                    }
-                    else
-                    {
-                            $parser = new UAParser;
-                            $result = $parser->parse($user_params['agent']);
-                            $user_params['browser'] = $result->ua->family;
-                            $user_params['os'] = $result->os->family;                
-                            $user_params['platform'] = '';
-                   }       
+                        $user_params['browser'] = $requestingDevice->getCapability('mobile_browser');                 
          }
-                
+         else
+         {
+                $parser = new UAParser;
+                $result = $parser->parse($user_params['agent']);
+                $user_params['browser'] = $result->ua->family;
+                $user_params['os'] = $result->os->family;                
+                $user_params['platform'] = '';
+         }
+
           
           $user_params['ip'] = $ip;
           $user_params['city'] = $cur_city;
@@ -280,13 +276,15 @@ ob_start();
           foreach ($arr_rules['geo_country'] as $key => $value) {
               if($value['value']=='default'){
                   $rule_id=$value['rule_id'];
-                  $out_id=$value['out_id']; 
+                  $out_id=$value['out_id'];
+                  $rule_order = 0;
                   break;
               }
           }
           
           $flag = false;
           foreach ($arr_rules as $key  => $value) {
+              $relevant_params = array(); $relevant_param_order = 0;
               foreach ($value as $internal_key => $internal_value) {
               if($key=='get'){
                   $get_arr = explode('=', $internal_value['value']);
@@ -294,25 +292,34 @@ ob_start();
                   $get_val = $get_arr[1];
                   if(isset($_GET[$get_name])&&$_GET[$get_name]==$get_val) {
                       $relevant_params[] = $internal_value;
+                      if(!$relevant_param_order){$relevant_param_order = $internal_value['order'];}else{
+                         if($relevant_param_order>$internal_value['order']){$relevant_param_order = $internal_value['order'];}
+                      }
                       $flag = true;
                   }
                }else{
-                   if($user_params[$key]==$internal_value['value']){ 
+                   if(strripos(' '.$internal_value['value'], $user_params[$key])){                 
                      $relevant_params[] = $internal_value;
+                      if(!$relevant_param_order){$relevant_param_order = $internal_value['order'];}else{
+                         if($relevant_param_order>$internal_value['order']){$relevant_param_order = $internal_value['order'];}
+                      }
                      $flag = true;
                    }
                } 
               
               }
-              if($flag){break;}
-          } 
-          $relevant_count = count($relevant_params); 
-          if($relevant_count){
-              $relevant_arr_key = rand(0, $relevant_count-1);
-              $rule_id = $relevant_params[$relevant_arr_key]['rule_id'];
-              $out_id = $relevant_params[$relevant_arr_key]['out_id'];                  
-          }
-	}
+             
+              $relevant_count = count($relevant_params); 
+            if($relevant_count){
+                $relevant_arr_key = rand(0, $relevant_count-1);
+                if(!$rule_order || ($rule_order>$relevant_param_order)){
+                $rule_id = $relevant_params[$relevant_arr_key]['rule_id'];
+                $out_id = $relevant_params[$relevant_arr_key]['out_id'];
+                $rule_order = $relevant_param_order;
+                }                  
+            }
+          }       
+	} 
 	$redirect_link=str_replace('%SUBID%', $subid, get_out_link ($out_id));
 	// Add rule id
 	$str.=$rule_id."\t";

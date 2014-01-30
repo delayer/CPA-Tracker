@@ -48,42 +48,50 @@
                     delete_rule($('#myModal').find('#hideid').val());                  
                 })            
             });
-            $('.rname').on("click", function() {
+            $('.rname').on("click", function(e) {
+                e.stopPropagation();
                 var id = $(this).attr('id');
                 var rule_name = $('#rule'+id).find('.rule-name-title');
                 var rule_name_text = $(rule_name).text();
                 var rule_old_name = rule_name_text;
                 var stop_flag = false;
-                $(rule_name).attr('contenteditable','true'); 
-                $(rule_name).focus();                
-                $(rule_name).keypress(function(e) {
+               // $(rule_name).attr('contenteditable','true');
+               $(rule_name).html('<input id="rn'+id+'" class="form-control rulenamein" placeholder="Имя не может быть пустым"  value="'+rule_old_name+'" >')
+               $("#rn"+id).focus(); 
+               $("#rn"+id).select();
+               $("#rn"+id).click(function(e){
+                   e.stopPropagation();
+               })
+                 $("#rn"+id).keypress(function(e) {
+                     e.stopPropagation();
                     if(e.which == 13) {                      
                      e.stopImmediatePropagation();
                      e.preventDefault();
-                     rule_name_text = $(rule_name).text();
+                     rule_name_text =  $("#rn"+id).val().replace(/^\s+|\s+$/g, '');
                       if(rule_name_text.length){
-                     $(this).attr('contenteditable','false');
+                     $(rule_name).html($("#rn"+id).val());
                      stop_flag = true;
                     }else{
                         alert("Имя не может быть пустым.");
-                        $(rule_name).text(rule_old_name);
+                         $("#rn"+id).val(rule_old_name);
                         $(rule_name).focus();                         
                     }
                 }
                 });
-               $(rule_name).focusout(function(e) {
+                $("#rn"+id).focusout(function(e) {
+                    e.stopPropagation();
                  e.stopImmediatePropagation();
-                 rule_name_text = $(rule_name).text();
+                 rule_name_text = $("#rn"+id).val().replace(/^\s+|\s+$/g, '');
                       if(rule_name_text.length){
-                 save_name(id,$(rule_name).text(),rule_old_name);
-                 if(!stop_flag){$(this).attr('contenteditable','false');}
+                 save_name(id,$("#rn"+id).val().replace(/^\s+|\s+$/g, ''),rule_old_name);
+                 if(!stop_flag){$(rule_name).html($("#rn"+id).val())}
                 }else{
                         alert("Имя не может быть пустым.");
-                        $(rule_name).text(rule_old_name);
-                        $(rule_name).focus();                         
+                        $("#rn"+id).val(rule_old_name);
+                        $("#rn"+id).focus();                         
                 }
             })
-            });
+            });        
             function save_name(id,name,old_name){
                 $.ajax({
                     type: 'POST',
@@ -205,7 +213,7 @@
                 rule_table.prepend(template);
                 var tr = rule_table.find('tr').first();
                 prepareTextInput(tr,'agent','User-agent'); 
-                console.log(rule_table.find('input.select-link'));
+                
                 rule_table.find('input.select-link').first().select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
              $('.addget').on("click", function(e) {
@@ -214,22 +222,33 @@
                 var rule_id = $(this).parent().parent().attr('id');
                 var rule_table =  $('#rule' + rule_id + ' tbody');
                 rule_table.prepend(template);       
-                console.log(rule_table.find('input.select-link'));
+                
                 rule_table.find('input.select-link').select2({data: {results: dictionary_links}, width: 'copy', containerCssClass: 'form-control select2'});
                 rule_table.find('input.select-link').first().select2('val',$('#rule'+rule_id).find('[name = default_out_id]').val()) ;    
             });
             
             // buttons }//  
-            $('body').on("change",'.getpreinput',function() {   
-                console.log(42);       
+            $('body').on("change",'.getpreinput',function() { 
                 var text = $(this).parent().find('.in1').val()+'='+$(this).parent().find('.in2').val();
                 $(this).parent().find('.select-item').val(text);
             });
             
             $('.btnsave').on("click", function(e) {
                 e.preventDefault();
+                var flag = true;
                 var rule_id = $(this).attr('id');
                 var rule_table = $('#rule' + rule_id + ' tbody');
+                $(rule_table).find('input.in1').each(function() {                                      
+                     if(!(/(^[a-z0-9_]+$)/.test($(this).val()))){
+                          flag = false;  
+                        }                     
+                });
+                 $(rule_table).find('input.in2').each(function() {                                      
+                     if(!(/(^[a-z0-9_]+$)/.test($(this).val()))){
+                          flag = false;  
+                        }                     
+                });
+                if(!flag){ alert("В полях ввода для правила GET можно использовать только цифры и буквы латинского алфавита.");  return false;}
                 $(rule_table).find('input.select-link').each(function() {                                      
                        $(this).addClass('toSave');                      
                 });
@@ -245,7 +264,7 @@
                 var rule_id = $(this).closest("tr").parent().attr('id');
                 $(this).closest("tr").remove();
                 update_rule(rule_id);
-            });
+            });          
             $(".table-rules th").on("click", function() {
                 $(this).closest("table").children("tbody").toggle();
                 $(this).closest("table").toggleClass("rule-table-selected");
@@ -363,8 +382,6 @@
                 data: 'ajax_act=update_rule&rule_id=' + rule_id + '&rule_name=' + name + rules_items + values
             }).done(function(msg)
             {
-                console.log(msg);
-           
                 if (links.length > 1) {
                     var badge = '<span class="badge">' + (links.length) + ' ' + declination((links.length), 'ссылка', 'ссылки', 'ссылок') + '</span>';
                     $(rule_table).parent().find('.rule-destination-title').html(badge);
@@ -636,7 +653,7 @@
                 <tr>
                     <th>
                         <button type='button' id='copy-button-{{id}}' class='btn-rule-copy' role="button" data-clipboard-target='rule-link-{{id}}'><i class="fa fa-copy" title="Скопировать ссылку в буфер"></i></button>
-                        <span class='rule-name-title' id='{{id}}' >{{name}}</span>
+                        <span class='rule-name-title'   >{{name}}</span>
                         <span class='rule-destination-title'>
                             {{destination}}
                             {{#destination_multi}}

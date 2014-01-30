@@ -1,9 +1,7 @@
 <?php
 	ob_start();
 	set_time_limit(0);
-//	error_reporting(0);
-error_reporting(E_ALL);
-ini_set('display_errors', 'on');
+	error_reporting(0);
 	ini_set('display_errors', 0);
 	
 	$include_flag=true;
@@ -574,6 +572,22 @@ ini_set('display_errors', 'on');
 			}
 			exit();
 		break;
+                
+                case 'postback_info':
+                        $net = $_POST['net'];
+                        if (!is_file('../track/postback/'.$net.'.php')) {
+                            $result['status'] = 'ERR';
+                            echo json_encode($result);
+                            exit;
+                        }
+                        require('../track/postback/'.$net.'.php');
+                        $result['status'] = 'OK';
+                        $network = new $net();
+                        $result['link'] = $network->get_link();
+                        $result['instruction'] = $network->get_instruction();
+                        echo json_encode($result);
+                        exit;
+                break;
 
 	}
         

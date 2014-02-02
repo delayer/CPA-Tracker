@@ -103,6 +103,8 @@
 
 	<form class="form-inline links_category_add_form" role="form" method="post" onsubmit='return add_new_category()' id='category_add_form'>
 		<input type='hidden' name='ajax_act' value='add_category'>
+                
+        <input type="hidden" name="csrfkey" value="<?php echo CSRF_KEY;?>">
 		  <div class="form-group">
 			    <input type="text" class="form-control" name="category_name" placeholder="Название категории">
 		  </div>

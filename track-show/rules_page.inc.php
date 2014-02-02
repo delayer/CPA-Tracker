@@ -13,7 +13,7 @@
         $.ajax({
             type: "POST",
             url: "index.php",
-            data: 'ajax_act=get_rules_json'
+            data: 'csrfkey=<?php echo CSRF_KEY;?>&ajax_act=get_rules_json'
         }).done(function(msg) {  
             var template = $('#rulesTemplate').html();
             var template_data = $.parseJSON(msg);
@@ -96,7 +96,7 @@
                 $.ajax({
                     type: 'POST',
                     url: 'index.php',
-                    data: 'ajax_act=update_rule_name&rule_id=' + id + '&rule_name=' + name + '&old_rule_name=' + old_name
+                    data: 'csrfkey=<?php echo CSRF_KEY;?>&ajax_act=update_rule_name&rule_id=' + id + '&rule_name=' + name + '&old_rule_name=' + old_name
                 })
             }
             function prepareTextInput(tr,name,title){                
@@ -321,7 +321,7 @@
             $.ajax({
             type: 'POST',
             url: 'index.php',
-            data: 'ajax_act=delete_rule&id=' + rule_id
+            data: 'csrfkey=<?php echo CSRF_KEY;?>&ajax_act=delete_rule&id=' + rule_id
         }).done(function(msg)
         {
             $('#rule' + rule_id).hide();
@@ -379,7 +379,7 @@
             $.ajax({
                 type: 'POST',
                 url: 'index.php',
-                data: 'ajax_act=update_rule&rule_id=' + rule_id + '&rule_name=' + name + rules_items + values
+                data: 'csrfkey=<?php echo CSRF_KEY;?>&ajax_act=update_rule&rule_id=' + rule_id + '&rule_name=' + name + rules_items + values
             }).done(function(msg)
             {
                 if (links.length > 1) {
@@ -775,6 +775,7 @@
         </div>
         <button type="submit" class="btn btn-default" onclick="">Добавить</button>
         <input type="hidden" name="ajax_act" value="add_rule">
+        <input type="hidden" name="csrfkey" value="<?php echo CSRF_KEY;?>">
         </form>         
     </div>
 </div>

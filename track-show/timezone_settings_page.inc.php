@@ -23,7 +23,7 @@
         $.ajax({
           type: "POST",
           url: "index.php",
-          data: {ajax_act: 'delete_timezone', id: $('input[name=timezone_id]').val()}
+          data: {csrfkey:"<?php CSRF_KEY?>",ajax_act: 'delete_timezone', id: $('input[name=timezone_id]').val()}
         })
         .done(function( msg ) 
         {
@@ -132,7 +132,8 @@
 	  <button type="button" onclick="add_timezone()" class="btn btn-default">Добавить</button>
 	  <span class="btn btn-link" id='cancel_timezone_edit' onclick="cancel_timezone_edit()" style='display:none;'>отменить</span>
 	  <span class="btn btn-link" id='delete_timezone' onclick="delete_timezone()" style='display:none; float:right;'><i class='icon-trash' title='Удалить часовой пояс'></i></span>
-	  <input type="hidden" name="ajax_act" value="add_timezone">
+	  <input type="hidden" name="ajax_act" value="add_timezone">    
+          <input type="hidden" name="csrfkey" value="<?php echo CSRF_KEY;?>">
 	  <input type="hidden" name="timezone_id" value="">
 	</form>
 </div>

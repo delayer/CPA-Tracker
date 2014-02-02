@@ -81,6 +81,7 @@
 
 	<button type="submit" class="btn btn-default">Добавить</button>
   	<input type='hidden' name='ajax_act' value='import_sales'>
+        <input type="hidden" name="csrfkey" value="<?php echo CSRF_KEY;?>">
   	<input type='hidden' id='currency_code' name='currency_code' value='rub'>
 	<input type='hidden' id='leadsType' name='leadsType' value='sale'>
 </form>

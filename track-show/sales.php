@@ -68,7 +68,7 @@ function delete_sale(obj, type, click_id, conversion_id)
 	$.ajax({
 	  type: 'POST',
 	  url: 'index.php',
-	  data: 'ajax_act=delete_sale&type='+type+'&click_id='+click_id+'&conversion_id='+conversion_id
+	  data: 'csrfkey=<?php echo CSRF_KEY;?>&ajax_act=delete_sale&type='+type+'&click_id='+click_id+'&conversion_id='+conversion_id
 	}).done(function( msg ) 
 	{
 		$(obj).parent().parent().parent().parent().parent().remove();

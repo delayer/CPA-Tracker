@@ -23,7 +23,7 @@
         $.ajax({
           type: "POST",
           url: "index.php",
-          data: {csrfkey:"<?php CSRF_KEY?>",ajax_act: 'delete_timezone', id: $('input[name=timezone_id]').val()}
+          data: {csrfkey:"<?php echo CSRF_KEY?>",ajax_act: 'delete_timezone', id: $('input[name=timezone_id]').val()}
         })
         .done(function( msg ) 
         {

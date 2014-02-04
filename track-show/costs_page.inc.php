@@ -80,6 +80,7 @@
 
 	<form role="form" class="form-horizontal" method="post" id='add_costs' onsubmit="return add_costs();">
 		<input type='hidden' name='ajax_act' value='add_costs'>
+                <input type="hidden" name="csrfkey" value="<?php echo CSRF_KEY;?>">
 		<input type='hidden' id='currency_code' name='currency_code' value='rub'>
 		<div class="form-group">
 			 <label class="col-sm-2 control-label">Период</label>

@@ -24,7 +24,7 @@
         $.ajax({
           type: "get",
           url: "index.php",
-          data: { ajax_act: "change_current_timezone", id: id }
+          data: { csrfkey:"<?php echo CSRF_KEY?>", ajax_act: "change_current_timezone", id: id }
         })
           .done(function( msg ) 
           {

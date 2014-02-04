@@ -2,7 +2,8 @@
 
 <div class='span6'>
 	<form class="form-horizontal" id="form_settings" onsubmit="return save_settings();">
-	  <input type='hidden' name='ajax_act' value='create_database'>
+	  <input type='hidden' name='ajax_act' value='create_database'>          
+          <input type="hidden" name="csrfkey" value="<?php echo CSRF_KEY;?>">
 	  <legend>Настройки базы данных</legend>
 	  <div class="control-group">
 	    <label class="control-label" for="login">Логин</label>

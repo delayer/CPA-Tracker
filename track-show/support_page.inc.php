@@ -65,6 +65,8 @@ $(function()
 		</div>
 		<form class="form form-validation form-contact" method="post" novalidate="novalidate" id='support_form' onSubmit='return send_support_message();'>
 			<input type=hidden name='ajax_act' value='send_support_message'>
+                        
+        <input type="hidden" name="csrfkey" value="<?php echo CSRF_KEY;?>">
 				<div class="row">
 					<div class="col-sm-12">
 						<div class="form-group control-group">

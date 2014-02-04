@@ -1,7 +1,10 @@
 <?php
 	ob_start();
 	set_time_limit(0);
-	error_reporting(0);
+
+//	error_reporting(0);
+        error_reporting(E_ALL);
+        define("CSRF_KEY", md5(session_id()));
 	ini_set('display_errors', 0);
 	
 	$include_flag=true;
@@ -139,6 +142,8 @@
 		}
 	}
 
+        
+      if(isset($_REQUEST['csrfkey'])&&$_REQUEST['csrfkey']==CSRF_KEY){  
 	switch ($_REQUEST['ajax_act'])
 	{
 		case 'get_rules_json': 
@@ -601,7 +606,7 @@
                 break;
 
 	}
-        
+      }
 	header('Content-Type: text/html; charset=utf-8');
 	switch ($_REQUEST['page'])
 	{

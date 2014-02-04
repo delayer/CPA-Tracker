@@ -97,7 +97,7 @@ else
 		$.ajax({
 		  type: 'POST',
 		  url: 'index.php',
-		  data: { ajax_act: 'import_hasoffers_offers', id: id}
+		  data: { csrfkey: '<?php echo CSRF_KEY;?>',ajax_act: 'import_hasoffers_offers', id: id}
 		}).done(function( msg ) 
 		{
 			$('#networks_import_ajax').hide();
@@ -156,7 +156,7 @@ else
 		$.ajax({
 		  type: 'POST',
 		  url: 'index.php',
-		  data: 'ajax_act=delete_link&id='+id
+		  data: 'csrfkey=<?php echo CSRF_KEY;?>&ajax_act=delete_link&id='+id
 		}).done(function( msg ) 
 		{
 			$(obj).parent().parent().parent().parent().parent().remove();
@@ -169,7 +169,7 @@ else
 		$.ajax({
 		  type: 'POST',
 		  url: 'index.php',
-		  data: 'ajax_act=move_link_to_category&offer_id='+offer_id+'&category_id='+category_id
+		  data: 'csrfkey=<?php echo CSRF_KEY;?>&ajax_act=move_link_to_category&offer_id='+offer_id+'&category_id='+category_id
 		}).done(function( msg ) 
 		{
 
@@ -195,6 +195,7 @@ if ($category_name!='{empty}')
 <div class="row">
 	<form class="form-inline" role="form" method='post' id='form_category_edit' onsubmit='return check_category_edit();'>
 			<input type='hidden' name='ajax_act' value='category_edit'>
+                        <input type="hidden" name="csrfkey" value="<?php echo CSRF_KEY;?>">
 			<input type='hidden' name='category_id' value='<?=_e($_REQUEST['category_id']);?>'>
 			<input type='hidden' name='is_delete' value='0'>
 
@@ -229,6 +230,7 @@ else
 <div class="row">
 	<form class="form-inline" role="form" method="post" onSubmit='return check_add_offer();' id='form_add_offer'>
 		<input type=hidden name='ajax_act' value='add_offer'>
+                <input type="hidden" name="csrfkey" value="<?php echo CSRF_KEY;?>">
 		<input type=hidden name='category_id' value='<? echo _e($category_id);?>'>
 
 		  <div class="form-group col-xs-3">

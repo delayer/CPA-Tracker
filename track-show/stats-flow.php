@@ -146,7 +146,7 @@ echo "</div> <!-- ./row -->";
 <?
 // ********************************************************
 
-	echo "<h4>Лента переходов <span style='float:right;'><a title='Экспорт в Excel' href='?ajax_act=excel_export&date="._e($date)."'><img src='img/icons/table-excel.png'></a></span><span style='float:right; margin-right:16px;'><a title='Экспорт в TSV' href='?ajax_act=tsv_export&date="._e($date)."'><img src='img/icons/table-tsv.png'></a></span></h4>";
+	echo "<h4>Лента переходов <span style='float:right;'><a title='Экспорт в Excel' href='?csrfkey=<?php echo CSRF_KEY;?>&ajax_act=excel_export&date="._e($date)."'><img src='img/icons/table-excel.png'></a></span><span style='float:right; margin-right:16px;'><a title='Экспорт в TSV' href='?csrfkey=<?php echo CSRF_KEY;?>&ajax_act=tsv_export&date="._e($date)."'><img src='img/icons/table-tsv.png'></a></span></h4>";
 	
 	echo "<table class='table table-striped'>";
 	echo "<tbody>";

@@ -517,35 +517,35 @@
 		return array ('categories'=>$arr_data, 'categories_count'=>$arr_categories_count);
 	}
 
-	function import_sale_info ($lead_type, $amount, $subid)
+	function import_sale_info ($data = array())
 	{
-		$sql="select id from tbl_conversions where subid='"._str($subid)."' and type='"._str($lead_type)."'";
-		$result=mysql_query($sql);
-		$row=mysql_fetch_assoc($result);
-
-		if ($row['id']>0)
-		{
-			$id=$row['id'];
-			$sql="update tbl_conversions set amount='"._str($amount)."', date_add=NOW() where id='"._str($id)."'";
-			mysql_query($sql);
-		}
-		else
-		{
-			$sql="insert into tbl_conversions (profit, type, subid, date_add) values ('"._str($amount)."', '"._str($lead_type)."', '"._str($subid)."', NOW())";
-			mysql_query($sql);
-		}
-
-		switch ($lead_type) 
-		{
-			case 'sale':
-				$sql="update tbl_clicks set conversion_price_main='"._str($amount)."', is_sale='1' where subid='"._str($subid)."'";
-			break;
-			
-			case 'lead':
-				$sql="update tbl_clicks set is_lead='1' where subid='"._str($subid)."'";		
-			break;
-		}
-		mysql_query($sql);			
+//		$sql="select id from tbl_conversions where subid='"._str($subid)."' and type='"._str($lead_type)."'";
+//		$result=mysql_query($sql);
+//		$row=mysql_fetch_assoc($result);
+//
+//		if ($row['id']>0)
+//		{
+//			$id=$row['id'];
+//			$sql="update tbl_conversions set amount='"._str($amount)."', date_add=NOW() where id='"._str($id)."'";
+//			mysql_query($sql);
+//		}
+//		else
+//		{
+//			$sql="insert into tbl_conversions (profit, type, subid, date_add) values ('"._str($amount)."', '"._str($lead_type)."', '"._str($subid)."', NOW())";
+//			mysql_query($sql);
+//		}
+//
+//		switch ($lead_type) 
+//		{
+//			case 'sale':
+//				$sql="update tbl_clicks set conversion_price_main='"._str($amount)."', is_sale='1' where subid='"._str($subid)."'";
+//			break;
+//			
+//			case 'lead':
+//				$sql="update tbl_clicks set is_lead='1' where subid='"._str($subid)."'";		
+//			break;
+//		}
+//		mysql_query($sql);			
 
 		return; 
 	}
@@ -753,8 +753,7 @@
 		return ;
 	}
 	
-?>
-<?
+
 function show_country_select($selected='')
 {
 	$arr_countries=array("AD"=>array("AD Andorra Андорра", "Андорра"),

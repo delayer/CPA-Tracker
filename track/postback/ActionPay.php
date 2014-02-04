@@ -2,34 +2,27 @@
 
 
 
-class AD1 {
+class ActionPay {
     
-    public $net = 'AD1';
+    
+    public $net = 'ActionPay';
+    
     
     private $params = array(
-        'subid' => 'subid',
-        'profit' => 'summ_approved',
-        'date_add' => 'postback_date',
-        'txt_status' => 'status',
-        'txt_param1' => 'uip',
-        'txt_param2' => 'uagent',
-        'txt_param3' => 'goal_title',
-        'txt_param4' => 'offer_name',
-        'float_param1' => 'summ_total',
-        'int_param1' => 'goal_id',
-        'int_param2' => 'offer_id',
-        'int_param3' => 'order_id',
-        'int_param4' => 'click_time',
-        'int_param5' => 'lead_time',
-        'int_param6' => 'postback_time',
-        'int_param7' => 'rid',
-        'date_param1' => 'click_date',
-        'date_param2' => 'lead_date'
+        'subid' => 'subaccount',
+        'profit' => 'payment',
+        'int_param1' => 'aim',
+        'int_param2' => 'offer',
+        'int_param3' => 'apid',
+        'int_param5' => 'time',
+        'int_param7' => 'landing',
+        'int_param8' => 'source',
+        'txt_param9' => 'uniqueid'
     );
     
     
     function __construct() {
-        
+  
     }
     
     
@@ -41,16 +34,26 @@ class AD1 {
         foreach ($this->params as $name => $value) {
             $url .= '&'.$name.'={'.$value.'}';
         }
-        $return = array(
-            'url' => $url,
-            'description' => 'Вставьте эту ссылку в поле PostBack ссылки в настройках Вашего потока в сети AD1.'
-        );
         
-        return array(
-            0 => $return
-        );
+        $return = array();
+        
+        array_push($return, array(
+            'description' => 'Вставьте эту ссылку в поле "Постбэк - Создание"',
+            'url' => $url.'&status=created'
+        ));
+        array_push($return, array(
+            'description' => 'Вставьте эту ссылку в поле "Постбэк - Принятие"',
+            'url' => $url.'&status=approved'
+        ));
+        array_push($return, array(
+            'description' => 'Вставьте эту ссылку в поле "Постбэк - Отклонение"',
+            'url' => $url.'&status=declined'
+        ));
+        
+        
+        return $return;
     }
- 
+    
     
     
     function process_conversion($data = array()) {
@@ -69,8 +72,8 @@ class AD1 {
                 $data['txt_status'] = 'Declined';
                 $data['status'] = 2;
                 break;
-            case 'waiting':
-                $data['txt_status'] = 'Waiting';
+            case 'created':
+                $data['txt_status'] = 'Created';
                 $data['status'] = 3;
                 break;
             default:
@@ -82,7 +85,7 @@ class AD1 {
         
         if (isset($data['subid'])) {
             // Проверяем, есть ли уже конверсия с таким SubID из этой же сетки
-            $r = mysql_query('SELECT * FROM `tbl_conversions` WHERE `subid` = "'.$data['subid'].'" AND `net` = "'.$this->net.'" LIMIT 1') or die(mysql_error());
+            $r = mysql_query('SELECT * FROM `tbl_conversions` WHERE `subid` = "'.$data['subid'].'" AND `network` = "'.$this->net.'" LIMIT 1') or die(mysql_error());
             if (mysql_num_rows($r) > 0) {
                 $f = mysql_fetch_assoc($r);
                 $update = '';
@@ -112,13 +115,13 @@ class AD1 {
             }
             $i++;
         }
-//        echo 'INSERT INTO `tbl_conversions` ('.$params.') VALUES ('.$vals.')';
+        $params .= ', `date_add`';
+        $vals .= ', "'.date('Y-m-d H:i:s').'"';
         mysql_query('INSERT INTO `tbl_conversions` ('.$params.') VALUES ('.$vals.')') or die(mysql_error());
     }
     
     
 }
-
 
 
 

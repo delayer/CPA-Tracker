@@ -595,8 +595,7 @@
                         require('../track/postback/'.$net.'.php');
                         $result['status'] = 'OK';
                         $network = new $net();
-                        $result['link'] = $network->get_link();
-                        $result['instruction'] = $network->get_instruction();
+                        $result['links'] = $network->get_links();
                         echo json_encode($result);
                         exit;
                 break;

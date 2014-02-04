@@ -320,7 +320,7 @@ ob_start();
             }
           }       
 	} 
-	$redirect_link=str_replace('%SUBID%', $subid, get_out_link ($out_id));
+	$redirect_link=str_ireplace('[SUBID]', $subid, get_out_link ($out_id));
 	// Add rule id
 	$str.=$rule_id."\t";
 

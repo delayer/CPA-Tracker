@@ -15,6 +15,14 @@ $_DB_HOST = $arr_settings['dbserver'];
 include dirname(__FILE__) . "/connect.php";
 include dirname(__FILE__) . "/../track-show/functions_general.php";
 
+
+function net_loader($class) {
+    include dirname(__FILE__).'/postback/'.$class.'.php';
+}
+
+spl_autoload_register('net_loader');
+
+
 $arr_files = array();
 if ($handle = opendir(dirname(__FILE__) . '/cache/postback')) {
     while (false !== ($entry = readdir($handle))) {
@@ -38,35 +46,29 @@ if ($handle = opendir(dirname(__FILE__) . '/cache/postback')) {
     }
     closedir($handle);
 }
-
+//print_r($arr_files);
 if (count($arr_files) == 0) {
     exit();
 }
 
 foreach ($arr_files as $cur_file) {
     $file_name = dirname(__FILE__) . "/cache/postback/{$cur_file}+";
+    $file_name = dirname(__FILE__) . "/cache/postback/{$cur_file}";
     rename(dirname(__FILE__) . "/cache/postback/$cur_file", $file_name);
-    $handle = fopen($file_name, "r");
-    while (($buffer = fgets($handle, 4096)) !== false) {
-        $arr_postback = array();
-        $arr_postback = explode("\t", rtrim($buffer, "\n"));
-
-        $type = trim($arr_postback[0]);
-        $amount = trim($arr_postback[1]);
-        $currency = trim($arr_postback[2]);
-        $subid = trim($arr_postback[3]);
-
-        switch (strtolower($currency)) {
-            case 'rub':
-                $amount = $amount / 30;
+    $conversions = file($file_name);
+    foreach ($conversions as $conv) {
+        $data = unserialize($conv);
+        switch ($data['net']) {
+            case 'other':
+                process_custom_conversion($data);
                 break;
-
             default:
+                $net = new $data['net']();
+                $net->process_conversion($data);
                 break;
         }
-        import_sale_info($type, $amount, $subid);
     }
-    fclose($handle);
+//    exit;
     rename($file_name, dirname(__FILE__) . "/cache/postback/{$cur_file}*");
 }
 

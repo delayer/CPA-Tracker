@@ -17,6 +17,7 @@ while ($file = $networks->read()) {
 <script src="lib/clipboard/ZeroClipboard.min.js"></script>
 
 <script type="text/javascript">
+    var links;
 $(document).ready(function()
 {
 
@@ -25,9 +26,9 @@ $(document).ready(function()
           moviePath: "lib/clipboard/ZeroClipboard.swf"
         } );
 
-        clip.on( 'complete', function(client, args) {
-            $('#clipboard_copy_icon').animate({opacity: 0.4}, "fast").animate({opacity: 1}, "fast");
-        });
+//        clip.on( 'complete', function(client, args) {
+//            $('#clipboard_copy_icon').animate({opacity: 0.4}, "fast").animate({opacity: 1}, "fast");
+//        });
         
         $('.net-btn').click(function(){
             var btn = this;
@@ -36,10 +37,14 @@ $(document).ready(function()
             $.post(
                     'index.php?ajax_act=postback_info',
                     {
-                        net: $(this).attr('net')
+                        net: $(this).attr('net'),
+                        csrfkey: '<?=CSRF_KEY?>'
                     },
                     function(data) {
                         if (data.status == 'OK') {
+                            
+                            links = data.links;
+                            
                             $('#net-name').text($(btn).attr('net'));
                             var template = $('#linkTemplate').html();
                             var template_data = data;
@@ -47,13 +52,52 @@ $(document).ready(function()
                             var html = Mustache.to_html(template, template_data);
                             
                             $('#links').html(html);
+                            
+                            $('button[id^="copy-button"]').each(function(i)
+                            {
+                                var cur_id = $(this).attr('id');
+                                var clip = new ZeroClipboard(this, {
+                                    moviePath: "lib/clipboard/ZeroClipboard.swf"
+                                });
+
+                                clip.on('mouseout', function(client, args) {
+                                    $('.btn-rule-copy').removeClass('zeroclipboard-is-hover');
+                                });
+                            });
+                            
                             $('#result-row').show();
                         }
                     },
                     'json'
             );
         });
+        
+        
+        $('#is_lead').change(function(){
+            show_urls($('#is_lead').is(':checked'), $('#is_sale').is(':checked'));
+        });
+        $('#is_sale').change(function(){
+            show_urls($('#is_lead').is(':checked'), $('#is_sale').is(':checked'));
+        });
+        
 });
+
+
+function show_urls(is_lead,is_sale) {
+    $.each(links, function (i, item) {
+        var url = item.url;
+        if (is_lead) {
+             url = url + '&is_lead=1';
+        }
+        
+        if (is_sale) {
+            url = url + '&is_sale=1';
+        }
+        $('#net-link-'+item.id).val(url);
+    })
+}
+
+
 </script>
 
 
@@ -64,9 +108,9 @@ $(document).ready(function()
         <em id="instruction">{{description}}</em>
         <div class="input-group">
             <span class="input-group-btn">
-                <button id="copy-button" class="btn btn-default" data-clipboard-target='net-link' title="Скопировать в буфер" type="button"><i class='fa fa-copy' id='clipboard_copy_icon'></i></button>
+                <button id="copy-button" class="btn btn-default clpbrd-copy" id="{{id}}" data-clipboard-target='net-link-{{id}}' title="Скопировать в буфер" type="button"><i class='fa fa-copy' id='clipboard_copy_icon'></i></button>
             </span>
-            <input type="text" style="width:100%;" class="form-control" id="net-link" value="{{url}}" readonly><br>
+            <input type="text" style="width:100%;" class="form-control" id="net-link-{{id}}" value="{{url}}" readonly><br>
         </div>
         </div>
     {{/links}}
@@ -111,7 +155,15 @@ $(document).ready(function()
 
 <div class="row" id="result-row" style="display:none;">
     <div class="col-md-12">
-        Postback ссылка для сети <span id="net-name"></span>:<br>
+        Postback ссылка для сети <b><span id="net-name"></span></b>:<br><br>
+        <div>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="is_lead" value="1"> Лид
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="is_sale" value="1"> Продажа
+        </label>
+        </div>
         <div id="links">
         
         </div>

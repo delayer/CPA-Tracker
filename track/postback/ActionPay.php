@@ -7,6 +7,7 @@ class ActionPay {
     
     public $net = 'ActionPay';
     
+    private $common;
     
     private $params = array(
         'subid' => 'subaccount',
@@ -22,7 +23,7 @@ class ActionPay {
     
     
     function __construct() {
-  
+        $this->common = new common($this->params);
     }
     
     
@@ -38,14 +39,17 @@ class ActionPay {
         $return = array();
         
         array_push($return, array(
+            'id' => 0,
             'description' => 'Вставьте эту ссылку в поле "Постбэк - Создание"',
             'url' => $url.'&status=created'
         ));
         array_push($return, array(
+            'id' => 1,
             'description' => 'Вставьте эту ссылку в поле "Постбэк - Принятие"',
             'url' => $url.'&status=approved'
         ));
         array_push($return, array(
+            'id' => 2,
             'description' => 'Вставьте эту ссылку в поле "Постбэк - Отклонение"',
             'url' => $url.'&status=declined'
         ));
@@ -82,42 +86,8 @@ class ActionPay {
                 break;
         }
         
+        $this->common->process_conversion($data);
         
-        if (isset($data['subid'])) {
-            // Проверяем, есть ли уже конверсия с таким SubID из этой же сетки
-            $r = mysql_query('SELECT * FROM `tbl_conversions` WHERE `subid` = "'.$data['subid'].'" AND `network` = "'.$this->net.'" LIMIT 1') or die(mysql_error());
-            if (mysql_num_rows($r) > 0) {
-                $f = mysql_fetch_assoc($r);
-                $update = '';
-                foreach ($data as $name => $value) {
-                    if (array_key_exists($name, $this->params) || $name == 'status' || $name == 'txt_status') {
-                        $update .= '`'.$name.'` = "'.$value.'"';
-                        if ($i < $cnt) {
-                            $update .= ', ';
-                        }
-                    }
-                    $i++;
-                }
-//                echo 'UPDATE `tbl_conversions` SET '.$update.' WHERE `id` = '.$f['id'];
-                mysql_query('UPDATE `tbl_conversions` SET '.$update.' WHERE `id` = '.$f['id']) or die(mysql_error());
-                return;
-            }
-        }
-        
-        foreach ($data as $name => $value) {
-            if (array_key_exists($name, $this->params) || $name == 'status' || $name == 'txt_status') {
-                $params .= '`'.$name.'`';
-                $vals .= '"'.$value.'"';
-                if ($i < $cnt) {
-                    $params .= ', ';
-                    $vals .= ', ';
-                }
-            }
-            $i++;
-        }
-        $params .= ', `date_add`';
-        $vals .= ', "'.date('Y-m-d H:i:s').'"';
-        mysql_query('INSERT INTO `tbl_conversions` ('.$params.') VALUES ('.$vals.')') or die(mysql_error());
     }
     
     

@@ -13,11 +13,13 @@ $_DB_NAME = $arr_settings['dbname'];
 $_DB_HOST = $arr_settings['dbserver'];
 
 include dirname(__FILE__) . "/connect.php";
+include dirname(__FILE__) . "/lib/class/common.php";
+include dirname(__FILE__) . "/lib/class/custom.php";
 include dirname(__FILE__) . "/../track-show/functions_general.php";
 
 
 function net_loader($class) {
-    include dirname(__FILE__).'/postback/'.$class.'.php';
+    include_once dirname(__FILE__).'/postback/'.$class.'.php';
 }
 
 spl_autoload_register('net_loader');
@@ -51,6 +53,9 @@ if (count($arr_files) == 0) {
     exit();
 }
 
+//Если есть что обрабатывать инициализируем класс собственных правил (custom)
+$custom = new custom();
+
 foreach ($arr_files as $cur_file) {
     $file_name = dirname(__FILE__) . "/cache/postback/{$cur_file}+";
     $file_name = dirname(__FILE__) . "/cache/postback/{$cur_file}";
@@ -58,14 +63,12 @@ foreach ($arr_files as $cur_file) {
     $conversions = file($file_name);
     foreach ($conversions as $conv) {
         $data = unserialize($conv);
-        switch ($data['net']) {
-            case 'other':
-                process_custom_conversion($data);
-                break;
-            default:
-                $net = new $data['net']();
-                $net->process_conversion($data);
-                break;
+        if (!isset($data['net'])) {
+            $custom->process_conversion($data);
+        }
+        else {
+            $net = new $data['net']();
+            $net->process_conversion($data);
         }
     }
 //    exit;

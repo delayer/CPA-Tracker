@@ -36,6 +36,9 @@ class ActionPay {
             $url .= '&'.$name.'={'.$value.'}';
         }
         
+        $code = $this->common->get_code();
+        $url .= '&apikey='.$code;
+        
         $return = array();
         
         array_push($return, array(
@@ -60,12 +63,12 @@ class ActionPay {
     
     
     
-    function process_conversion($data = array()) {
+    function process_conversion($data_all = array()) {
+        $data = $data_all['get'];
         $params = '`network`, ';
         $vals  = '"'.$this->net.'", ';
         unset($data['net']);
-        $cnt  = count($data);
-        $i   = 0;
+        
         
         switch ($data['status']) {
             case 'approved':

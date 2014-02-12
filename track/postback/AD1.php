@@ -43,7 +43,12 @@ class AD1 {
         foreach ($this->params as $name => $value) {
             $url .= '&'.$name.'={'.$value.'}';
         }
+        
+        $code = $this->common->get_code();
+        $url .= '&apikey='.$code;
+        
         $return = array(
+            'id' => 0,
             'url' => $url,
             'description' => 'Вставьте эту ссылку в поле PostBack ссылки в настройках Вашего потока в сети AD1.'
         );
@@ -55,7 +60,8 @@ class AD1 {
  
     
     
-    function process_conversion($data = array()) {
+    function process_conversion($data_all = array()) {
+        $data = $data_all['get'];
         $params = '`network`, ';
         $vals  = '"'.$this->net.'", ';
         unset($data['net']);

@@ -1,5 +1,7 @@
 <?php
 
+define('_ROOT_PATH', dirname(__FILE__));
+
 set_time_limit(0);
 
 $settings_file = dirname(__FILE__) . '/cache/settings.php';

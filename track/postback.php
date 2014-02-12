@@ -1,10 +1,16 @@
 <?php
-	$data = serialize($_GET)."\n";
-	// Save postback information in file	
-	if (strlen ($data)>0)
-	{
-//		$str="{$type}\t{$amount}\t{$currency}\t{$subid}\n";
-		file_put_contents(dirname (__FILE__).'/cache/postback/.postback_'.date('Y-m-d-H-i'), $data, FILE_APPEND | LOCK_EX);		
-	}
+
+// Если не передан API ключ, то пропускаем такое
+//if (!isset($_GET['apikey']))
+//    exit;
+
+$data['get']    = $_GET;
+$data['post']   = $_POST;
+
+$s_data = serialize($data)."\n";
+if (strlen ($data)>0)
+{
+        file_put_contents(dirname (__FILE__).'/cache/postback/.postback_'.date('Y-m-d-H-i'), $s_data, FILE_APPEND | LOCK_EX);		
+}
 
         

@@ -8,12 +8,14 @@ class common {
     private $params = array();
     
     
-    function __construct($params) {
+    function __construct($params = array()) {
        $this->params = $params;
     }
     
     
     function process_conversion($data) {
+        $cnt  = count($data);
+        $i   = 0;
         $is_lead = (isset($data['is_lead']))?1:0;
         $is_sale = (isset($data['is_sale']))?1:0;
         unset($data['is_lead']);
@@ -65,6 +67,40 @@ class common {
         $vals .= ', "'.date('Y-m-d H:i:s').'"';
         mysql_query('INSERT INTO `tbl_conversions` ('.$params.') VALUES ('.$vals.')') or die(mysql_error());
     }
+    
+    
+    
+    function get_code() {
+        if (is_file(_ROOT_PATH.'/cache/.postback.key')) {
+            $key = file_get_contents(_ROOT_PATH.'/cache/.postback.key');
+            return $key;
+        }
+        else {
+            $key = substr(md5(__FILE__), 3, 10);
+            file_put_contents(_ROOT_PATH.'/cache/.postback.key', $key);
+            return $key;
+        }
+    }
+    
+    
+    function log($net, $post, $get) {
+        if (!isset($get['apikey']) || ($this->get_code() != $get['apikey'])) {
+            return;
+        }
+        
+        if (!is_dir(_ROOT_PATH.'/cache/pblogs/')) {
+            mkdir(_ROOT_PATH.'/cache/pblogs');
+        }
+        
+        $log = fopen(_ROOT_PATH.'/cache/pblogs/.'.$net.date('Y-m-d').'.txt', 'a+');
+        
+        if ($log) {
+            fwrite($log, '['.date('Y-m-d H:i:s').'] [POST] '. var_export($post));
+            fwrite($log, '['.date('Y-m-d H:i:s').'] [GET] '.  var_export($get));
+            fclose($log);
+        }        
+    }
+    
     
     
 }

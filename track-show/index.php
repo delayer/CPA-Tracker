@@ -2,8 +2,8 @@
 	ob_start();
 	set_time_limit(0);
 
-//	error_reporting(0);
-        error_reporting(E_ALL);
+	error_reporting(0);
+//        error_reporting(E_ALL);
         define("CSRF_KEY", md5(session_id()));
 	ini_set('display_errors', 0);
 	
@@ -597,6 +597,7 @@
                             echo json_encode($result);
                             exit;
                         }
+                        require('../track/lib/class/common.php');
                         require('../track/postback/'.$net.'.php');
                         $result['status'] = 'OK';
                         $network = new $net();

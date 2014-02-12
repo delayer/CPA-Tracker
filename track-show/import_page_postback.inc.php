@@ -105,7 +105,7 @@ function show_urls(is_lead,is_sale) {
     
     {{#links}}
         <div>
-        <em id="instruction">{{description}}</em>
+        <em id="instruction">{{{description}}}</em>
         <div class="input-group">
             <span class="input-group-btn">
                 <button id="copy-button" class="btn btn-default clpbrd-copy" id="{{id}}" data-clipboard-target='net-link-{{id}}' title="Скопировать в буфер" type="button"><i class='fa fa-copy' id='clipboard_copy_icon'></i></button>

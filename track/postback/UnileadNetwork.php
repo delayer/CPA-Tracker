@@ -1,7 +1,7 @@
 <?php
 
 
-class ActionAds {
+class UnileadNetwork {
     
     
     public $net = 'UnileadNetwork';

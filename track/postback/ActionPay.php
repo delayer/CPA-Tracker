@@ -65,8 +65,7 @@ class ActionPay {
     
     function process_conversion($data_all = array()) {
         $data = $data_all['get'];
-        $params = '`network`, ';
-        $vals  = '"'.$this->net.'", ';
+        $data['network'] = $this->net;
         unset($data['net']);
         
         
@@ -92,6 +91,7 @@ class ActionPay {
         $this->common->process_conversion($data);
         
     }
+    
     
     
 }

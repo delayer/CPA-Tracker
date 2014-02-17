@@ -1,6 +1,6 @@
-<? if (!$include_flag){exit();} ?>
+<?php if (!$include_flag){exit();} ?>
 <script src="js/report_toolbar.js"></script>
-<?
+<?php
 
 	$date=($_REQUEST['date']?$_REQUEST['date']:get_current_day());
 	$prev_date=date('Y-m-d', strtotime('-1 days', strtotime($date)));
@@ -143,7 +143,7 @@ echo "</div> <!-- ./row -->";
 <input type='hidden' id='sales_selected' value='1'>
 
 
-<?
+<?php
 // ********************************************************
 
 	echo "<h4>Лента переходов <span style='float:right;'><a title='Экспорт в Excel' href='?csrfkey=<?php echo CSRF_KEY;?>&ajax_act=excel_export&date="._e($date)."'><img src='img/icons/table-excel.png'></a></span><span style='float:right; margin-right:16px;'><a title='Экспорт в TSV' href='?csrfkey=<?php echo CSRF_KEY;?>&ajax_act=tsv_export&date="._e($date)."'><img src='img/icons/table-tsv.png'></a></span></h4>";

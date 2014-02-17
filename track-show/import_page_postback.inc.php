@@ -156,14 +156,6 @@ function show_urls(is_lead,is_sale) {
 <div class="row" id="result-row" style="display:none;">
     <div class="col-md-12">
         Postback ссылка для сети <b><span id="net-name"></span></b>:<br><br>
-        <div>
-        <label class="checkbox-inline">
-            <input type="checkbox" id="is_lead" value="1"> Лид
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" id="is_sale" value="1"> Продажа
-        </label>
-        </div>
         <div id="links">
         
         </div>

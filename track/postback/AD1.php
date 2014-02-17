@@ -62,8 +62,7 @@ class AD1 {
     
     function process_conversion($data_all = array()) {
         $data = $data_all['get'];
-        $params = '`network`, ';
-        $vals  = '"'.$this->net.'", ';
+        $data['network'] = $this->net;
         unset($data['net']);
         $cnt  = count($data);
         $i   = 0;

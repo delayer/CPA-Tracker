@@ -72,7 +72,7 @@ class CityAds {
                 $output_data[$key] = $value;
             }
         }
-        
+        $output_data['network'] = $this->net;
         $output_data['status'] = 1;
         $this->common->process_conversion($output_data);
     }

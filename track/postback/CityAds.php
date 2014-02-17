@@ -53,7 +53,7 @@ class CityAds {
         array_push($return, array(
             'id' => 0,
             'description' => '1. Вставьте эту ссылку в поле <b>Postback URL</b> в CityAds.<br>'
-            . '2. Выберите Тип запроса <b>GET</b><br>'
+            . '2. Выберите Тип запроса <b>POST</b><br>'
             . '3. Поставьте галочки напротив ВСЕХ переменных',
             'url' => $url.'&status=created'
         ));

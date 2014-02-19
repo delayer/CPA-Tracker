@@ -1,5 +1,5 @@
-<? if (!$include_flag){exit();} ?>
-<?
+<?php if (!$include_flag){exit();} ?>
+<?php
 $category_id=$_REQUEST['category_id'];
 $category_name='{empty}';
 
@@ -91,6 +91,8 @@ else
 }
 ?>
 <script>
+    
+    var last_removed = 0;
 	function import_offers_from_network(id)
 	{
 		$('#networks_import_ajax').show();
@@ -153,13 +155,16 @@ else
 
 	function delete_link(obj, id)
 	{
+            last_removed = id;
 		$.ajax({
 		  type: 'POST',
 		  url: 'index.php',
 		  data: 'csrfkey=<?php echo CSRF_KEY;?>&ajax_act=delete_link&id='+id
 		}).done(function( msg ) 
 		{
-			$(obj).parent().parent().parent().parent().parent().remove();
+//			$(obj).parent().parent().parent().parent().parent().remove();
+                        $('#linkrow-' + id).hide();
+                        $('#remove_alert').show();
 		});
 
 		return false;
@@ -176,19 +181,36 @@ else
 		});
 		return false;
 	}
+        
+        
+        function restore_link() {
+                var id = last_removed;
+		$.ajax({
+		  type: 'POST',
+		  url: 'index.php',
+		  data: 'csrfkey=<?php echo CSRF_KEY;?>&ajax_act=restore_link&id='+id
+		}).done(function( msg ) 
+		{
+//			$(obj).parent().parent().parent().parent().parent().remove();
+                        $('#linkrow-' + id).show();
+                        $('#remove_alert').hide();
+		});
+                last_removed = 0;
+		return false;
+        }
 
 	$(document).ready(function() 
 	{
 		$('#link_add_tooltip').tooltip({delay: { show: 300, hide: 100 }});	
 	});	
 </script>
-<?
+<?php
 if ($category_name!='{empty}')
 {?>
 
 
 
-	<?
+	<?php
 	echo "<div class='category_title' onclick='show_category_edit()'><span class='category_name'>"._e($category_name)."</span> <i class='fa fa-edit'></i></div>";
 	echo "<div class='category_edit'>";
 	?>
@@ -207,12 +229,12 @@ if ($category_name!='{empty}')
 	  <button type="button" class="btn btn-link" onclick='delete_category()'>Удалить</button>
 	</form>
 </div>
-	<?
+	<?php
 
 	echo "</div>";
 }
 ?>
-<?
+<?php
 if ($page_type=='network')
 {
 	echo "<p align=right><img style='margin-right:15px; display: none;' id='networks_import_ajax' src='img/icons/ajax.gif'><span class='btn' onclick='import_offers_from_network(\""._e($category_id)."\")'>Импорт офферов</span></p>";
@@ -245,7 +267,7 @@ else
 	</form>
 </div>
 
-<?
+<?php
 }
 
 if (count($arr_offers)>0)
@@ -253,6 +275,9 @@ if (count($arr_offers)>0)
 	echo "<div class='row'>&nbsp;</div>";
 	echo "<div class='row'>";
 	echo "<div class='col-md-12'>";
+        echo '<div class="alert alert-info" style="display:none;" id="remove_alert"><button type="button" class="close" data-dismiss="alert">&times;</button>'
+                . '<strong>Внимание!</strong> Ссылка была удалена, Вы можете ее <b><u><a href="javascript:void(0);" onClick="restore_link();">восстановить</a></u></b>.'
+                . '</div>';
 	echo "<table class='table table-striped table-condensed table-bordered'>";
 	echo "<tr>";
 		echo "<th>Название</th>";
@@ -272,13 +297,13 @@ if (count($arr_offers)>0)
 			$tracking_url=substr($tracking_url, strlen ('http://'));
 		}
 		$total_visits=$offers_stats_array[$cur['offer_id']]+0;
-		echo "<tr class='links_row'>";
+		echo "<tr class='links_row' id=linkrow-".$cur['offer_id'].">";
 			echo "<td>";
 			?>
 			<div class="btn-group links_menu">
                 <button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                 <ul class="dropdown-menu">
-					<?
+					<?php
 					if (count($arr_categories)>0)
 					{
 						if (intval($_REQUEST['category_id'])!=0)
@@ -298,7 +323,7 @@ if (count($arr_offers)>0)
 					?>
                 </ul>
               </div>
-			<?
+			<?php
 			echo _e($cur['offer_name'])."</td>";
 			echo "<td><input type=text style='width:350px; border:none; background:none; -webkit-box-shadow:none; box-shadow:none;' value='"._e($tracking_url)."'></td>";
 			echo "<td>"._e($total_visits)."</td>";

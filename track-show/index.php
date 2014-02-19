@@ -293,6 +293,16 @@
 			}
 			exit();
 		break;
+                
+		case 'restore_link': 
+			$id=intval($_POST['id']);
+			if ($id>0)
+			{
+				$sql="update tbl_offers set status='0' where id='".mysql_real_escape_string($id)."'";
+				mysql_query($sql);
+			}
+			exit();
+		break;
 		
 		case 'delete_sale':
 			$type=$_REQUEST['type'];

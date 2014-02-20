@@ -753,6 +753,15 @@
 		return ;
 	}
 	
+	function restore_rule($rule_id)
+	{
+		$sql="update tbl_rules set status='0' where id='"._str($rule_id)."'";
+                mysql_query($sql);
+
+                $sql="update tbl_rules_items set status='0' where rule_id='"._str($rule_id)."'";
+                mysql_query($sql);
+	}
+	
 
 function show_country_select($selected='')
 {

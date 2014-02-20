@@ -6,6 +6,7 @@
 <script src="lib/clipboard/ZeroClipboard.min.js"></script>
 
 <script>
+    var last_removed = 0;
     $(document).ready(function()
     {
         $('input[name=rule_name]').focus();
@@ -38,15 +39,7 @@
             $('.delbut').on("click", function(e) {
                 e.stopImmediatePropagation();
                 var id = $(this).attr('id');
-                var rule_name = $('#rule'+id).find('.rule-name-title').text();
-                $('#myModal').find('.modal-body').text('Удалить правило '+rule_name+'?');
-                $('#myModal').find('#hideid').val(id);
-                $('#myModal').modal()
-                $('#myModal').find('.yeapdel').on("click", function(e) {
-                    e.stopImmediatePropagation();
-                    $('#myModal').modal('hide');
-                    delete_rule($('#myModal').find('#hideid').val());                  
-                })            
+                delete_rule(id);            
             });
             $('.rname').on("click", function(e) {
                 e.stopPropagation();
@@ -318,16 +311,33 @@
     function delete_rule(rule_id)
     {
         
-            $.ajax({
+        $.ajax({
             type: 'POST',
             url: 'index.php',
             data: 'csrfkey=<?php echo CSRF_KEY;?>&ajax_act=delete_rule&id=' + rule_id
         }).done(function(msg)
         {
             $('#rule' + rule_id).hide();
+            $('#restore_alert').show();
+            last_removed = rule_id;
         });
 
         return false;
+    }
+    
+    
+    function restore_rule() {
+        $.ajax({
+            type: 'POST',
+            url: 'index.php',
+            data: 'csrfkey=<?php echo CSRF_KEY;?>&ajax_act=restore_rule&id=' + last_removed
+        }).done(function(msg)
+        {
+            $('#rule' + last_removed).show();
+            $('#restore_alert').hide();
+            last_removed = 0;
+        });
+
     }
  
 
@@ -780,7 +790,13 @@
     </div>
 </div>
 
-
+<div class="row">
+    <div class="col-md-9">
+        <div class="alert alert-info" style="display: none;" id="restore_alert">
+            <strong>Внимание!</strong> Правило было удалено, Вы можете его <strong><u><a href="javascript:void(0);" onClick="restore_rule();">восстановить</a></u></strong>
+        </div>
+    </div>
+</div>
 
 <div class='row'>
     <div class="col-md-9" id='rules_container'></div>

@@ -323,7 +323,12 @@
 			delete_rule ($rule_id);
 			exit();
 		break;
-		
+            
+                case 'restore_rule':
+                    $rule_id  = intval($_POST['id']);
+                    restore_rule($rule_id);
+                    exit;
+                break;
 		case 'move_link_to_category':
 			$category_id=$_REQUEST['category_id'];
 			$offer_id=$_REQUEST['offer_id'];

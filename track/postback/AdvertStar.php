@@ -1,10 +1,10 @@
 <?php
 
 
-class PrimeLead {
+class AdvertStar {
     
     
-    public $net = 'PrimeLead';
+    public $net = 'AdvertStar';
     
     private $common;
     
@@ -66,7 +66,7 @@ class PrimeLead {
         $return = array(
             'id' => 0,
             'url' => $url,
-            'description' => 'Вставьте эту ссылку в поле PostBack ссылки в настройках оффера PrimeLead.'
+            'description' => 'Вставьте эту ссылку в поле PostBack ссылки в настройках оффера AdvertStar.'
         );
         
         return array(

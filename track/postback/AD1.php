@@ -61,6 +61,7 @@ class AD1 {
     
     
     function process_conversion($data_all = array()) {
+        $this->common->log($this->net, $data_all['post'], $data_all['get']);
         $data = $data_all['get'];
         $data['network'] = $this->net;
         unset($data['net']);

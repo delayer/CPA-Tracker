@@ -76,6 +76,7 @@ class PrimeLead {
     
     
     function proceed_conversion($data_all) {
+        $this->common->log($this->net, $data_all['post'], $data_all['get']);
         $data = $data_all['get'];
         $data['network'] = $this->net;
         $data['status'] = 1;

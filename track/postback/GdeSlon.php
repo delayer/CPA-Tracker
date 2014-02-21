@@ -1,22 +1,25 @@
 <?php
 
 
-class Himba {
+class GdeSlon {
     
     
-    public $net = 'Himba';
+    public $net = 'GdeSlon';
     
     private $common;
     
     private $params = array(
-        'profit' => 'amount',
+        'profit' => 'profit',
         'subid' => 'sub_id',
-        'status' => 'status',
-        'txt_param7' => 'source',
-        'txt_param16' => 'sub_id2',
-        'int_param1' => 'goal_id',
-        'int_param2' => 'offer_id',
-        'int_param3' => 'adv_sub',
+        'txt_param1' => 'action_ip',
+        'txt_param2' => 'user_agent',
+        'txt_param5' => 'click_id',
+        'txt_param7' => 'user_referrer',
+        'float_param1' => 'order_sum',
+        'int_param2' => 'merchant_id',
+        'int_param3' => 'order_id',
+        'int_param4' => 'click_time',
+        'int_param6' => 'action_time',
     );
     
     
@@ -30,9 +33,6 @@ class Himba {
         $cur_url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
         $url = substr($cur_url, 0, strlen($cur_url)-21);
         $url .= '/track/postback.php?net='.$this->net;
-        foreach ($this->params as $name => $value) {
-            $url .= '&'.$name.'={'.$value.'}';
-        }
         
         $code = $this->common->get_code();
         $url .= '&apikey='.$code;
@@ -40,7 +40,7 @@ class Himba {
         $return = array(
             'id' => 0,
             'url' => $url,
-            'description' => 'Вставьте эту ссылку в поле PostBack ссылки в настройках оффера Himba.'
+            'description' => 'Вставьте эту ссылку в поле PostBack ссылки в настройках GdeSlon и выберите метод запроса GET'
         );
         
         return array(
@@ -51,12 +51,17 @@ class Himba {
     
     function proceed_conversion($data_all) {
         $this->common->log($this->net, $data_all['post'], $data_all['get']);
-        $data = $data_all['get'];
-        $data['network'] = $this->net;
-        unset($data['net']);
-        $data['date_add'] = date('Y-m-d H:i:s');
-        
-        $this->common->process_conversion($data);
+        $input_data = $data_all['get'];
+        $output_data = array();
+        foreach ($input_data as $name => $value) {
+            if ($key = array_search($name, $this->params)) {
+                $output_data[$key] = $value;
+            }
+        }
+        $output_data['network'] = $this->net;
+        $output_data['status'] = 1;
+        $output_data['date_add'] = date('Y-m-d H:i:s', $output_data['action_time']);
+        $this->common->process_conversion($output_data);
     }
     
     

@@ -37,35 +37,52 @@ class common {
                 $f = mysql_fetch_assoc($r);
                 $update = '';
                 foreach ($data as $name => $value) {
-                    if (array_key_exists($name, $this->params) || $name == 'status' || $name == 'txt_status') {
+                    if (array_key_exists($name, $this->params)) {
                         $update .= '`'.$name.'` = "'.$value.'"';
                         if ($i < $cnt) {
                             $update .= ', ';
                         }
+                        unset($data[$name]);
                     }
                     $i++;
                 }
-//                echo 'UPDATE `tbl_conversions` SET '.$update.' WHERE `id` = '.$f['id'];
+
                 mysql_query('UPDATE `tbl_conversions` SET '.$update.' WHERE `id` = '.$f['id']) or die(mysql_error());
+                
+                mysql_query('DELETE * FROM `tbl_postback_params` WHERE `conv_id` = '.$f['id']);
+                
+                foreach ($data as $name => $value) {
+                    mysql_query('INSERT INTO `tbl_postback_params` (`conv_id`, `name`, `value`)'
+                            . 'VALUES ('.$f['id'].', "'.$name.'", "'.$value.'")');
+                }
+                
                 return;
             }
             
         }
         
         foreach ($data as $name => $value) {
-            if (array_key_exists($name, $this->params) || $name == 'status' || $name == 'txt_status') {
+            if (array_key_exists($name, $this->params)) {
                 $params .= '`'.$name.'`';
                 $vals .= '"'.$value.'"';
                 if ($i < $cnt) {
                     $params .= ', ';
                     $vals .= ', ';
                 }
+                unset($data[$name]);
             }
             $i++;
         }
-        $params .= ', `date_add`';
-        $vals .= ', "'.date('Y-m-d H:i:s').'"';
+        
         mysql_query('INSERT INTO `tbl_conversions` ('.$params.') VALUES ('.$vals.')') or die(mysql_error());
+        $conv_id = mysql_insert_id();
+        foreach ($data as $name => $value) {
+            if (strpos($name, 'bsave_') > 0) {
+                $name = str_replace('pbsave_', '', $name);
+                mysql_query('INSERT INTO `tbl_postback_params` (`conv_id`, `name`, `value`)'
+                        . 'VALUES ('.$conv_id.', "'.$name.'", "'.$value.'")');
+            }
+        }
     }
     
     

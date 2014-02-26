@@ -271,6 +271,10 @@
 
 		while ($row=mysql_fetch_assoc($result))
 		{
+                    $add_r = mysql_query('SELECT * FROM `tbl_postback_params` WHERE `conv_id` = '.$row['id']);
+                    while ($add_f = mysql_fetch_assoc($add_r)) {
+                        $row['add'][] = $add_f;
+                    }
 			$arr_sales[]=$row;
 		}
 		return $arr_sales;

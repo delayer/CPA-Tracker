@@ -173,7 +173,12 @@
                                     echo 'Баннер: '.$cur['int_param10'].' '.$cur['txt_param15'].'<br>';
                                 }
                                 
-                                
+                                if (count($cur['add']) > 0) {
+                                    echo 'Дополнительно:<br>';
+                                    foreach ($cur['add'] as $add) {
+                                        echo $add['name'].':'.$add['value'].'<br>';
+                                    }
+                                }
                                 
                                 echo '</td></tr>';
 			}

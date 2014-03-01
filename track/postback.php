@@ -8,7 +8,7 @@ $data['get']    = $_GET;
 $data['post']   = $_POST;
 
 $s_data = serialize($data)."\n";
-if (strlen ($data)>0)
+if (strlen ($s_data)>0)
 {
         file_put_contents(dirname (__FILE__).'/cache/postback/.postback_'.date('Y-m-d-H-i'), $s_data, FILE_APPEND | LOCK_EX);		
 }

@@ -67,6 +67,7 @@ class ActionPay {
         $this->common->log($this->net, $data_all['post'], $data_all['get']);
         $data = $data_all['get'];
         $data['network'] = $this->net;
+        $data['date_add'] = date('Y-m-d H:i:s');
         unset($data['net']);
         
         

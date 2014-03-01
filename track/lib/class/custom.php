@@ -11,8 +11,8 @@ class custom {
     
     
     function process_conversion($data) {
-        if (isset($data['t'])) {
-            $this->proceed_old($data);
+        if (isset($data['get']['t'])) {
+            $this->proceed_old($data['get']);
             return;
         }
         

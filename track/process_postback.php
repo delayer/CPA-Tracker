@@ -65,11 +65,11 @@ foreach ($arr_files as $cur_file) {
     $conversions = file($file_name);
     foreach ($conversions as $conv) {
         $data = unserialize($conv);
-        if (!isset($data['net'])) {
+        if (!isset($data['get']['net'])) {
             $custom->process_conversion($data);
         }
         else {
-            $net = new $data['net']();
+            $net = new $data['get']['net']();
             $net->process_conversion($data);
         }
     }

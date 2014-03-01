@@ -14,7 +14,7 @@ class common {
     
     
     function process_conversion($data) {
-        $cnt  = count($data);
+        $cnt  = count($this->params);
         $i   = 0;
         $is_lead = (isset($data['is_lead']))?1:0;
         $is_sale = (isset($data['is_sale']))?1:0;
@@ -32,23 +32,20 @@ class common {
 
 
             // Проверяем, есть ли уже конверсия с таким SubID из этой же сетки
-            $r = mysql_query('SELECT * FROM `tbl_conversions` WHERE `subid` = "'.$data['subid'].'" AND `network` = "'.$this->net.'" LIMIT 1') or die(mysql_error());
+            $r = mysql_query('SELECT * FROM `tbl_conversions` WHERE `subid` = "'.$data['subid'].'" LIMIT 1') or die(mysql_error());
             if (mysql_num_rows($r) > 0) {
                 $f = mysql_fetch_assoc($r);
                 $update = '';
                 foreach ($data as $name => $value) {
                     if (array_key_exists($name, $this->params)) {
-                        $update .= '`'.$name.'` = "'.$value.'"';
-                        if ($i < $cnt) {
-                            $update .= ', ';
-                        }
+                        $update .= ', `'.$name.'` = "'.$value.'"';
+                        
                         unset($data[$name]);
                     }
-                    $i++;
                 }
 
-                mysql_query('UPDATE `tbl_conversions` SET '.$update.' WHERE `id` = '.$f['id']) or die(mysql_error());
-                
+                mysql_query('UPDATE `tbl_conversions` SET `network` = "'.$data['network'].'"'.$update.' WHERE `id` = '.$f['id']) or die(mysql_error());
+                unset($data['network']);
                 mysql_query('DELETE * FROM `tbl_postback_params` WHERE `conv_id` = '.$f['id']);
                 
                 foreach ($data as $name => $value) {
@@ -61,21 +58,19 @@ class common {
             
         }
         
+        
+        
         foreach ($data as $name => $value) {
             if (array_key_exists($name, $this->params)) {
-                $params .= '`'.$name.'`';
-                $vals .= '"'.$value.'"';
-                if ($i < $cnt) {
-                    $params .= ', ';
-                    $vals .= ', ';
-                }
+                $params .= ',`'.$name.'`';
+                $vals .= ',"'.$value.'"';
+                
                 unset($data[$name]);
             }
-            $i++;
         }
-        
-        mysql_query('INSERT INTO `tbl_conversions` ('.$params.') VALUES ('.$vals.')') or die(mysql_error());
+        mysql_query('INSERT INTO `tbl_conversions` (`network`, `date_add`  '.$params.') VALUES ("'.$data['network'].'", "'.$data['date_add'].'" '.$vals.')') or die(mysql_error());
         $conv_id = mysql_insert_id();
+        unset($data['network']);
         foreach ($data as $name => $value) {
             if (strpos($name, 'bsave_') > 0) {
                 $name = str_replace('pbsave_', '', $name);

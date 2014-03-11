@@ -68,6 +68,9 @@ foreach ($arr_files as $cur_file) {
         if (!isset($data['get']['net']) || $data['get']['net'] == 'custom') {
             $custom->process_conversion($data);
         }
+        elseif ($data['get']['net'] == 'pixel') {
+            $custom->process_pixel($data);
+        }
         else {
             $net = new $data['get']['net']();
             $net->process_conversion($data);

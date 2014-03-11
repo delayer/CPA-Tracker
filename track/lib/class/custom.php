@@ -93,9 +93,36 @@ class custom {
         return $url;
     }
     
+    function get_pixel_link() {
+        $protocol = isset($_SERVER["HTTPS"]) ? (($_SERVER["HTTPS"]==="on" || $_SERVER["HTTPS"]===1 || $_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://") :  (($_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://");
+        $cur_url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
+        $url = substr($cur_url, 0, strlen($cur_url)-21);
+        $url .= '/track/pixel.php';
+        
+        $code = $this->common->get_code();
+        $url .= '?apikey='.$code;
+        
+        
+        return $url;
+    }
+    
+    
+    
+    function process_pixel($data_all) {
+        $data = $data_all['get'];
+        
+        unset($data['net']);
+        
+        if (!isset($data['subid']))
+            $data['subid'] = date("YmdHis").'x'.sprintf ("%05d",rand(0,99999));
+        
+        if (!isset($data['date_add']))
+            $data['date_add'] = date('Y-m-d H:i:s');
+        
+        $data['network'] = 'pixel';
+                
+        $this->common->process_conversion($data);
+    }
+    
     
 }
-
-
-
-

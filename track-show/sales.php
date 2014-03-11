@@ -22,7 +22,7 @@
 	echo "<div class='col-md-12'>";
 	echo "<table class='table table-striped table-bordered table-condensed' style='width:600px;'>";
 		echo "<thead>";
-		echo "<tr><th>Дата</th><th>Ссылка</th><th>Сумма</th><th>Страна</th><th>Источник</th><th>Кампания</th><th>Реферер</th><th>SubID</th></tr>";
+		echo "<tr><th>Дата</th><th>Ссылка</th><th>Сумма</th><th>Сеть</th><th>Страна</th><th>Источник</th><th>Кампания</th><th>Реферер</th><th>SubID</th></tr>";
 		echo "</thead>";
 		echo "<tbody>";	
 			foreach ($arr_sales as $cur)
@@ -49,6 +49,7 @@
 							</div>";							
 							echo "</td>
 							<td>"._e(round($cur['profit'], 3))."</td>
+                                                        <td>"._e($cur['network'])."</td>    
 							<td>"._e($cur['country'])."</td>
 							<td>"._e($cur['source_name'])."</td>
 							<td>"._e($cur['campaign_name'])." "._e($cur['ads_name'])."</td>

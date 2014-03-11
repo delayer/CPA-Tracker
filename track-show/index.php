@@ -118,7 +118,7 @@
 	include "../track/connect.php";
 
 	$page_sidebar_allowed=array('sidebar-left-links.inc.php', 'sidebar-left-reports.inc.php');
-	$page_content_allowed=array('reports.php', 'sales.php', 'stats-flow.php','links_page.inc.php','rules_page.inc.php', 'import_page.inc.php', 'support_page.inc.php', 'costs_page.inc.php', 'import_page_postback.inc.php', 'timezone_settings_page.inc.php', 'login.php', 'salesreport.php');
+	$page_content_allowed=array('reports.php', 'sales.php', 'stats-flow.php','links_page.inc.php','rules_page.inc.php', 'import_page.inc.php', 'support_page.inc.php', 'costs_page.inc.php', 'import_page_postback.inc.php', 'timezone_settings_page.inc.php', 'login.php', 'salesreport.php', 'pixel_page.inc.php');
 
 	// Authentification
 	if ($_REQUEST['page']!='login')

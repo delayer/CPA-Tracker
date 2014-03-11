@@ -75,7 +75,8 @@ class common {
                 unset($data[$name]);
             }
         }
-        mysql_query('INSERT INTO `tbl_conversions` (`network`, `date_add`  '.$params.') VALUES ("'.$data['network'].'", "'.$data['date_add'].'" '.$vals.')') or die(mysql_error());
+        
+        mysql_query('INSERT INTO `tbl_conversions` (`network`  '.$params.') VALUES ("'.$data['network'].'" '.$vals.')') or die(mysql_error());
         $conv_id = mysql_insert_id();
         unset($data['network']);
         foreach ($data as $name => $value) {

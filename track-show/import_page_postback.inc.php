@@ -1,5 +1,7 @@
 <?php
 
+require_once '../track/lib/class/common.php';
+require_once '../track/lib/class/custom.php';
 $available_nets = array();
 $networks = dir('../track/postback');
 
@@ -9,6 +11,8 @@ while ($file = $networks->read()) {
         array_push($available_nets, $file);
     }
 }
+
+$custom = new custom();
 ?>
 <link href="lib/select2/select2.css" rel="stylesheet"/>
 
@@ -18,6 +22,7 @@ while ($file = $networks->read()) {
 
 <script type="text/javascript">
     var links;
+    var base_custom = "<?=$custom->get_links();?>";
 $(document).ready(function()
 {
 
@@ -80,6 +85,36 @@ $(document).ready(function()
             show_urls($('#is_lead').is(':checked'), $('#is_sale').is(':checked'));
         });
         
+        $('#custom-master-start').click(function(){
+            $('#search-row').hide();
+            $('#net-row').hide();
+            $('#net-row2').hide();
+            $('#master-form').show();
+        });
+        
+        $('#master-form input[type=checkbox]').change(function(){
+            var cur_url = base_custom;
+            
+            $('#master-form input[type=checkbox]').each(function(i) {
+                if ($(this).is(':checked')) {
+                    cur_url = cur_url + '&' + $(this).attr('id') + '=' + $('#'+$(this).attr('id')+'_val').val();
+                }
+                $('#custom-link-val').val(cur_url);
+            });
+            
+        });
+        
+        $('#master-form input[type=text]').change(function(){
+            var cur_url = base_custom;
+            $('#master-form input[type=checkbox]').each(function(i) {
+                if ($(this).is(':checked')) {
+                    cur_url = cur_url + '&' + $(this).attr('id') + '=' + $('#'+$(this).attr('id')+'_val').val();
+                }
+                $('#custom-link-val').val(cur_url);
+            });
+            
+        });
+        
 });
 
 
@@ -96,6 +131,10 @@ function show_urls(is_lead,is_sale) {
         $('#net-link-'+item.id).val(url);
     })
 }
+
+
+
+
 
 
 </script>
@@ -124,7 +163,7 @@ function show_urls(is_lead,is_sale) {
     </div>
 </div>
 
-<div class="row">
+<div class="row" id="net-row2">
     <div class="col-md-12">
         <b>Для Вашего удобства мы подготовили Postback ссылки для популярных СРА сетей, выберите необходимую и просто скопируйте полученную ссылку в нее: </b>
     </div>
@@ -149,7 +188,7 @@ function show_urls(is_lead,is_sale) {
 <div class="row" id="master-row">
     <div class="col-md-12">
         <b>Если Вы все еще не нашли свою Postback ссылку, то воспользуйтесь нашим мастером генерации ссылок, который сосздаст ссылку именно под Ваши данные.</b><br>
-        <button class="btn btn-success">Запуситить мастер</button>
+        <button class="btn btn-success" id="custom-master-start">Запуситить мастер</button>
     </div>
 </div>
 
@@ -160,4 +199,74 @@ function show_urls(is_lead,is_sale) {
         
         </div>
     </div>
+</div>
+
+<div class="row" id="master-form" style="display:none;">
+    <div class="col-md-12">
+        <div class="input-group">
+            <span class="input-group-btn">
+                <button id="copy-button" class="btn btn-default clpbrd-copy" id="custom-link" data-clipboard-target='custom-link-val' title="Скопировать в буфер" type="button"><i class='fa fa-copy' id='clipboard_copy_icon'></i></button>
+            </span>
+            <input type="text" style="width:100%;" class="form-control" id="custom-link-val" value="<?=$custom->get_links();?>" ><br>
+        </div><br>
+        Выберите какие параметры отслеживать (помимо параметров из таблицы трекер хранит все параметры начинающиеся с префикса pbsave_):<br>
+        
+        <table class="table table-hover table-striped">
+            <tr>
+                <td><input type="checkbox" id="profit"></td>
+                <td>Сумма конверсии:</td>
+                <td><input type="text" id="profit_val" value="{profit}"></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" id="subid"></td>
+                <td>SubID:</td>
+                <td><input type="text" id="subid_val" value="{subid}"></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" id="status"></td>
+                <td>Статус:</td>
+                <td><input type="text" id="subid_val" value="{status}"></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" id="date_add"></td>
+                <td>Дата:</td>
+                <td><input type="text" id="date_add_val" value="{date}"></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" id="txt_param1"></td>
+                <td>IP:</td>
+                <td><input type="text" id="txt_param1_val" value="{ip}"></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" id="txt_param2"></td>
+                <td>User Agent:</td>
+                <td><input type="text" id="txt_param2_val" value="{uagent}"></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" id="txt_param4"></td>
+                <td>Название оффера:</td>
+                <td><input type="text" id="txt_param4_val" value="{offer_name}"></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" id="txt_param7"></td>
+                <td>Источник:</td>
+                <td><input type="text" id="txt_param7_val" value="{source}"></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" id="int_param1"></td>
+                <td>ID цели:</td>
+                <td><input type="text" id="int_param1_val" value="{goal_id}"></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" id="int_param2"></td>
+                <td>ID оффера:</td>
+                <td><input type="text" id="int_param2_val" value="{offer_id}"></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" id="int_param3"></td>
+                <td>ID заказа:</td>
+                <td><input type="text" id="int_param3_val" value="{order_id}"></td>
+            </tr>
+        </table>
+    </div>    
 </div>

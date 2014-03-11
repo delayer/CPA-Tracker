@@ -607,13 +607,14 @@
 		break;
                 
                 case 'postback_info':
+                        require('../track/lib/class/common.php');
                         $net = $_POST['net'];
                         if (!is_file('../track/postback/'.$net.'.php')) {
                             $result['status'] = 'ERR';
                             echo json_encode($result);
                             exit;
                         }
-                        require('../track/lib/class/common.php');
+                        
                         require('../track/postback/'.$net.'.php');
                         $result['status'] = 'OK';
                         $network = new $net();
@@ -650,6 +651,7 @@
 			$arr_left_menu[]=array('link'=>'index.php?page=import', 'icon'=>'icon-shopping-cart', 'caption'=>'Добавление продаж');
 			$arr_left_menu[]=array('link'=>'index.php?page=costs', 'icon'=>'icon-credit-card', 'caption'=>'Добавление затрат', 'is_active'=>1);
 			$arr_left_menu[]=array('link'=>'index.php?page=postback', 'icon'=>'icon-cogs', 'caption'=>'Интеграция с CPA сетями');
+                        $arr_left_menu[]=array('link'=>'index.php?page=pixel', 'icon'=>'icon-cogs', 'caption'=>'Пиксель отслеживания');
 
 			$arr_sources=get_sources();
 			$arr_campaigns=get_campaigns();
@@ -665,6 +667,7 @@
 			$arr_left_menu[]=array('link'=>'index.php?page=import', 'icon'=>'icon-shopping-cart', 'caption'=>'Добавление продаж', 'is_active'=>1);
 			$arr_left_menu[]=array('link'=>'index.php?page=costs', 'icon'=>'icon-credit-card', 'caption'=>'Добавление затрат');
 			$arr_left_menu[]=array('link'=>'index.php?page=postback', 'icon'=>'icon-cogs', 'caption'=>'Интеграция с CPA сетями');
+			$arr_left_menu[]=array('link'=>'index.php?page=pixel', 'icon'=>'icon-cogs', 'caption'=>'Пиксель отслеживания');
 
 			$page_content='import_page.inc.php';
 			include "templates/main.inc.php";
@@ -676,8 +679,21 @@
 			$arr_left_menu[]=array('link'=>'index.php?page=import', 'icon'=>'icon-shopping-cart', 'caption'=>'Добавление продаж');
 			$arr_left_menu[]=array('link'=>'index.php?page=costs', 'icon'=>'icon-credit-card', 'caption'=>'Добавление затрат');
 			$arr_left_menu[]=array('link'=>'index.php?page=postback', 'icon'=>'icon-cogs', 'caption'=>'Интеграция с CPA сетями', 'is_active'=>1);
+                        $arr_left_menu[]=array('link'=>'index.php?page=pixel', 'icon'=>'icon-cogs', 'caption'=>'Пиксель отслеживания');
 
 			$page_content='import_page_postback.inc.php';
+			include "templates/main.inc.php";
+			exit();
+		break;
+		
+		case 'pixel':
+			$arr_left_menu=array();
+			$arr_left_menu[]=array('link'=>'index.php?page=import', 'icon'=>'icon-shopping-cart', 'caption'=>'Добавление продаж');
+			$arr_left_menu[]=array('link'=>'index.php?page=costs', 'icon'=>'icon-credit-card', 'caption'=>'Добавление затрат');
+			$arr_left_menu[]=array('link'=>'index.php?page=postback', 'icon'=>'icon-cogs', 'caption'=>'Интеграция с CPA сетями');
+                        $arr_left_menu[]=array('link'=>'index.php?page=pixel', 'icon'=>'icon-cogs', 'caption'=>'Пиксель отслеживания', 'is_active'=>1);
+
+			$page_content='pixel_page.inc.php';
 			include "templates/main.inc.php";
 			exit();
 		break;

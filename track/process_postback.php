@@ -65,7 +65,7 @@ foreach ($arr_files as $cur_file) {
     $conversions = file($file_name);
     foreach ($conversions as $conv) {
         $data = unserialize($conv);
-        if (!isset($data['get']['net'])) {
+        if (!isset($data['get']['net']) || $data['get']['net'] == 'custom') {
             $custom->process_conversion($data);
         }
         else {

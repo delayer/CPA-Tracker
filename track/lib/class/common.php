@@ -13,6 +13,13 @@ class common {
     }
     
     
+    function set_params($params) {
+        if (is_array($params)) {
+            $this->params = $params;
+        }
+    }
+    
+    
     function process_conversion($data) {
         $cnt  = count($this->params);
         $i   = 0;
@@ -21,7 +28,7 @@ class common {
         unset($data['is_lead']);
         unset($data['is_dale']);
         
-        if (isset($data['subid'])) {
+        if (isset($data['subid']) && $data['subid'] != '') {
             //Проверяем есть ли клик с этим SibID
             $r = mysql_query('SELECT `id` FROM `tbl_clicks` WHERE `subid` = "'.$data['subid'].'"');
             

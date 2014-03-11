@@ -3,10 +3,23 @@
 
 class custom {
     
-    
-    
-    function __construct() {
+    public $params = array(
+        'profit'        => 'profit',
+        'subid'         => 'subid',
+        'status'        => 'status',
+        'date_add'      => 'date_add',
+        'txt_param1'    => 'txt_param1',
+        'txt_param2'    => 'txt_param2',
+        'txt_param4'    => 'txt_param4',
+        'txt_param7'    => 'txt_param7',
+        'int_param1'    => 'int_param1',
+        'int_param2'    => 'int_param2',
+        'int_param3'    => 'int_param3'
         
+    );
+            
+    function __construct() {
+        $this->common = new common($this->params);
     }
     
     
@@ -16,6 +29,17 @@ class custom {
             return;
         }
         
+        if (!isset($data['get']['date_add']) || $data['get']['date_add'] == '') {
+            $data['get']['date_add'] = date('Y-m-d H:i:s');
+        }
+        
+        if (is_int($data['get']['date_add'])) {
+            $data['get']['date_add'] = date('Y-m-d H:i:s', $data['get']['date_add']);
+        }
+        
+        unset($data['get']['net']);
+        
+        $this->common->proceed_conversion($data['get']);
         
     }
     
@@ -52,6 +76,21 @@ class custom {
                         . 'VALUES ("custom", "'.$data['a'].'", "'.$data['s'].'", 1, "'.$data['c'].'")');
             }
         }
+    }
+    
+    
+    
+    function get_links() {
+        $protocol = isset($_SERVER["HTTPS"]) ? (($_SERVER["HTTPS"]==="on" || $_SERVER["HTTPS"]===1 || $_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://") :  (($_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://");
+        $cur_url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
+        $url = substr($cur_url, 0, strlen($cur_url)-21);
+        $url .= '/track/postback.php?net=custom';
+        
+        $code = $this->common->get_code();
+        $url .= '&apikey='.$code;
+        
+        
+        return $url;
     }
     
     

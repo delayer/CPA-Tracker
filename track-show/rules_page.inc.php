@@ -318,6 +318,9 @@
         }).done(function(msg)
         {
             $('#rule' + rule_id).hide();
+            var rule_name = $('#rule'+rule_id).find('.rule-name-title');
+            var rule_name_text = $(rule_name).text();
+            $('#rule_name').text(rule_name_text);
             $('#restore_alert').show();
             last_removed = rule_id;
         });
@@ -793,7 +796,7 @@
 <div class="row">
     <div class="col-md-9">
         <div class="alert alert-info" style="display: none;" id="restore_alert">
-            <strong>Внимание!</strong> Правило было удалено, Вы можете его <strong><u><a href="javascript:void(0);" onClick="restore_rule();">восстановить</a></u></strong>
+            <strong>Внимание!</strong> Правило <span id="rule_name"></span> было удалено, Вы можете его <strong><u><a href="javascript:void(0);" onClick="restore_rule();">восстановить</a></u></strong>
         </div>
     </div>
 </div>

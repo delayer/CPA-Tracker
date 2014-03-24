@@ -102,6 +102,18 @@ class common {
         }
     }
     
+    function get_pixelcode() {
+        if (is_file(_ROOT_PATH.'/cache/.pixel.key')) {
+            $key = file_get_contents(_ROOT_PATH.'/cache/.pixel.key');
+            return $key;
+        }
+        else {
+            $key = substr(md5(__FILE__.'TraCKKERPIxxel'), 3, 10);
+            file_put_contents(_ROOT_PATH.'/cache/.pixel.key', $key);
+            return $key;
+        }
+    }
+    
     
     function log($net, $post, $get) {
         if (!isset($get['apikey']) || ($this->get_code() != $get['apikey'])) {

@@ -99,7 +99,7 @@ class custom {
         $url = substr($cur_url, 0, strlen($cur_url)-21);
         $url .= '/track/pixel.php';
         
-        $code = $this->common->get_code();
+        $code = $this->common->get_pixelcode();
         $url .= '?apikey='.$code;
         
         

@@ -17,12 +17,12 @@ $custom = new custom();
             var cur_url = base_custom;
             
             $('#master-form input[type=checkbox]').each(function(i) {
+                console.log(cur_url);
                 if ($(this).is(':checked')) {
-                    cur_url =  +cur_url + '&' + $(this).attr('id') + '=' + $('#'+$(this).attr('id')+'_val').val();
+                    cur_url =  cur_url + '&' + $(this).attr('id') + '=' + $('#'+$(this).attr('id')+'_val').val();
                 }
-                $('#custom-link-val').val("<img src='"+cur_url+"' width='1' height='1'>");
             });
-            
+            $('#custom-link-val').val("<img src='"+cur_url+"' width='1' height='1'>");
         });
         
         $('#master-form input[type=text]').change(function(){
@@ -31,9 +31,9 @@ $custom = new custom();
                 if ($(this).is(':checked')) {
                     cur_url = cur_url + '&' + $(this).attr('id') + '=' + $('#'+$(this).attr('id')+'_val').val();
                 }
-                $('#custom-link-val').val("<img src='"+cur_url+"' width='1' height='1'>");
+                
             });
-            
+            $('#custom-link-val').val("<img src='"+cur_url+"' width='1' height='1'>");
         });
     });
 </script>

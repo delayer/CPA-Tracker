@@ -58,7 +58,7 @@
 					echo "</td>";
 				echo "</tr>";
                                 
-                                echo '<tr style="display:none;"><td colspan="8">';
+                                echo '<tr style="display:none;"><td colspan="9">';
                                 if ($cur['txt_param1'] != '') {
                                     echo "<span class='badge' style='float:right; font-weight:normal; margin-right:25px;'>"._e($cur['txt_param1'])."</span>";
                                 }

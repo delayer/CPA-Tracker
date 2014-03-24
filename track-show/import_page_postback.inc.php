@@ -8,10 +8,14 @@ $networks = dir('../track/postback');
 while ($file = $networks->read()) {
     if ($file != '.' && $file != '..') {
         $file = str_replace('.php', '', $file);
-        array_push($available_nets, $file);
+        $name = $file;
+        if ($file == 'GdeSlon')
+            $name = 'ГдеСлон?';
+        $available_nets[$file] = $name;
     }
 }
 
+asort($available_nets);
 $custom = new custom();
 ?>
 <link href="lib/select2/select2.css" rel="stylesheet"/>
@@ -30,10 +34,6 @@ $(document).ready(function()
         var clip = new ZeroClipboard( document.getElementById("copy-button"), {
           moviePath: "lib/clipboard/ZeroClipboard.swf"
         } );
-
-//        clip.on( 'complete', function(client, args) {
-//            $('#clipboard_copy_icon').animate({opacity: 0.4}, "fast").animate({opacity: 1}, "fast");
-//        });
         
         $('.net-btn').click(function(){
             var btn = this;
@@ -87,7 +87,6 @@ $(document).ready(function()
         
         $('#custom-master-start').click(function(){
             $('#search-row').hide();
-            $('#net-row').hide();
             $('#net-row2').hide();
             $('#master-form').show();
         });
@@ -165,30 +164,31 @@ function show_urls(is_lead,is_sale) {
 
 <div class="row" id="net-row2">
     <div class="col-md-12">
-        <b>Для Вашего удобства мы подготовили Postback ссылки для популярных СРА сетей, выберите необходимую и просто скопируйте полученную ссылку в нее: </b>
+        В данном разделе вы можете настроить автоматический импорт информации о продажах из поддерживаемых CPA сетей.
     </div>
 </div>
 
 <div class="row" id="net-row">
     <div class="col-md-12">
         <div class="btn-group">
-            <?php foreach ($available_nets as $net) :?>
-                <button class="btn btn-default net-btn" net="<?=$net?>"><?=$net;?></button>
+            <? $i = 0;?>
+            <?php foreach ($available_nets as $net => $name) :?>
+                <button class="btn btn-default net-btn" net="<?=$net?>"><?=$name;?></button>
+                <?$i++;?>
+                <? if ($i%7 == 0):?>
+                </div>
+                <div class="btn-group">
+                <? endif;?>
             <?php endforeach; ?>
         </div>
     </div>
 </div>
 <br>
-<div class="row" id="search-row">
-    <div class="col-md-12">
-        <b>Как, не нашли подходящего? Поищите на <a href="http://www.cpatracker.ru/postback.html" target="_blank">нашем сайте</a>, возможно мы уже выпустили плагин для нее;)</b>
-    </div>
-</div>
-<br>
+
 <div class="row" id="master-row">
     <div class="col-md-12">
-        <b>Если Вы все еще не нашли свою Postback ссылку, то воспользуйтесь нашим мастером генерации ссылок, который сосздаст ссылку именно под Ваши данные.</b><br>
-        <button class="btn btn-success" id="custom-master-start">Запуситить мастер</button>
+        Если вашей сети нет в списке, вы можете использовать генератор Postback ссылок.<br>
+        <button class="btn btn-success" id="custom-master-start">Создать универсальную ссылку</button>
     </div>
 </div>
 

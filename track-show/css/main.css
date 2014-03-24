@@ -459,3 +459,9 @@ div.links_category_add span {
     width: 263px;
   }
 }
+
+
+.net-btn {
+    min-width: 120px; 
+    margin-bottom: 5px;
+}

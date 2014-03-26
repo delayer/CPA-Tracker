@@ -619,6 +619,10 @@
                         $result['status'] = 'OK';
                         $network = new $net();
                         $result['links'] = $network->get_links();
+                        $result['reg_url'] = $result['links']['reg_url'];
+                        $result['net_text'] = $result['links']['net_text'];
+                        unset($result['links']['reg_url']);
+                        unset($result['links']['net_text']);
                         echo json_encode($result);
                         exit;
                 break;

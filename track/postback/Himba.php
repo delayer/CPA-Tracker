@@ -19,6 +19,11 @@ class Himba {
         'int_param3' => 'adv_sub',
     );
     
+    private $reg_url = 'http://himba.ru/registration.html';
+    
+    private $net_text = 'Устали от серости на графиках? С нами они обретут краски! Наши рекламодатели получают реальные продажи, а вебмастера - хорошее вознаграждение.';
+    
+    
     
     function __construct() {
         $this->common = new common($this->params);
@@ -44,7 +49,9 @@ class Himba {
         );
         
         return array(
-            0 => $return
+            0 => $return,
+            'reg_url' => $this->reg_url,
+            'net_text' => $this->net_text
         );
     }
     

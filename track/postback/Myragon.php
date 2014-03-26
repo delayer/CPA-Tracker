@@ -21,6 +21,11 @@ class Myragon {
         'int_param6' => 'timestamp',
     );
     
+    private $reg_url = 'http://myragon.ru/';
+    
+    private $net_text = 'Устали от серости на графиках? С нами они обретут краски! Наши рекламодатели получают реальные продажи, а вебмастера - хорошее вознаграждение.';
+    
+    
     
     function __construct() {
         $this->common = new common($this->params);
@@ -46,7 +51,9 @@ class Myragon {
         );
         
         return array(
-            0 => $return
+            0 => $return,
+            'reg_url' => $this->reg_url,
+            'net_text' => $this->net_text
         );
     }
     

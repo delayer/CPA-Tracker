@@ -34,6 +34,11 @@ class ActionAds {
     );
     
     
+    private $reg_url = 'http://aff.actionads.ru/signup';
+    
+    private $net_text = 'Устали от серости на графиках? С нами они обретут краски! Наши рекламодатели получают реальные продажи, а вебмастера - хорошее вознаграждение.';
+    
+    
     function __construct() {
         $this->common = new common($this->params);
     }
@@ -58,7 +63,9 @@ class ActionAds {
         );
         
         return array(
-            0 => $return
+            0 => $return,
+            'reg_url' => $this->reg_url,
+            'net_text' => $this->net_text
         );
     }
     

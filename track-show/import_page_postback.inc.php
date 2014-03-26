@@ -1,5 +1,4 @@
 <?php
-
 require_once '../track/lib/class/common.php';
 require_once '../track/lib/class/custom.php';
 $available_nets = array();
@@ -26,16 +25,16 @@ $custom = new custom();
 
 <script type="text/javascript">
     var links;
-    var base_custom = "<?=$custom->get_links();?>";
-$(document).ready(function()
-{
+    var base_custom = "<?= $custom->get_links(); ?>";
+    $(document).ready(function()
+    {
 
         // init ZeroClipboard
-        var clip = new ZeroClipboard( document.getElementById("copy-button"), {
-          moviePath: "lib/clipboard/ZeroClipboard.swf"
-        } );
-        
-        $('.net-btn').click(function(){
+        var clip = new ZeroClipboard(document.getElementById("copy-button"), {
+            moviePath: "lib/clipboard/ZeroClipboard.swf"
+        });
+
+        $('.net-btn').click(function() {
             var btn = this;
             $('#search-row').hide();
             $('#master-row').hide();
@@ -43,93 +42,96 @@ $(document).ready(function()
                     'index.php?ajax_act=postback_info',
                     {
                         net: $(this).attr('net'),
-                        csrfkey: '<?=CSRF_KEY?>'
+                        csrfkey: '<?= CSRF_KEY ?>'
                     },
-                    function(data) {
-                        if (data.status == 'OK') {
-                            
-                            links = data.links;
-                            
-                            $('#net-name').text($(btn).attr('net'));
-                            var template = $('#linkTemplate').html();
-                            var template_data = data;
+            function(data) {
+                if (data.status == 'OK') {
 
-                            var html = Mustache.to_html(template, template_data);
-                            
-                            $('#links').html(html);
-                            
-                            $('button[id^="copy-button"]').each(function(i)
-                            {
-                                var cur_id = $(this).attr('id');
-                                var clip = new ZeroClipboard(this, {
-                                    moviePath: "lib/clipboard/ZeroClipboard.swf"
-                                });
+                    links = data.links;
 
-                                clip.on('mouseout', function(client, args) {
-                                    $('.btn-rule-copy').removeClass('zeroclipboard-is-hover');
-                                });
-                            });
-                            
-                            $('#result-row').show();
-                        }
-                    },
+                    $('#net-name').text($(btn).attr('net'));
+                    $('#netlink_name').text($(btn).attr('net'));
+                    $('#netlink_text').html(data.net_text);
+                    $('#netlink_href').attr('href', data.reg_url);
+                    var template = $('#linkTemplate').html();
+                    var template_data = data;
+
+                    var html = Mustache.to_html(template, template_data);
+
+                    $('#links').html(html);
+
+                    $('button[id^="copy-button"]').each(function(i)
+                    {
+                        var cur_id = $(this).attr('id');
+                        var clip = new ZeroClipboard(this, {
+                            moviePath: "lib/clipboard/ZeroClipboard.swf"
+                        });
+
+                        clip.on('mouseout', function(client, args) {
+                            $('.btn-rule-copy').removeClass('zeroclipboard-is-hover');
+                        });
+                    });
+
+                    $('#result-row').show();
+                }
+            },
                     'json'
-            );
+                    );
         });
-        
-        
-        $('#is_lead').change(function(){
+
+
+        $('#is_lead').change(function() {
             show_urls($('#is_lead').is(':checked'), $('#is_sale').is(':checked'));
         });
-        $('#is_sale').change(function(){
+        $('#is_sale').change(function() {
             show_urls($('#is_lead').is(':checked'), $('#is_sale').is(':checked'));
         });
-        
-        $('#custom-master-start').click(function(){
+
+        $('#custom-master-start').click(function() {
             $('#search-row').hide();
             $('#net-row2').hide();
             $('#master-form').show();
         });
-        
-        $('#master-form input[type=checkbox]').change(function(){
+
+        $('#master-form input[type=checkbox]').change(function() {
             var cur_url = base_custom;
-            
+
             $('#master-form input[type=checkbox]').each(function(i) {
                 if ($(this).is(':checked')) {
-                    cur_url = cur_url + '&' + $(this).attr('id') + '=' + $('#'+$(this).attr('id')+'_val').val();
+                    cur_url = cur_url + '&' + $(this).attr('id') + '=' + $('#' + $(this).attr('id') + '_val').val();
                 }
                 $('#custom-link-val').val(cur_url);
             });
-            
+
         });
-        
-        $('#master-form input[type=text]').change(function(){
+
+        $('#master-form input[type=text]').change(function() {
             var cur_url = base_custom;
             $('#master-form input[type=checkbox]').each(function(i) {
                 if ($(this).is(':checked')) {
-                    cur_url = cur_url + '&' + $(this).attr('id') + '=' + $('#'+$(this).attr('id')+'_val').val();
+                    cur_url = cur_url + '&' + $(this).attr('id') + '=' + $('#' + $(this).attr('id') + '_val').val();
                 }
                 $('#custom-link-val').val(cur_url);
             });
-            
+
         });
-        
-});
+
+    });
 
 
-function show_urls(is_lead,is_sale) {
-    $.each(links, function (i, item) {
-        var url = item.url;
-        if (is_lead) {
-             url = url + '&is_lead=1';
-        }
-        
-        if (is_sale) {
-            url = url + '&is_sale=1';
-        }
-        $('#net-link-'+item.id).val(url);
-    })
-}
+    function show_urls(is_lead, is_sale) {
+        $.each(links, function(i, item) {
+            var url = item.url;
+            if (is_lead) {
+                url = url + '&is_lead=1';
+            }
+
+            if (is_sale) {
+                url = url + '&is_sale=1';
+            }
+            $('#net-link-' + item.id).val(url);
+        })
+    }
 
 
 
@@ -140,17 +142,17 @@ function show_urls(is_lead,is_sale) {
 
 
 <script id="linkTemplate"  type="text/template">
-    
+
     {{#links}}
-        <div>
-        <em id="instruction">{{{description}}}</em>
-        <div class="input-group">
-            <span class="input-group-btn">
-                <button id="copy-button" class="btn btn-default clpbrd-copy" id="{{id}}" data-clipboard-target='net-link-{{id}}' title="Скопировать в буфер" type="button"><i class='fa fa-copy' id='clipboard_copy_icon'></i></button>
-            </span>
-            <input type="text" style="width:100%;" class="form-control" id="net-link-{{id}}" value="{{url}}" readonly><br>
-        </div>
-        </div>
+    <div>
+    <em id="instruction">{{{description}}}</em>
+    <div class="input-group">
+    <span class="input-group-btn">
+    <button id="copy-button" class="btn btn-default clpbrd-copy" id="{{id}}" data-clipboard-target='net-link-{{id}}' title="Скопировать в буфер" type="button"><i class='fa fa-copy' id='clipboard_copy_icon'></i></button>
+    </span>
+    <input type="text" style="width:100%;" class="form-control" id="net-link-{{id}}" value="{{url}}" readonly><br>
+    </div>
+    </div>
     {{/links}}
 
 </script>
@@ -171,14 +173,14 @@ function show_urls(is_lead,is_sale) {
 <div class="row" id="net-row">
     <div class="col-md-12">
         <div class="btn-group">
-            <? $i = 0;?>
-            <?php foreach ($available_nets as $net => $name) :?>
-                <button class="btn btn-default net-btn" net="<?=$net?>"><?=$name;?></button>
-                <?$i++;?>
-                <? if ($i%7 == 0):?>
+            <? $i = 0; ?>
+            <?php foreach ($available_nets as $net => $name) : ?>
+                <button class="btn btn-default net-btn" net="<?= $net ?>"><?= $name; ?></button>
+                <? $i++; ?>
+                <? if ($i % 7 == 0): ?>
                 </div>
                 <div class="btn-group">
-                <? endif;?>
+                <? endif; ?>
             <?php endforeach; ?>
         </div>
     </div>
@@ -196,7 +198,18 @@ function show_urls(is_lead,is_sale) {
     <div class="col-md-12">
         Postback ссылка для сети <b><span id="net-name"></span></b>:<br><br>
         <div id="links">
-        
+
+        </div>
+        <div class="panel panel-primary" style="margin-top: 30px;">
+            <div class="panel-heading">
+                <h3 class="panel-title">Партнерская сеть Biznip</h3>
+            </div>
+            <div class="panel-body">
+                <span id="netlink_text"></span>
+                <div>
+                    <a class="btn btn-primary pull-right" id="netlink_href" href="" style="padding: 5px 10px;">Зарегистрироваться в <span id="netlink_name"></span> →</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -207,10 +220,10 @@ function show_urls(is_lead,is_sale) {
             <span class="input-group-btn">
                 <button id="copy-button" class="btn btn-default clpbrd-copy" id="custom-link" data-clipboard-target='custom-link-val' title="Скопировать в буфер" type="button"><i class='fa fa-copy' id='clipboard_copy_icon'></i></button>
             </span>
-            <input type="text" style="width:100%;" class="form-control" id="custom-link-val" value="<?=$custom->get_links();?>" ><br>
+            <input type="text" style="width:100%;" class="form-control" id="custom-link-val" value="<?= $custom->get_links(); ?>" ><br>
         </div><br>
         Выберите какие параметры отслеживать (помимо параметров из таблицы трекер хранит все параметры начинающиеся с префикса pbsave_):<br>
-        
+
         <table class="table table-hover table-striped">
             <tr>
                 <td><input type="checkbox" id="profit"></td>

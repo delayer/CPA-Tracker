@@ -1,14 +1,9 @@
 <?php
 
-
-
 class ActionPay {
-    
-    
+
     public $net = 'ActionPay';
-    
     private $common;
-    
     private $params = array(
         'subid' => 'subaccount',
         'profit' => 'payment',
@@ -21,56 +16,60 @@ class ActionPay {
         'txt_param9' => 'uniqueid'
     );
     
+    private $reg_url = 'http://actionpay.ru/ru/signup/';
     
+    private $net_text = 'Устали от серости на графиках? С нами они обретут краски! Наши рекламодатели получают реальные продажи, а вебмастера - хорошее вознаграждение.';
+    
+
     function __construct() {
         $this->common = new common($this->params);
     }
-    
-    
+
     function get_links() {
-        $protocol = isset($_SERVER["HTTPS"]) ? (($_SERVER["HTTPS"]==="on" || $_SERVER["HTTPS"]===1 || $_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://") :  (($_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://");
-        $cur_url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
-        $url = substr($cur_url, 0, strlen($cur_url)-21);
-        $url .= '/track/postback.php?net='.$this->net;
+        $protocol = isset($_SERVER["HTTPS"]) ? (($_SERVER["HTTPS"] === "on" || $_SERVER["HTTPS"] === 1 || $_SERVER["SERVER_PORT"] === $pv_sslport) ? "https://" : "http://") : (($_SERVER["SERVER_PORT"] === $pv_sslport) ? "https://" : "http://");
+        $cur_url = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+        $url = substr($cur_url, 0, strlen($cur_url) - 21);
+        $url .= '/track/postback.php?net=' . $this->net;
         foreach ($this->params as $name => $value) {
-            $url .= '&'.$name.'={'.$value.'}';
+            $url .= '&' . $name . '={' . $value . '}';
         }
-        
+
         $code = $this->common->get_code();
-        $url .= '&apikey='.$code;
-        
+        $url .= '&apikey=' . $code;
+
         $return = array();
-        
+
         array_push($return, array(
             'id' => 0,
             'description' => 'Вставьте эту ссылку в поле "Постбэк - Создание"',
-            'url' => $url.'&status=created'
+            'url' => $url . '&status=created'
         ));
         array_push($return, array(
             'id' => 1,
             'description' => 'Вставьте эту ссылку в поле "Постбэк - Принятие"',
-            'url' => $url.'&status=approved'
+            'url' => $url . '&status=approved'
         ));
         array_push($return, array(
             'id' => 2,
             'description' => 'Вставьте эту ссылку в поле "Постбэк - Отклонение"',
-            'url' => $url.'&status=declined'
+            'url' => $url . '&status=declined'
         ));
-        
-        
+
+
+        $return = $return + array('reg_url' => $this->reg_url, 'net_text' => $this->net_text);
+
+
         return $return;
     }
-    
-    
-    
+
     function process_conversion($data_all = array()) {
         $this->common->log($this->net, $data_all['post'], $data_all['get']);
         $data = $data_all['get'];
         $data['network'] = $this->net;
         $data['date_add'] = date('Y-m-d H:i:s');
         unset($data['net']);
-        
-        
+
+
         switch ($data['status']) {
             case 'approved':
                 $data['txt_status'] = 'Approved';
@@ -89,15 +88,8 @@ class ActionPay {
                 $data['status'] = 0;
                 break;
         }
-        
+
         $this->common->process_conversion($data);
-        
     }
-    
-    
-    
+
 }
-
-
-
-

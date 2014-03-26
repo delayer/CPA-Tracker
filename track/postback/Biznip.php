@@ -22,6 +22,11 @@ class Biznip {
         'int_param3' => 'conversion_id',
     );
     
+    private $reg_url = 'http://my.biznip.com/auth/register';
+    
+    private $net_text = 'Устали от серости на графиках? С нами они обретут краски! Наши рекламодатели получают реальные продажи, а вебмастера - хорошее вознаграждение.';
+    
+    
     
     function __construct() {
         $this->common = new common($this->params);
@@ -47,7 +52,9 @@ class Biznip {
         );
         
         return array(
-            0 => $return
+            0 => $return,
+            'reg_url' => $this->reg_url,
+            'net_text' => $this->net_text
         );
     }
     

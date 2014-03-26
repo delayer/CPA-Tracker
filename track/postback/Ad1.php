@@ -29,6 +29,11 @@ class AD1 {
         'date_param2' => 'lead_date'
     );
     
+    private $reg_url = 'http://office.ad1.ru/register.html';
+    
+    private $net_text = 'Устали от серости на графиках? С нами они обретут краски! Наши рекламодатели получают реальные продажи, а вебмастера - хорошее вознаграждение.';
+    
+    
     
     function __construct() {
         $this->common = new common($this->params);
@@ -54,7 +59,9 @@ class AD1 {
         );
         
         return array(
-            0 => $return
+            0 => $return,
+            'reg_url' => $this->reg_url,
+            'net_text' => $this->net_text
         );
     }
  

@@ -33,6 +33,11 @@ class CityAds {
         'int_param9' => 'payout_id',
     );
     
+    private $reg_url = 'http://cityads.ru/ru/start/webmasters';
+    
+    private $net_text = 'Устали от серости на графиках? С нами они обретут краски! Наши рекламодатели получают реальные продажи, а вебмастера - хорошее вознаграждение.';
+    
+    
     
     function __construct() {
         $this->common = new common($this->params);
@@ -48,7 +53,7 @@ class CityAds {
         $code = $this->common->get_code();
         $url .= '&apikey='.$code;
         
-        $return = array();
+        $return = array('reg_url' => $this->reg_url, 'net_text' => $this->net_text);
         
         array_push($return, array(
             'id' => 0,

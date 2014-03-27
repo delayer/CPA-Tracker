@@ -64,7 +64,7 @@
                                 }
                                 
                                 if ($cur['date_add'] != '') {
-                                    echo 'Дата конверсии: '. $cur['date_add'].'<br>';
+                                    echo 'Дата конверсии: '. date('d.m.Y H:i:s', strtotime($cur['date_add'])).'<br>';
                                 }
                                 
                                 echo 'Сеть: '.$cur['network'].'<br>';

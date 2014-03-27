@@ -521,22 +521,22 @@
 		return array ('categories'=>$arr_data, 'categories_count'=>$arr_categories_count);
 	}
 
-	function import_sale_info ($data = array())
+	function import_sale_info ($lead_type, $amount, $subid)
 	{
 		$sql="select id from tbl_conversions where subid='"._str($subid)."' and type='"._str($lead_type)."'";
-		$result=mysql_query($sql);
+		$result=mysql_query($sql) or die(mysql_error());
 		$row=mysql_fetch_assoc($result);
 
 		if ($row['id']>0)
 		{
 			$id=$row['id'];
 			$sql="update tbl_conversions set amount='"._str($amount)."', date_add=NOW() where id='"._str($id)."'";
-			mysql_query($sql);
+			mysql_query($sql) or die(mysql_error());
 		}
 		else
 		{
-			$sql="insert into tbl_conversions (profit, type, subid, date_add) values ('"._str($amount)."', '"._str($lead_type)."', '"._str($subid)."', NOW())";
-			mysql_query($sql);
+			$sql="insert into tbl_conversions (profit, subid, date_add) values ('"._str($amount)."', '"._str($subid)."', NOW())";
+			mysql_query($sql) or die(mysql_error());
 		}
 
 		switch ($lead_type) 
@@ -549,7 +549,7 @@
 				$sql="update tbl_clicks set is_lead='1' where subid='"._str($subid)."'";		
 			break;
 		}
-		mysql_query($sql);			
+		mysql_query($sql) or die(mysql_error());			
 
 		return; 
 	}

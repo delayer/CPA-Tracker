@@ -215,17 +215,6 @@ krsort($sales);
         visibility: hidden; float:right; margin-left:5px;
     }
 
-    #per_day_range {
-        background: #ffffff;
-        -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
-        -moz-box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
-        box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
-        color: #333333;
-        padding: 8px;
-        line-height: 18px;
-        cursor: pointer;
-        margin-top: 12px;
-        margin-right: 20px;
-    }
+    
 
 </style>

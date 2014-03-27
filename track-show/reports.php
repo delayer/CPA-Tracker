@@ -51,15 +51,16 @@ switch ($_REQUEST['type']) {
           <a href="?act=reports&type=daily_stats&subtype='.$_GET['subtype'].'" type="button" class="btn btn-default '.$days_active.'">По дням</a>
           <a href="?act=reports&type=monthly_stats&subtype='.$_GET['subtype'].'" type="button" class="btn btn-default '.$month_active.'">По месяцам</a>
         </div>';
-        echo '<form method="post"  name="datachangeform">
-                <div style="width: 229px;float: right;position: relative;top: -5px;">
-                    <div class="input-group">                          
-			  <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-			  <input style="width: 192px;" type="text" name="date_range" value="' . $value_date_range . '" id="putdate_range" class="form-control">
-			  <input type="hidden" id="form_range_from" name="from" value="' . $from . '">
-                          <input  id="form_range_to"  type="hidden" name="to" value="' . $to . '">
-                    </div>
+        
+        
+        echo '<form method="post"  name="datachangeform" id="range_form">
+                <div id="per_day_range" class="pull-right" style="margin-top:0px; margin-bottom:10px;">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                    <span id="cur_day_range">'.date('d.m.Y', strtotime($from)).' - '. date('d.m.Y', strtotime($to)).'</span> <b class="caret"></b>
+                    <input type="hidden" name="from" id="sStart" value="">
+                    <input type="hidden" name="to" id="sEnd" value="">
                 </div>
+                
                 <div><h3>' . $report_name . '</h3></div>
               </form>';
 
@@ -152,8 +153,40 @@ switch ($_REQUEST['type']) {
 <script>
     $('#dpMonthsF').datepicker();
     $('#dpMonthsT').datepicker();
-    $('#putdate_range').daterangepicker({format: 'DD.MM.YYYY', locale: {applyLabel: "Выбрать", cancelLabel: "<i class='fa fa-times' style='color:gray'></i>", fromLabel: "От", toLabel: "До", customRangeLabel: 'Свой интервал', daysOfWeek: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
-        }});
+//    $('#putdate_range').daterangepicker({format: 'DD.MM.YYYY', locale: {applyLabel: "Выбрать", cancelLabel: "<i class='fa fa-times' style='color:gray'></i>", fromLabel: "От", toLabel: "До", customRangeLabel: 'Свой интервал', daysOfWeek: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
+//        }});
+    
+    
+    $('#per_day_range').daterangepicker(
+            {
+                
+                format: 'DD.MM.YYYY',
+                locale: {
+                    applyLabel: "Выбрать",
+                    cancelLabel: "<i class='fa fa-times' style='color:gray'></i>",
+                    fromLabel: "От",
+                    toLabel: "До",
+                    customRangeLabel: 'Свой интервал',
+                    daysOfWeek: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
+                },
+                ranges: {
+                    
+                    'Сегодня': [moment(), moment()],
+                    'Вчера': [moment().subtract('days', 1), moment().subtract('days', 1)],
+                    'Последние 7 дней': [moment().subtract('days', 6), moment()],
+                    'Последние 30 дней': [moment().subtract('days', 29), moment()],
+                    'Ткущий месяц': [moment().startOf('month'), moment().endOf('month')],
+                    'Прошлый месяц': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+                    
+                }
+            },
+    function(start, end) {
+        $('#cur_day_range').text(start.format('DD.MM.YYYY') + ' - ' + end.format('DD.MM.YYYY'));
+        $('#sStart').val(start.format('YYYY-MM-DD'));
+        $('#sEnd').val(end.format('YYYY-MM-DD'));
+        $('#range_form').submit();
+    }
+    );
     jQuery.fn.dataTableExt.oSort['click-data-asc'] = function(a, b) {
         x = $('.clicks', $('<div>' + a + '</div>')).text().split(':', 1);
         y = $('.clicks', $('<div>' + b + '</div>')).text().split(':', 1);

@@ -50,7 +50,7 @@ if ($handle = opendir(dirname(__FILE__) . '/cache/postback')) {
     }
     closedir($handle);
 }
-//print_r($arr_files);
+
 if (count($arr_files) == 0) {
     exit();
 }
@@ -76,7 +76,7 @@ foreach ($arr_files as $cur_file) {
             $net->process_conversion($data);
         }
     }
-//    exit;
+
     rename($file_name, dirname(__FILE__) . "/cache/postback/{$cur_file}*");
 }
 

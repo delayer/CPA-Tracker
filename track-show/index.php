@@ -2,8 +2,6 @@
 	ob_start();
 	set_time_limit(0);
 
-//	error_reporting(0);
-//        error_reporting(E_ALL);
         ini_set('display_errors', 'off');
         define("CSRF_KEY", md5(session_id()));
         define('_ROOT_PATH', str_replace('track-show/', 'track/', dirname(__FILE__)));

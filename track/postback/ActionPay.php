@@ -88,7 +88,7 @@ class ActionPay {
                 $data['status'] = 0;
                 break;
         }
-
+        
         $this->common->process_conversion($data);
     }
 

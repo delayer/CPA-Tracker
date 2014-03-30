@@ -169,7 +169,7 @@ $custom = new custom();
         В данном разделе вы можете настроить автоматический импорт информации о продажах из поддерживаемых CPA сетей.
     </div>
 </div>
-
+<br>
 <div class="row" id="net-row">
     <div class="col-md-12">
         <div class="btn-group">
@@ -189,11 +189,11 @@ $custom = new custom();
 
 <div class="row" id="master-row">
     <div class="col-md-12">
-        Если вашей сети нет в списке, вы можете использовать генератор Postback ссылок.<br>
+        Если вашей сети нет в списке, вы можете использовать генератор Postback ссылок.<br><br>
         <button class="btn btn-success" id="custom-master-start">Создать универсальную ссылку</button>
     </div>
 </div>
-
+<br>
 <div class="row" id="result-row" style="display:none;">
     <div class="col-md-12">
         Postback ссылка для сети <b><span id="net-name"></span></b>:<br><br>

@@ -45,9 +45,9 @@ class UnileadNetwork {
         'int_param14' => 'offer_ref',
     );
     
-    private $reg_url = 'http://www.unileadnetwork.com/affiliate-create-account/';
+    private $reg_url = 'http://www.cpatracker.ru/networks/unilead';
     
-    private $net_text = 'Устали от серости на графиках? С нами они обретут краски! Наши рекламодатели получают реальные продажи, а вебмастера - хорошее вознаграждение.';
+    private $net_text = 'Международная сеть с большим количеством офферов для российского трафика. Сеть специализируется на мобильных офферах для iPhone и Android, с оплатой за установку приложений. Среди рекламодателей такие известные бренды как Castle Clash, Kaspersky Internet Security, Drakensang Online, Carnage и Travian. Кроме игр сеть предлагает также мобильные лендинги для кредитных продуктов, заказа такси и товаров Mail.Ru.';
     
     
     

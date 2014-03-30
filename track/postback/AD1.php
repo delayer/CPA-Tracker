@@ -29,10 +29,9 @@ class AD1 {
         'date_param2' => 'lead_date'
     );
     
-    private $reg_url = 'http://office.ad1.ru/register.html';
+    private $reg_url = 'http://aff.actionads.ru/signup';
     
     private $net_text = 'Устали от серости на графиках? С нами они обретут краски! Наши рекламодатели получают реальные продажи, а вебмастера - хорошее вознаграждение.';
-    
     
     
     function __construct() {

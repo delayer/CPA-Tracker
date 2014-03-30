@@ -57,7 +57,7 @@
 		<div class="row">
 			<div class="col-xs-6">
 				<div class="input-group">
-					<input type="text" class="form-control" id='amount_value' name='amount_value' placeholder="0.00">
+					<input type="text" class="form-control" id='amount_value' name='amount_value' placeholder="0.00" required>
 					<div class="input-group-btn">
 						<button type="button" id="currency_selected" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">руб.&nbsp;&nbsp;<span class="caret"></span></button>
 						<ul class="dropdown-menu pull-right" role="menu">
@@ -74,7 +74,7 @@
 	<div class="row">
 		<div class="form-group col-xs-6">
 			<label for="exampleInputFile">Список SubID</label>
-		    <textarea class="form-control" rows='5' id='subids' name='subids'></textarea>
+                        <textarea class="form-control" rows='5' id='subids' name='subids' required></textarea>
 		    <p class="help-block">По одному на строке или через запятую.</p>
 		</div>
 	</div>

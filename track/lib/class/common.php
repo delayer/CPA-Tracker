@@ -28,6 +28,18 @@ class common {
         unset($data['is_lead']);
         unset($data['is_dale']);
         
+        switch ($data['txt_param2']) {
+            case 'uah':
+                $data['profit'] = convert_to_usd('uah', $data['profit']);
+                break;
+            case 'usd':
+                $data['profit'] = convert_to_usd('usd', $data['profit']);
+                break;
+            default:
+                $data['profit'] = convert_to_usd('rub', $data['profit']);
+                break;
+        }
+        
         if (isset($data['subid']) && $data['subid'] != '') {
             //Проверяем есть ли клик с этим SibID
             $r = mysql_query('SELECT `id` FROM `tbl_clicks` WHERE `subid` = "'.$data['subid'].'"') or die(mysql_error());

@@ -92,7 +92,7 @@ else
 ?>
 <script>
     
-    var last_removed = 0;
+        var last_removed = 0;
 	function import_offers_from_network(id)
 	{
 		$('#networks_import_ajax').show();
@@ -162,8 +162,8 @@ else
 		  data: 'csrfkey=<?php echo CSRF_KEY;?>&ajax_act=delete_link&id='+id
 		}).done(function( msg ) 
 		{
-//			$(obj).parent().parent().parent().parent().parent().remove();
                         $('#linkrow-' + id).hide();
+                        $('#link_name_alert').text($('#link-name-'+id).text());
                         $('#remove_alert').show();
 		});
 
@@ -201,7 +201,8 @@ else
 
 	$(document).ready(function() 
 	{
-		$('#link_add_tooltip').tooltip({delay: { show: 300, hide: 100 }});	
+            $('#new_link_name').focus();
+            $('#link_add_tooltip').tooltip({delay: { show: 300, hide: 100 }});	
 	});	
 </script>
 <?php
@@ -256,7 +257,7 @@ else
 		<input type=hidden name='category_id' value='<? echo _e($category_id);?>'>
 
 		  <div class="form-group col-xs-3">
-			    <input type="text" class="form-control" name='link_name' placeholder="Название ссылки">
+			    <input type="text" class="form-control" name='link_name' id="new_link_name" placeholder="Название ссылки">
 		  </div>
 
 		  <div class="form-group  col-xs-5">
@@ -276,7 +277,7 @@ if (count($arr_offers)>0)
 	echo "<div class='row'>";
 	echo "<div class='col-md-12'>";
         echo '<div class="alert alert-info" style="display:none;" id="remove_alert"><button type="button" class="close" data-dismiss="alert">&times;</button>'
-                . '<strong>Внимание!</strong> Ссылка была удалена, Вы можете ее <b><u><a href="javascript:void(0);" onClick="restore_link();">восстановить</a></u></b>.'
+                . '<strong>Внимание!</strong> Ссылка <strong id="link_name_alert"></strong> была удалена, Вы можете ее <b><u><a href="javascript:void(0);" onClick="restore_link();">восстановить</a></u></b>.'
                 . '</div>';
 	echo "<table class='table table-striped table-condensed table-bordered'>";
 	echo "<tr>";
@@ -324,7 +325,7 @@ if (count($arr_offers)>0)
                 </ul>
               </div>
 			<?php
-			echo _e($cur['offer_name'])."</td>";
+			echo '<span id="link-name-'.$cur['offer_id'].'">'._e($cur['offer_name'])."</span></td>";
 			echo "<td><input type=text style='width:350px; border:none; background:none; -webkit-box-shadow:none; box-shadow:none;' value='"._e($tracking_url)."'></td>";
 			echo "<td>"._e($total_visits)."</td>";
 		echo "</tr>";	

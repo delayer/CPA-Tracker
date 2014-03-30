@@ -430,7 +430,7 @@
     }
     function validate_add_rule() {
         var nameR = /^[a-z0-9\-\_]+$/i;
-        if ($('#form_add_rule')).val() == '') {
+        if ($('#form_add_rule').val() == '') {
             return false;
         }
         if (!nameR.test($('input[name=rule_name]', $('#form_add_rule')).val())){

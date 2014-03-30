@@ -9,7 +9,7 @@ while ($file = $networks->read()) {
         $file = str_replace('.php', '', $file);
         $name = $file;
         if ($file == 'GdeSlon')
-            $name = 'ГдеСлон?';
+            $name = 'Где Слон?';
         $available_nets[$file] = $name;
     }
 }

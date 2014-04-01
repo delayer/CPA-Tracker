@@ -12,13 +12,13 @@ class Myragon {
         'profit' => 'price',
         'subid' => 'sa',
         'txt_status' => 'event',
-        'txt_param3' => 'target_name',
-        'txt_param4' => 'offer_name',
-        'txt_param20' => 'currency',
-        'int_param1' => 'target_id',
-        'int_param2' => 'offer_id',
-        'int_param3' => 'order_id',
-        'int_param6' => 'timestamp',
+        't3' => 'target_name',
+        't4' => 'offer_name',
+        't20' => 'currency',
+        'i1' => 'target_id',
+        'i2' => 'offer_id',
+        'i3' => 'order_id',
+        'i6' => 'timestamp',
     );
     
     private $reg_url = 'http://www.cpatracker.ru/networks/myragon';
@@ -36,13 +36,13 @@ class Myragon {
         $protocol = isset($_SERVER["HTTPS"]) ? (($_SERVER["HTTPS"]==="on" || $_SERVER["HTTPS"]===1 || $_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://") :  (($_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://");
         $cur_url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
         $url = substr($cur_url, 0, strlen($cur_url)-21);
-        $url .= '/track/postback.php?net='.$this->net;
+        $url .= '/track/p.php?n='.$this->net;
         foreach ($this->params as $name => $value) {
             $url .= '&'.$name.'=[='.$value.'=]';
         }
         
         $code = $this->common->get_code();
-        $url .= '&apikey='.$code;
+        $url .= '&ak='.$code;
         
         $return = array(
             'id' => 0,

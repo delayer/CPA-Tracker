@@ -13,20 +13,20 @@ class AD1 {
         'profit' => 'summ_approved',
         'date_add' => 'postback_date',
         'txt_status' => 'status',
-        'txt_param1' => 'uip',
-        'txt_param2' => 'uagent',
-        'txt_param3' => 'goal_title',
-        'txt_param4' => 'offer_name',
-        'float_param1' => 'summ_total',
-        'int_param1' => 'goal_id',
-        'int_param2' => 'offer_id',
-        'int_param3' => 'order_id',
-        'int_param4' => 'click_time',
-        'int_param5' => 'lead_time',
-        'int_param6' => 'postback_time',
-        'int_param7' => 'rid',
-        'date_param1' => 'click_date',
-        'date_param2' => 'lead_date'
+        't1' => 'uip',
+        't2' => 'uagent',
+        't3' => 'goal_title',
+        't4' => 'offer_name',
+        'f1' => 'summ_total',
+        'i1' => 'goal_id',
+        'i2' => 'offer_id',
+        'i3' => 'order_id',
+        'i4' => 'click_time',
+        'i5' => 'lead_time',
+        'i6' => 'postback_time',
+        'i7' => 'rid',
+        'd1' => 'click_date',
+        'd2' => 'lead_date'
     );
     
     private $reg_url = 'http://www.cpatracker.ru/networks/ad1';
@@ -43,13 +43,13 @@ class AD1 {
         $protocol = isset($_SERVER["HTTPS"]) ? (($_SERVER["HTTPS"]==="on" || $_SERVER["HTTPS"]===1 || $_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://") :  (($_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://");
         $cur_url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
         $url = substr($cur_url, 0, strlen($cur_url)-21);
-        $url .= '/track/postback.php?net='.$this->net;
+        $url .= '/track/p.php?n='.$this->net;
         foreach ($this->params as $name => $value) {
             $url .= '&'.$name.'={'.$value.'}';
         }
         
         $code = $this->common->get_code();
-        $url .= '&apikey='.$code;
+        $url .= '&ak='.$code;
         
         $return = array(
             'id' => 0,

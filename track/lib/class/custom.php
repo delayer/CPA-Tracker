@@ -8,13 +8,13 @@ class custom {
         'subid'         => 'subid',
         'status'        => 'status',
         'date_add'      => 'date_add',
-        'txt_param1'    => 'txt_param1',
-        'txt_param2'    => 'txt_param2',
-        'txt_param4'    => 'txt_param4',
-        'txt_param7'    => 'txt_param7',
-        'int_param1'    => 'int_param1',
-        'int_param2'    => 'int_param2',
-        'int_param3'    => 'int_param3'
+        't1'    => 'txt_param1',
+        't2'    => 'txt_param2',
+        't4'    => 'txt_param4',
+        't7'    => 'txt_param7',
+        'i1'    => 'int_param1',
+        'i2'    => 'int_param2',
+        'i3'    => 'int_param3'
         
     );
             
@@ -37,7 +37,7 @@ class custom {
             $data['get']['date_add'] = date('Y-m-d H:i:s', $data['get']['date_add']);
         }
         
-        unset($data['get']['net']);
+        unset($data['get']['n']);
         
         $this->common->proceed_conversion($data['get']);
         
@@ -84,10 +84,10 @@ class custom {
         $protocol = isset($_SERVER["HTTPS"]) ? (($_SERVER["HTTPS"]==="on" || $_SERVER["HTTPS"]===1 || $_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://") :  (($_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://");
         $cur_url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
         $url = substr($cur_url, 0, strlen($cur_url)-21);
-        $url .= '/track/postback.php?net=custom';
+        $url .= '/track/p.php?n=custom';
         
         $code = $this->common->get_code();
-        $url .= '&apikey='.$code;
+        $url .= '&ak='.$code;
         
         
         return $url;
@@ -100,7 +100,7 @@ class custom {
         $url .= '/track/pixel.php';
         
         $code = $this->common->get_pixelcode();
-        $url .= '?apikey='.$code;
+        $url .= '?ak='.$code;
         
         
         return $url;
@@ -111,7 +111,7 @@ class custom {
     function process_pixel($data_all) {
         $data = $data_all['get'];
         
-        unset($data['net']);
+        unset($data['n']);
         
         if (!isset($data['subid']))
             $data['subid'] = date("YmdHis").'x'.sprintf ("%05d",rand(0,99999));

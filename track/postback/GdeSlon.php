@@ -11,15 +11,15 @@ class GdeSlon {
     private $params = array(
         'profit' => 'profit',
         'subid' => 'sub_id',
-        'txt_param1' => 'action_ip',
-        'txt_param2' => 'user_agent',
-        'txt_param5' => 'click_id',
-        'txt_param7' => 'user_referrer',
-        'float_param1' => 'order_sum',
-        'int_param2' => 'merchant_id',
-        'int_param3' => 'order_id',
-        'int_param4' => 'click_time',
-        'int_param6' => 'action_time',
+        't1' => 'action_ip',
+        't2' => 'user_agent',
+        't5' => 'click_id',
+        't7' => 'user_referrer',
+        'f1' => 'order_sum',
+        'i2' => 'merchant_id',
+        'i3' => 'order_id',
+        'i4' => 'click_time',
+        'i6' => 'action_time',
     );
     
     private $reg_url = 'http://www.cpatracker.ru/networks/gdeslon';
@@ -37,10 +37,10 @@ class GdeSlon {
         $protocol = isset($_SERVER["HTTPS"]) ? (($_SERVER["HTTPS"]==="on" || $_SERVER["HTTPS"]===1 || $_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://") :  (($_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://");
         $cur_url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
         $url = substr($cur_url, 0, strlen($cur_url)-21);
-        $url .= '/track/postback.php?net='.$this->net;
+        $url .= '/track/p.php?n='.$this->net;
         
         $code = $this->common->get_code();
-        $url .= '&apikey='.$code;
+        $url .= '&ak='.$code;
         
         $return = array(
             'id' => 0,

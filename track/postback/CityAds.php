@@ -9,28 +9,28 @@ class CityAds {
         'subid' => 'subaccount',
         'profit' => 'payout',
         'date_add' => 'conversion_date',
-        'txt_param1' => 'ip',
-        'txt_param2' => 'ua',
-        'txt_param3' => 'target_name',
-        'txt_param4' => 'offer_name',
-        'txt_param5' => 'click_id',
-        'txt_param6' => 'wp_name',
-        'txt_param7' => 'site',
-        'txt_param8' => 'action_type',
-        'txt_param9' => 'country',
-        'txt_param10' => 'city',
-        'txt_param11' => 'user_browser',
-        'txt_param12' => 'user_os',
-        'txt_param13' => 'user_device',
-        'txt_param20' => 'payout_currency',
-        'int_param1' => 'target_id',
-        'int_param2' => 'offer_id',
-        'int_param3' => 'cpl_id',
-        'int_param4' => 'click_time',
-        'int_param5' => 'event_time',
-        'int_param6' => 'conversion_time',
-        'int_param7' => 'wp_id',
-        'int_param9' => 'payout_id',
+        't1' => 'ip',
+        't2' => 'ua',
+        't3' => 'target_name',
+        't4' => 'offer_name',
+        't5' => 'click_id',
+        't6' => 'wp_name',
+        't7' => 'site',
+        't8' => 'action_type',
+        't9' => 'country',
+        't10' => 'city',
+        't11' => 'user_browser',
+        't12' => 'user_os',
+        't13' => 'user_device',
+        't20' => 'payout_currency',
+        'i1' => 'target_id',
+        'i2' => 'offer_id',
+        'i3' => 'cpl_id',
+        'i4' => 'click_time',
+        'i5' => 'event_time',
+        'i6' => 'conversion_time',
+        'i7' => 'wp_id',
+        'i9' => 'payout_id',
     );
     
     private $reg_url = 'http://www.cpatracker.ru/networks/cityads';
@@ -48,10 +48,10 @@ class CityAds {
         $protocol = isset($_SERVER["HTTPS"]) ? (($_SERVER["HTTPS"]==="on" || $_SERVER["HTTPS"]===1 || $_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://") :  (($_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://");
         $cur_url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
         $url = substr($cur_url, 0, strlen($cur_url)-21);
-        $url .= '/track/postback.php?net='.$this->net;
+        $url .= '/track/p.php?n='.$this->net;
 
         $code = $this->common->get_code();
-        $url .= '&apikey='.$code;
+        $url .= '&ak='.$code;
         
         $return = array('reg_url' => $this->reg_url, 'net_text' => $this->net_text);
         

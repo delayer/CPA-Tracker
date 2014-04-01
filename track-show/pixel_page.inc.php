@@ -67,9 +67,9 @@ $custom = new custom();
                 <td><input type="text" id="profit_val" value=""></td>
             </tr>
             <tr>
-                <td><input type="checkbox" id="int_param3"></td>
+                <td><input type="checkbox" id="i3"></td>
                 <td>ID заказа:</td>
-                <td><input type="text" id="int_param3_val" value=""></td>
+                <td><input type="text" id="i3_val" value=""></td>
             </tr>
         </table>
     </div>    

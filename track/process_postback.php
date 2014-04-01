@@ -60,19 +60,18 @@ $custom = new custom();
 
 foreach ($arr_files as $cur_file) {
     $file_name = dirname(__FILE__) . "/cache/postback/{$cur_file}+";
-    $file_name = dirname(__FILE__) . "/cache/postback/{$cur_file}";
     rename(dirname(__FILE__) . "/cache/postback/$cur_file", $file_name);
     $conversions = file($file_name);
     foreach ($conversions as $conv) {
         $data = unserialize($conv);
-        if (!isset($data['get']['net']) || $data['get']['net'] == 'custom') {
+        if (!isset($data['get']['n']) || $data['get']['n'] == 'custom') {
             $custom->process_conversion($data);
         }
-        elseif ($data['get']['net'] == 'pixel') {
+        elseif ($data['get']['n'] == 'pixel') {
             $custom->process_pixel($data);
         }
         else {
-            $net = new $data['get']['net']();
+            $net = new $data['get']['n']();
             $net->process_conversion($data);
         }
     }

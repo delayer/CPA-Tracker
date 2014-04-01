@@ -75,7 +75,7 @@ class common {
                 
                 if (isset($data['status'])) {
                     $update .= ', `status` = "'.$data['status'].'"';
-                    unset($data['txt_status']);
+                    unset($data['status']);
                 }
 
                 mysql_query('UPDATE `tbl_conversions` SET `network` = "'.$data['network'].'"'.$update.' WHERE `id` = '.$f['id']) or die(mysql_error());

@@ -12,25 +12,25 @@ class ActionAds {
         'profit' => 'payout',
         'subid' => 'aff_sub',
         'date_add' => 'datetime',
-        'txt_param1' => 'ip',
-        'txt_param4' => 'offer_name',
-        'txt_param7' => 'source',
-        'txt_param14' => 'affiliate_name',
-        'txt_param15' => 'file_name',
-        'txt_param16' => 'aff_sub2',
-        'txt_param17' => 'aff_sub3',
-        'txt_param18' => 'aff_sub4',
-        'txt_param19' => 'aff_sub5',
-        'txt_param20' => 'currency',
-        'int_param1' => 'goal_id',
-        'int_param2' => 'offer_id',
-        'int_param3' => 'transaction_id',
-        'int_param7' => 'offer_url_id',
-        'int_param10' => 'offer_file_id',
-        'int_param11' => 'device_id',
-        'int_param12' => 'affiliate_id',
-        'int_param13' => 'affiliate_ref',
-        'int_param14' => 'offer_ref',
+        't1' => 'ip',
+        't4' => 'offer_name',
+        't7' => 'source',
+        't14' => 'affiliate_name',
+        't15' => 'file_name',
+        't16' => 'aff_sub2',
+        't17' => 'aff_sub3',
+        't18' => 'aff_sub4',
+        't19' => 'aff_sub5',
+        't20' => 'currency',
+        'i1' => 'goal_id',
+        'i2' => 'offer_id',
+        'i3' => 'transaction_id',
+        'i7' => 'offer_url_id',
+        'i10' => 'offer_file_id',
+        'i11' => 'device_id',
+        'i12' => 'affiliate_id',
+        'i13' => 'affiliate_ref',
+        'i14' => 'offer_ref',
     );
     
     
@@ -48,13 +48,13 @@ class ActionAds {
         $protocol = isset($_SERVER["HTTPS"]) ? (($_SERVER["HTTPS"]==="on" || $_SERVER["HTTPS"]===1 || $_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://") :  (($_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://");
         $cur_url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
         $url = substr($cur_url, 0, strlen($cur_url)-21);
-        $url .= '/track/postback.php?net='.$this->net;
+        $url .= '/track/p.php?n='.$this->net;
         foreach ($this->params as $name => $value) {
             $url .= '&'.$name.'={'.$value.'}';
         }
         
         $code = $this->common->get_code();
-        $url .= '&apikey='.$code;
+        $url .= '&ak='.$code;
         
         $return = array(
             'id' => 0,

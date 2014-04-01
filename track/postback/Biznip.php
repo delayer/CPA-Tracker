@@ -12,14 +12,14 @@ class Biznip {
         'profit' => 'payout',
         'subid' => 'aff_sub',
         'txt_status' => 'status',
-        'txt_param5' => 'click_id',
-        'txt_param16' => 'aff_sub2',
-        'txt_param17' => 'aff_sub3',
-        'txt_param18' => 'aff_sub4',
-        'txt_param19' => 'aff_sub5',
-        'int_param1' => 'goal_id',
-        'int_param2' => 'offer_id',
-        'int_param3' => 'conversion_id',
+        't5' => 'click_id',
+        't16' => 'aff_sub2',
+        't17' => 'aff_sub3',
+        't18' => 'aff_sub4',
+        't19' => 'aff_sub5',
+        'i1' => 'goal_id',
+        'i2' => 'offer_id',
+        'i3' => 'conversion_id',
     );
     
     private $reg_url = 'http://www.cpatracker.ru/networks/biznip';
@@ -37,13 +37,13 @@ class Biznip {
         $protocol = isset($_SERVER["HTTPS"]) ? (($_SERVER["HTTPS"]==="on" || $_SERVER["HTTPS"]===1 || $_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://") :  (($_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://");
         $cur_url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
         $url = substr($cur_url, 0, strlen($cur_url)-21);
-        $url .= '/track/postback.php?net='.$this->net;
+        $url .= '/track/p.php?n='.$this->net;
         foreach ($this->params as $name => $value) {
             $url .= '&'.$name.'={'.$value.'}';
         }
         
         $code = $this->common->get_code();
-        $url .= '&apikey='.$code;
+        $url .= '&ak='.$code;
         
         $return = array(
             'id' => 0,

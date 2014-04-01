@@ -59,8 +59,8 @@
 				echo "</tr>";
                                 
                                 echo '<tr style="display:none;"><td colspan="9">';
-                                if ($cur['txt_param1'] != '') {
-                                    echo "<span class='badge' style='float:right; font-weight:normal; margin-right:25px;'>"._e($cur['txt_param1'])."</span>";
+                                if ($cur['t1'] != '') {
+                                    echo "<span class='badge' style='float:right; font-weight:normal; margin-right:25px;'>"._e($cur['t1'])."</span>";
                                 }
                                 
                                 if ($cur['date_add'] != '') {
@@ -93,85 +93,85 @@
                                 
                                 echo 'SubID: '.$cur['subid'];
                                 
-                                if ($cur['txt_param16'] != '' || $cur['txt_param17'] != '' || $cur['txt_param18'] != '' || $cur['txt_param19'] != '') {
-                                    echo '('.$cur['txt_param16'].' '.$cur['txt_param17'].' '.$cur['txt_param18'].' '.$cur['txt_param19'].' '.')';
+                                if ($cur['t16'] != '' || $cur['t17'] != '' || $cur['t18'] != '' || $cur['t19'] != '') {
+                                    echo '('.$cur['t16'].' '.$cur['t17'].' '.$cur['t18'].' '.$cur['t19'].' '.')';
                                 }
                                 echo '<br>';
                                 
-                                if ($cur['txt_param20'] != '') {
-                                    echo 'Валюта: '.$cur['txt_param20'].'<br>';
+                                if ($cur['t20'] != '') {
+                                    echo 'Валюта: '.$cur['t20'].'<br>';
                                 }
                                 
-                                if ($cur['int_param3'] != 0) {
-                                    echo 'ID транзакции: '.$cur['int_param3'].'<br>';
+                                if ($cur['i3'] != 0) {
+                                    echo 'ID транзакции: '.$cur['i3'].'<br>';
                                 }
                                 
-                                if ($cur['int_param9'] != 0) {
-                                    echo 'ID выплаты: '.$cur['int_param9'].'<br>';
+                                if ($cur['i9'] != 0) {
+                                    echo 'ID выплаты: '.$cur['i9'].'<br>';
                                 }
                                 
-                                if ($cur['txt_param2'] != '') {
-                                    echo 'UserAgent: '.$cur['txt_param2'].'<br>';
+                                if ($cur['t2'] != '') {
+                                    echo 'UserAgent: '.$cur['t2'].'<br>';
                                 }
                                 
-                                if ($cur['txt_param3'] != '') {
-                                    echo 'Цель: '.$cur['txt_param3'].'<br>';
+                                if ($cur['t3'] != '') {
+                                    echo 'Цель: '.$cur['t3'].'<br>';
                                 }
-                                if ($cur['int_param1'] != 0){
-                                    echo 'ID Цели: '.$cur['int_param1'].'<br>';
+                                if ($cur['i1'] != 0){
+                                    echo 'ID Цели: '.$cur['i1'].'<br>';
                                 }                    
-                                if ($cur['int_param2'] != 0) {
-                                    echo 'Оффер: '.$cur['int_param2'];
-                                    if ($cur['txt_param4'] != '') {
-                                        echo ' - '.$cur['txt_param4'];
+                                if ($cur['i2'] != 0) {
+                                    echo 'Оффер: '.$cur['i2'];
+                                    if ($cur['t4'] != '') {
+                                        echo ' - '.$cur['t4'];
                                     }
                                     echo '<br>';                                    
                                 }
                                 
-                                if ($cur['txt_param5'] != '') {
-                                    echo 'Unique ID: '.$cur['txt_param5'].'<br>';
+                                if ($cur['t5'] != '') {
+                                    echo 'Unique ID: '.$cur['t5'].'<br>';
                                 }
                                 
-                                if ($cur['int_param7'] != 0) {
-                                    echo 'Поток: '.$cur['int_param7'];
-                                    if ($cur['txt_param6'] != '') {
-                                        echo ' - '.$cur['txt_param6'];
+                                if ($cur['i7'] != 0) {
+                                    echo 'Поток: '.$cur['i7'];
+                                    if ($cur['t6'] != '') {
+                                        echo ' - '.$cur['t6'];
                                     }
                                     
                                     echo '<br>';
                                 }
                                 
-                                if ($cur['int_param8'] != 0 || $cur['txt_param7'] != '') {
-                                    echo 'Источник: '.$cur['int_param8'].' '.$cur['txt_param7'].'<br>';
+                                if ($cur['i8'] != 0 || $cur['t7'] != '') {
+                                    echo 'Источник: '.$cur['i8'].' '.$cur['t7'].'<br>';
                                 }
                                 
-                                if ($cur['txt_param8'] != '') {
-                                    echo 'CPL/CPA: '.$cur['txt_param8'].'<br>';
+                                if ($cur['t8'] != '') {
+                                    echo 'CPL/CPA: '.$cur['t8'].'<br>';
                                 }
                                 
-                                if ($cur['txt_param9'] != '') {
-                                    echo 'Страна: '.$cur['txt_param9'].'<br>';
+                                if ($cur['t9'] != '') {
+                                    echo 'Страна: '.$cur['t9'].'<br>';
                                 }
                                 
-                                if ($cur['txt_param10'] != '') {
-                                    echo 'Город: '.$cur['txt_param10'].'<br>';
+                                if ($cur['t10'] != '') {
+                                    echo 'Город: '.$cur['t10'].'<br>';
                                 }
                                 
-                                if ($cur['txt_param11'] != '') {
-                                    echo 'Браузер: '.$cur['txt_param11'].'<br>';
+                                if ($cur['t11'] != '') {
+                                    echo 'Браузер: '.$cur['t11'].'<br>';
                                 }
                                 
-                                if ($cur['txt_param12'] != '') {
-                                    echo 'ОС: '.$cur['txt_param12'].'<br>';
+                                if ($cur['t12'] != '') {
+                                    echo 'ОС: '.$cur['t12'].'<br>';
                                 }
                                 
-                                if ($cur['txt_param13'] != '') {
-                                    echo 'Устройство: '.$cur['int_param13'].' '.$cur['txt_param13'].'<br>';
+                                if ($cur['t13'] != '') {
+                                    echo 'Устройство: '.$cur['i13'].' '.$cur['t13'].'<br>';
                                 }
                                 
                                 
-                                if ($cur['txt_param15'] != '') {
-                                    echo 'Баннер: '.$cur['int_param10'].' '.$cur['txt_param15'].'<br>';
+                                if ($cur['t15'] != '') {
+                                    echo 'Баннер: '.$cur['i10'].' '.$cur['t15'].'<br>';
                                 }
                                 
                                 if (count($cur['add']) > 0) {

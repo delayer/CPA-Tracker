@@ -12,11 +12,11 @@ class Himba {
         'profit' => 'amount',
         'subid' => 'sub_id',
         'status' => 'status',
-        'txt_param7' => 'source',
-        'txt_param16' => 'sub_id2',
-        'int_param1' => 'goal_id',
-        'int_param2' => 'offer_id',
-        'int_param3' => 'adv_sub',
+        't7' => 'source',
+        't16' => 'sub_id2',
+        'i1' => 'goal_id',
+        'i2' => 'offer_id',
+        'i3' => 'adv_sub',
     );
     
     private $reg_url = 'http://www.cpatracker.ru/networks/himba';
@@ -34,13 +34,13 @@ class Himba {
         $protocol = isset($_SERVER["HTTPS"]) ? (($_SERVER["HTTPS"]==="on" || $_SERVER["HTTPS"]===1 || $_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://") :  (($_SERVER["SERVER_PORT"]===$pv_sslport) ? "https://" : "http://");
         $cur_url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
         $url = substr($cur_url, 0, strlen($cur_url)-21);
-        $url .= '/track/postback.php?net='.$this->net;
+        $url .= '/track/p.php?n='.$this->net;
         foreach ($this->params as $name => $value) {
             $url .= '&'.$name.'={'.$value.'}';
         }
         
         $code = $this->common->get_code();
-        $url .= '&apikey='.$code;
+        $url .= '&ak='.$code;
         
         $return = array(
             'id' => 0,

@@ -7,13 +7,13 @@ class ActionPay {
     private $params = array(
         'subid' => 'subaccount',
         'profit' => 'payment',
-        'int_param1' => 'aim',
-        'int_param2' => 'offer',
-        'int_param3' => 'apid',
-        'int_param5' => 'time',
-        'int_param7' => 'landing',
-        'int_param8' => 'source',
-        'txt_param9' => 'uniqueid'
+        'i1' => 'aim',
+        'i2' => 'offer',
+        'i3' => 'apid',
+        'i5' => 'time',
+        'i7' => 'landing',
+        'i8' => 'source',
+        't9' => 'uniqueid'
     );
     
     private $reg_url = 'http://www.cpatracker.ru/networks/actionpay';
@@ -29,13 +29,13 @@ class ActionPay {
         $protocol = isset($_SERVER["HTTPS"]) ? (($_SERVER["HTTPS"] === "on" || $_SERVER["HTTPS"] === 1 || $_SERVER["SERVER_PORT"] === $pv_sslport) ? "https://" : "http://") : (($_SERVER["SERVER_PORT"] === $pv_sslport) ? "https://" : "http://");
         $cur_url = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
         $url = substr($cur_url, 0, strlen($cur_url) - 21);
-        $url .= '/track/postback.php?net=' . $this->net;
+        $url .= '/track/p.php?n=' . $this->net;
         foreach ($this->params as $name => $value) {
             $url .= '&' . $name . '={' . $value . '}';
         }
 
         $code = $this->common->get_code();
-        $url .= '&apikey=' . $code;
+        $url .= '&ak=' . $code;
 
         $return = array();
 
@@ -66,7 +66,9 @@ class ActionPay {
         $this->common->log($this->net, $data_all['post'], $data_all['get']);
         $data = $data_all['get'];
         $data['network'] = $this->net;
-        $data['date_add'] = date('Y-m-d H:i:s');
+        if (!isset($data['date_add'])) {
+            $data['date_add'] = date('Y-m-d H:i:s');
+        }
         unset($data['net']);
 
 

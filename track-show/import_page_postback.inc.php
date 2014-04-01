@@ -49,7 +49,7 @@ $custom = new custom();
 
                     links = data.links;
 
-                    $('#net-name').text($(btn).attr('net'));
+                    $('.net-name').text($(btn).attr('net'));
                     $('#netlink_name').text($(btn).attr('net'));
                     $('#netlink_text').html(data.net_text);
                     $('#netlink_href').attr('href', data.reg_url);
@@ -196,13 +196,13 @@ $custom = new custom();
 <br>
 <div class="row" id="result-row" style="display:none;">
     <div class="col-md-12">
-        Postback ссылка для сети <b><span id="net-name"></span></b>:<br><br>
+        Postback ссылка для сети <b><span class="net-name"></span></b>:<br><br>
         <div id="links">
 
         </div>
         <div class="panel panel-primary" style="margin-top: 30px;">
             <div class="panel-heading">
-                <h3 class="panel-title">Партнерская сеть Biznip</h3>
+                <h3 class="panel-title">Партнерская сеть <span class="net-name"></span></h3>
             </div>
             <div class="panel-body">
                 <span id="netlink_text"></span>

@@ -430,7 +430,7 @@
     }
     function validate_add_rule() {
         var nameR = /^[a-z0-9\-\_]+$/i;
-        if ($('#form_add_rule').val() == '') {
+        if ($('#rule_name_id').val() == '') {
             return false;
         }
         if (!nameR.test($('input[name=rule_name]', $('#form_add_rule')).val())){
@@ -782,7 +782,7 @@
         <form class="form-inline" method="post" onsubmit="return validate_add_rule();" id="form_add_rule" role="form" style="margin-bottom:30px">
         <div class="form-group">
             <label class="sr-only">Название правила</label>
-            <input type="text" class="form-control" placeholder="Название правила" name="rule_name">
+            <input type="text" class="form-control" placeholder="Название правила" id="rule_name_id" name="rule_name">
         </div>
         &nbsp;→&nbsp;
         <div class="form-group">

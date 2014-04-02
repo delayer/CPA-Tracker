@@ -37,7 +37,6 @@
 				    $dbname=$_REQUEST['dbname'];
 				    $dbserver=$_REQUEST['dbserver'];
 				    $server_type=$_REQUEST['server_type'];
-
 					// Trying to connect
 					$connection = mysql_connect($dbserver, $login, $password);
 					if (!$connection) 

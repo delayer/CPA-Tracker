@@ -37,7 +37,8 @@ $custom = new custom();
         $('.net-btn').click(function() {
             var btn = this;
             $('#search-row').hide();
-            $('#master-row').hide();
+            $('#master-row').show();
+            $('#master-form').hide();
             $.post(
                     'index.php?ajax_act=postback_info',
                     {
@@ -90,6 +91,7 @@ $custom = new custom();
         $('#custom-master-start').click(function() {
             $('#search-row').hide();
             $('#net-row2').hide();
+            $('#result-row').hide();
             $('#master-form').show();
         });
 
@@ -207,7 +209,7 @@ $custom = new custom();
             <div class="panel-body">
                 <span id="netlink_text"></span>
                 <div>
-                    <a class="btn btn-primary pull-right" id="netlink_href" href="" target="_blank" style="padding: 5px 10px;">Зарегистрироваться в <span id="netlink_name"></span> →</a>
+                    <a class="btn btn-primary pull-right" id="netlink_href" href="" target="_blank" style="padding: 5px 10px; margin-top: 15px;">Зарегистрироваться в <span id="netlink_name"></span> →</a>
                 </div>
             </div>
         </div>

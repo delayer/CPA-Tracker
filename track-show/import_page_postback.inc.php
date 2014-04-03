@@ -207,7 +207,7 @@ $custom = new custom();
             <div class="panel-body">
                 <span id="netlink_text"></span>
                 <div>
-                    <a class="btn btn-primary pull-right" id="netlink_href" href="" style="padding: 5px 10px;">Зарегистрироваться в <span id="netlink_name"></span> →</a>
+                    <a class="btn btn-primary pull-right" id="netlink_href" href="" target="_blank" style="padding: 5px 10px;">Зарегистрироваться в <span id="netlink_name"></span> →</a>
                 </div>
             </div>
         </div>

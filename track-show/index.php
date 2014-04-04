@@ -94,7 +94,8 @@
 		{
 			case 'cache_not_writable': 
 				$cache_folder=$settings[2];
-	        	$page_top_menu="top_menu_empty.php";
+                        $bHideTopMenu = true;
+	        	$page_top_menu="templates/menu-top.inc.php";
 	        	$sidebar_inc="left-sidebar-empty.php";
 	        	$page_content="system-message-cache.php";
         		include ('main-template.inc.php');
@@ -102,7 +103,8 @@
 			break;
 			
 			case 'first_run': 
-	        	$page_top_menu="top_menu_empty.php";
+                            $bHideTopMenu = true;
+	        	$page_top_menu="templates/menu-top.inc.php";
 	        	$sidebar_inc="left-sidebar-empty.php";
 	        	$page_content="system-first-run.php";
         		include ('main-template.inc.php');			

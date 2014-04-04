@@ -11,11 +11,11 @@
 
   <body>
   <? include $page_top_menu; ?>
-    <div class="container-fluid">
+    <div class="container">
       <div class="row-fluid">
-	      <? include ($sidebar_inc); ?>
-        <div class="span9">
-          <div class="row-fluid">
+	      <?// include ($sidebar_inc); ?>
+        <div class="col-lg-9 col-lg-offset-3">
+          <div class="row">
             <? 
             	include ($page_content);
             ?>

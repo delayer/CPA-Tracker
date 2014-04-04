@@ -1,6 +1,6 @@
 <? if (!$include_flag){exit();} ?>
-
-<div class='span6'>
+<div class="row">
+<div class='col-md-6'>
 	<form class="form-horizontal" id="form_settings" onsubmit="return save_settings();">
 	  <input type='hidden' name='ajax_act' value='create_database'>          
           <input type="hidden" name="csrfkey" value="<?php echo CSRF_KEY;?>">
@@ -8,25 +8,25 @@
 	  <div class="control-group">
 	    <label class="control-label" for="login">Логин</label>
 	    <div class="controls">
-	      <input type="text" id="login" name='login'>
+	      <input type="text" id="login" name='login' class="form-control">
 	    </div>
 	  </div>
 	  <div class="control-group">
 	    <label class="control-label" for="password">Пароль</label>
 	    <div class="controls">
-	      <input type="text" id="password" name='password'>
+	      <input type="text" id="password" name='password' class="form-control">
 	    </div>
 	  </div>
 	  <div class="control-group">
 	    <label class="control-label" for="dbname">Название базы данных</label>
 	    <div class="controls">
-	      <input type="text" id="dbname" name='dbname'>
+	      <input type="text" id="dbname" name='dbname' class="form-control">
 	    </div>
 	  </div>  
 	<div class="control-group">
 	    <label class="control-label" for="dbserver">Сервер базы данных</label>
 	    <div class="controls">
-	      <input type="text" id="dbserver" name="dbserver" value="localhost">
+	      <input type="text" id="dbserver" name="dbserver" value="localhost" class="form-control">
 	    </div>
 	  </div>  
 
@@ -34,7 +34,7 @@
 	  <div class="control-group">
 	      <label class="control-label" for="server_type">Тип сервера</label>
 	      <div class="controls">
-	        <select id="server_type" name="server_type" style='margin-right:10px;'>
+	        <select id="server_type" name="server_type" style='margin-right:10px;'  class="form-control">
 			  <option value='apache' selected>Apache</option>
 			  <option value='nginx'>Nginx</option>
 			</select>
@@ -75,7 +75,7 @@
 	</div>
 
 </div>
-
+</div>
 
 
 <style>
